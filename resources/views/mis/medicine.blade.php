@@ -1,0 +1,350 @@
+@include('mis.header')
+
+<!-- Main Wrapper -->
+<div class="main-wrapper">
+
+    <!-- Sidebar -->
+    @include('mis.Sidebar')
+    <!-- /Sidebar -->
+
+    <!-- Page Wrapper -->
+    <div class="page-wrapper" style="min-height: 653px;">
+        <div class="content container-fluid">
+
+            <!-- Page Header -->
+            @include('mis.breadcum')
+            <!-- /Page Header -->
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Medicine</h4>
+                            <button type="button" class="btn btn-primary float-right" data-toggle="modal"
+                                data-target="#medicineModal" onclick="resetForm()">
+                                <i class="fa fa-plus"></i> Add Medicine
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="medicinetable" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Medicine Name</th>
+                                            <th>Medicine Header</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Data will be loaded via AJAX -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+<!-- /Main Wrapper -->
+
+<!-- Medicine Modal -->
+<div class="modal fade" id="medicineModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Add Medicine</h5>
+            </div>
+            <div class="modal-body">
+                <form action="mis-Create-Medicine-Post" name="createMedicine" id="createMedicine" method="post"
+                    enctype="multipart/form-data">
+                    <input type="hidden" name="medicine_id" id="medicine_id">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Medicine Name <span class="text-danger">*</span></label>
+                                <input type="text" maxlength="50" class="form-control" name="medicine_name"
+                                    id="medicine_name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Medicine Header <span class="text-danger">*</span></label>
+                                <select class="form-control" name="medicine_header" id="medicine_header">
+                                    <option value=""> -- Select -- </option>
+                                    <!-- Dynamic options can be populated here -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" name="submit" id="submitBtn" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-secondary" onclick="closemodal();"
+                            data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Medicine Modal -->
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this medicine?</p>
+                <input type="hidden" id="delete_id">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                    onclick="closemodaldelete()">Cancel</button>
+                <button type="button" class="btn btn-danger" onclick="deletemedicine()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Delete Confirmation Modal -->
+
+@include('mis.footer')
+
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $(document).ready(function () {
+        $('#medicinetable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [],
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: 'mis-Get-Medicine',
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: function (d) {
+                    return JSON.stringify({
+                        draw: d.draw,
+                        start: d.start,
+                        length: d.length,
+                        search: { value: d.search.value },
+                        order: d.order,
+                        columns: d.columns
+                    });
+                },
+                dataSrc: function (json) {
+                    if (!json || json.error) {
+                        console.error(json?.error || 'Empty response');
+                        return [];
+                    }
+                    return json.data;
+                }
+            },
+            columns: [
+                { data: 'id' },
+                { data: 'medicine_name' },
+                { data: 'medicine_header' },
+                {
+                    data: null,
+                    render: function (data, type, row) {
+                        return `
+                            <div class="actions">
+                                <a href="javascript:void(0);" class="btn btn-sm bg-primary-light m-2" onclick="editRecord(${row.id})">Edit</a>
+                                <a href="javascript:void(0);" class="btn btn-sm bg-danger-light m-2" onclick="confirmDelete(${row.id})">Delete</a>
+                            </div>`;
+                    }
+                }
+            ],
+            error: function (xhr, error, thrown) {
+                console.error('DataTables error:', error, thrown);
+                $('#medicinetable').DataTable().clear().draw();
+            }
+        });
+    });
+
+    // Reset form and modal
+    function resetForm() {
+        $('#medicineModal').modal('show');
+        $('#modalTitle').text('Add Medicine');
+        $('#createMedicine')[0].reset();
+        $('#medicine_id').val('');
+        $('#submitBtn').text('Submit').prop('disabled', false);
+
+        // Clear validation errors
+        $('.is-invalid').removeClass('is-invalid');
+        $('.invalid-feedback').remove();
+        loadMedicineHeaders();
+    }
+
+    function closemodal() {
+        $('#medicineModal').modal('hide');
+    }
+
+    function confirmDelete(id) {
+        $('#delete_id').val(id);
+        $('#deleteModal').modal('show');
+    }
+
+    function closemodaldelete() {
+        $('#deleteModal').modal('hide');
+    }
+
+    // Delete medicine
+    function deletemedicine() {
+        var id = $('#delete_id').val();
+
+        $.ajax({
+            url: 'mis-Delete-Medicine/' + id,
+            type: 'POST',
+            dataType: 'json',
+            data: { _token: $('meta[name="csrf-token"]').attr('content') },
+            success: function (response) {
+                if (response.status) {
+                    $('#medicinetable').DataTable().ajax.reload(null, false);
+                    $('#deleteModal').modal('hide');
+                    toastr.success(response.message || 'Medicine deleted successfully', 'Success');
+                } else {
+                    toastr.error(response.message || 'Failed to delete medicine', 'Error');
+                }
+            },
+            error: function (xhr) {
+                toastr.error('Error processing response');
+                console.error(xhr.responseText);
+            }
+        });
+    }
+
+    // Form submission
+    $('#createMedicine').submit(function (e) {
+        e.preventDefault();
+
+        var $submitBtn = $('#submitBtn')
+            .prop('disabled', true)
+            .html('<i class="fa fa-spinner fa-spin"></i> Processing...');
+
+        if (validateMedicineForm()) {
+            var formData = new FormData(this);
+            var url = $('#medicine_id').val() ? 'mis-Update-Medicine-Post' : 'mis-Create-Medicine-Post';
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status) {
+                        $('#medicinetable').DataTable().ajax.reload();
+                        $('#medicineModal').modal('hide');
+                        toastr.success(response.message || 'Saved successfully', 'Success');
+                    } else {
+                        toastr.error(response.message || 'Error saving medicine', 'Error');
+                        if (response.errors) {
+                            $.each(response.errors, function (field, message) {
+                                $('#' + field).addClass('is-invalid')
+                                    .after('<div class="invalid-feedback">' + message + '</div>');
+                            });
+                        }
+                    }
+                },
+                error: function (xhr) {
+                    toastr.error('Unexpected error occurred', 'Error');
+                    console.error(xhr.responseText);
+                },
+                complete: function () {
+                    $submitBtn.prop('disabled', false).html('Submit');
+                }
+            });
+        } else {
+            $submitBtn.prop('disabled', false).html('Submit');
+        }
+    });
+
+    // Validation
+    function validateMedicineForm() {
+        var isValid = true;
+
+        // Clear old errors
+        $('.is-invalid').removeClass('is-invalid');
+        $('.invalid-feedback').remove();
+
+        const medicine_name = $('#medicine_name').val().trim();
+        const medicine_header = $('#medicine_header').val().trim();
+
+        if (isEmpty(medicine_name)) {
+            $('#medicine_name').addClass('is-invalid')
+                .after('<div class="invalid-feedback">Medicine name is required</div>');
+            isValid = false;
+        }
+
+        if (isEmpty(medicine_header)) {
+            $('#medicine_header').addClass('is-invalid')
+                .after('<div class="invalid-feedback">Medicine header is required</div>');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    function editRecord(id) {
+        var table = $('#medicinetable').DataTable();
+        var rowData = table.rows().data().toArray().find(r => r.id == id);
+
+        if (!rowData) {
+            toastr.error("Medicine not found");
+            return;
+        }
+
+        $('#modalTitle').text("Edit Medicine");
+        $('#submitBtn').prop('disabled', false).text('Update');
+
+        $('#medicine_id').val(rowData.id);
+        $('#medicine_name').val(rowData.medicine_name);
+        $('#medicine_header').val(rowData.medicine_header);
+
+        $('#medicineModal').modal('show');
+    }
+
+    function isEmpty(value) {
+        return !value || value.trim() === "";
+    }
+    function loadMedicineHeaders() {
+    $.ajax({
+        url: 'mis-Get-Medicine-Headers',
+        type: 'POST',
+        dataType: 'json',
+        data: { _token: $('meta[name="csrf-token"]').attr('content') },
+        success: function(response) {
+            if (response.status) {
+                var $dropdown = $('#medicine_header');
+                $dropdown.empty().append('<option value=""> -- Select -- </option>');
+                $.each(response.data, function(index, header) {
+                    $dropdown.append('<option value="'+header.header+'">'+header.header+'</option>');
+                });
+            } else {
+                toastr.error(response.message || 'Unable to fetch headers');
+            }
+        },
+        error: function(xhr) {
+            toastr.error('Error fetching medicine headers');
+            console.error(xhr.responseText);
+        }
+    });
+}
+</script>
