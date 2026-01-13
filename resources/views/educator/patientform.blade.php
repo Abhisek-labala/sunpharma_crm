@@ -50,7 +50,7 @@
             <!-- Page Header -->
             @include('educator.breadcum')
             <!-- /Page Header -->
-            <form action="{{ url('educator/Patient-Inquiry-Post') }}" name="createPatientInquiry"
+            <form action="{{ url('counsellor/Patient-Inquiry-Post') }}" name="createPatientInquiry"
                 id="createPatientInquiry" method="post" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name='campId' id='campId' value='{{ $campId ?? "" }}'>
@@ -1264,7 +1264,7 @@
             dropdownParent: $('#Compititor').parent()
         });
         $.ajax({
-            url: '/educator/get-camp-id', // Your endpoint to get campId
+            url: '/counsellor/get-camp-id', // Your endpoint to get campId
             type: 'GET',
             dataType: 'json',
             success: function (response) {
@@ -1359,7 +1359,7 @@
     }
     function loadHCPNames() {
         $.ajax({
-            url: '/educator/getHCPNames',
+            url: '/counsellor/getHCPNames',
             type: 'GET',
             dataType: 'json',
             success: function (response) {
@@ -1387,7 +1387,7 @@
 
     function loadMedicines() {
         $.ajax({
-            url: '/educator/getMedicines',
+            url: '/counsellor/getMedicines',
             type: 'GET',
             dataType: 'json',
             success: function (response) {
@@ -1407,7 +1407,7 @@
 
     function loadCompetitors() {
         $.ajax({
-            url: '/educator/getCompetitors',
+            url: '/counsellor/getCompetitors',
             type: 'GET',
             dataType: 'json',
             success: function (response) {
@@ -1430,7 +1430,7 @@
 
     function getHCPDetails(doctorId) {
         $.ajax({
-            url: '/educator/getHCLDetails',
+            url: '/counsellor/getHCLDetails',
             type: 'POST',
             data: {
                 doctor_id: doctorId,
