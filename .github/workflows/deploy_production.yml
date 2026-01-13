@@ -20,7 +20,7 @@ jobs:
           username: root
           key: ${{ secrets.DO_SSH_KEY_PROD }}
           source: "."
-          target: "/var/www/sunpharma"
+          target: "/var/www/sunpharma_crm"
 
       - name: SSH and deploy application
         uses: appleboy/ssh-action@v0.1.10
@@ -29,7 +29,7 @@ jobs:
           username: root
           key: ${{ secrets.DO_SSH_KEY_PROD }}
           script: |
-            cd /var/www/sunpharma
+            cd /var/www/sunpharma_crm
 
             # Install dependencies
             composer install --no-dev --optimize-autoloader
@@ -57,5 +57,5 @@ jobs:
             php artisan storage:link || true
 
             # Permissions
-            chown -R www-data:www-data /var/www/sunpharma
+            chown -R www-data:www-data /var/www/sunpharma_crm
             chmod -R 775 storage bootstrap/cache

@@ -11,6 +11,7 @@ use App\Http\Controllers\misController;
 use App\Http\Controllers\digitalController;
 use App\Http\Controllers\RmController;
 use App\Http\Controllers\yogaController;
+use App\Http\Controllers\EducatorAttendanceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -33,8 +34,8 @@ Route::middleware(['check.session'])->group(function () {
         ->name('private.file');
 });
 Route::middleware(['check.session', 'role:counsellor'])->group(function () {
-    Route::get('/educator/dashboard', [DashboardController::class, 'educator'])->name('dashboard.educator');
-    Route::get('educator/analytics', [EducatorController::class, 'analytics']);
+    Route::get('/counsellor/dashboard', [DashboardController::class, 'educator'])->name('dashboard.educator');
+    Route::get('counsellor/analytics', [EducatorController::class, 'analytics']);
     Route::prefix('charts')->group(function () {
         Route::get('monthly_counseling', [EducatorController::class, 'monthlyCounseling']);
         Route::get('gender_distribution', [EducatorController::class, 'genderDistribution']);
@@ -44,45 +45,50 @@ Route::middleware(['check.session', 'role:counsellor'])->group(function () {
         Route::get('doctor_metrics', [EducatorController::class, 'doctorMetrics']);
         Route::get('doctornot_metrics', [EducatorController::class, 'doctorNotMetrics']);
     });
-    Route::get('/educator/campinfo', [EducatorController::class, 'camp'])->name('campinfo');
-    Route::get('/educator/get-doctors', [EducatorController::class, 'getDoctors']);
-    Route::post('/educator/get-hcl-details', [EducatorController::class, 'getHCLDetails']);
-    Route::post('/educator/start-camp', [EducatorController::class, 'startCamp']);
-    Route::post('/educator/stop-camp', [EducatorController::class, 'stopCamp']);
-    Route::post('/educator/executed', [EducatorController::class, 'executed']);
-    Route::post('/educator/not-executed', [EducatorController::class, 'notExecuted']);
-    Route::get('/educator/get-ongoing-camp', [EducatorController::class, 'getOngoingCamp']);
-    Route::get('/educator/patientinfo', [PatientController::class, 'patientform']);
-    Route::get('/educator/PatientList', [PatientController::class, 'patientlist']);
-    Route::get('/educator/change-password', [ChangePasswordController::class, 'educatorchangepassword']);
-    Route::post('/educator/change-password-post', [ChangePasswordController::class, 'educatorchangePasswordpost'])->name('educator.change-password-post');
+    Route::get('/counsellor/campinfo', [EducatorController::class, 'camp'])->name('campinfo');
+    Route::get('/counsellor/get-doctors', [EducatorController::class, 'getDoctors']);
+    Route::post('/counsellor/get-hcl-details', [EducatorController::class, 'getHCLDetails']);
+    Route::post('/counsellor/start-camp', [EducatorController::class, 'startCamp']);
+    Route::post('/counsellor/stop-camp', [EducatorController::class, 'stopCamp']);
+    Route::post('/counsellor/executed', [EducatorController::class, 'executed']);
+    Route::post('/counsellor/not-executed', [EducatorController::class, 'notExecuted']);
+    Route::get('/counsellor/get-ongoing-camp', [EducatorController::class, 'getOngoingCamp']);
+    Route::get('/counsellor/patientinfo', [PatientController::class, 'patientform']);
+    Route::get('/counsellor/PatientList', [PatientController::class, 'patientlist']);
+    Route::get('/counsellor/change-password', [ChangePasswordController::class, 'educatorchangepassword']);
+    Route::post('/counsellor/change-password-post', [ChangePasswordController::class, 'educatorchangePasswordpost'])->name('educator.change-password-post');
     Route::prefix('common')->group(function () {
         Route::post('/get-educator-camp', [DashboardController::class, 'getEducatorCamp'])->name('common.getEducatorCamp');
         Route::post('/get-doctors-by-camp', [DashboardController::class, 'getDoctorsByCamp'])->name('common.getDoctorsByCamp');
         Route::post('/get-educator-patient-table', [DashboardController::class, 'getEducatorPatientTable'])->name('common.getEducatorPatientTable');
     });
-    Route::get('/educator/patients/export', [DashboardController::class, 'downloadEducatorPatientExcel'])->name('educator.patients.export');
-    Route::get('/educator/getHCPNames', [PatientController::class, 'gethcpnames']);
-    Route::get('/educator/getMedicines', [PatientController::class, 'getMedicines']);
-    Route::get('/educator/getCompetitors', [PatientController::class, 'getCompetitors']);
-    Route::post('/educator/getHCLDetails', [PatientController::class, 'getHCLDetails']);
-    Route::get('/educator/get-camp-id', [PatientController::class, 'getcampid']);
-    Route::post('/educator/Patient-Inquiry-Post', [PatientController::class, 'createPatientInquiryPost']);
-    Route::get('/educator/patientlist', [PatientController::class, 'getPatientList'])->name('educator.patientslist');
-    Route::post('/educator/upload-documents', [EducatorController::class, 'uploadDocuments'])->name('educator.uploadDocuments');
-    Route::get('/educator/educator-follow-up-form', [FeedBackController::class, 'followupFormeducator'])->name('educator.followupform');
+    Route::get('/counsellor/patients/export', [DashboardController::class, 'downloadEducatorPatientExcel'])->name('educator.patients.export');
+    
+    // Attendance
+    Route::get('/counsellor/attendance', [EducatorAttendanceController::class, 'index'])->name('educator.attendance.index');
+    Route::post('/counsellor/attendance/location', [EducatorAttendanceController::class, 'updateLocation'])->name('educator.attendance.updateLocation');
 
-    Route::get('/educator/max-day/{patientId}', [EducatorController::class, 'getMaxDay']);
-    Route::get('/educator/day3-Followup-get/{patient_id}', [EducatorController::class, 'day3followupget'])->name('educator.day3followupget');
-    Route::get('/educator/day7-Followup-get/{patient_id}', [EducatorController::class, 'day7followupget'])->name('educator.day7followupget');
-    Route::get('/educator/day15-Followup-get/{patient_id}', [EducatorController::class, 'day15followupget'])->name('educator.day15followupget');
-    Route::get('/educator/day30-Followup-get/{patient_id}', [EducatorController::class, 'day30followupget'])->name('educator.day30followupget');
-    Route::get('/educator/day45-Followup-get/{patient_id}', [EducatorController::class, 'day45followupget'])->name('educator.day45followupget');
-    Route::get('/educator/day60-Followup-get/{patient_id}', [EducatorController::class, 'day60followupget'])->name('educator.day60followupget');
-    Route::get('/educator/day90-Followup-get/{patient_id}', [EducatorController::class, 'day90followupget'])->name('educator.day90followupget');
-    Route::get('/educator/day120-Followup-get/{patient_id}', [EducatorController::class, 'day120followupget'])->name('educator.day120followupget');
-    Route::get('/educator/day150-Followup-get/{patient_id}', [EducatorController::class, 'day150followupget'])->name('educator.day150followupget');
-    Route::get('/educator/day180-Followup-get/{patient_id}', [EducatorController::class, 'day180followupget'])->name('educator.day180followupget');
+    Route::get('/counsellor/getHCPNames', [PatientController::class, 'gethcpnames']);
+    Route::get('/counsellor/getMedicines', [PatientController::class, 'getMedicines']);
+    Route::get('/counsellor/getCompetitors', [PatientController::class, 'getCompetitors']);
+    Route::post('/counsellor/getHCLDetails', [PatientController::class, 'getHCLDetails']);
+    Route::get('/counsellor/get-camp-id', [PatientController::class, 'getcampid']);
+    Route::post('/counsellor/Patient-Inquiry-Post', [PatientController::class, 'createPatientInquiryPost']);
+    Route::get('/counsellor/patientlist', [PatientController::class, 'getPatientList'])->name('educator.patientslist');
+    Route::post('/counsellor/upload-documents', [EducatorController::class, 'uploadDocuments'])->name('educator.uploadDocuments');
+    Route::get('/counsellor/educator-follow-up-form', [FeedBackController::class, 'followupFormeducator'])->name('educator.followupform');
+
+    Route::get('/counsellor/max-day/{patientId}', [EducatorController::class, 'getMaxDay']);
+    Route::get('/counsellor/day3-Followup-get/{patient_id}', [EducatorController::class, 'day3followupget'])->name('educator.day3followupget');
+    Route::get('/counsellor/day7-Followup-get/{patient_id}', [EducatorController::class, 'day7followupget'])->name('educator.day7followupget');
+    Route::get('/counsellor/day15-Followup-get/{patient_id}', [EducatorController::class, 'day15followupget'])->name('educator.day15followupget');
+    Route::get('/counsellor/day30-Followup-get/{patient_id}', [EducatorController::class, 'day30followupget'])->name('educator.day30followupget');
+    Route::get('/counsellor/day45-Followup-get/{patient_id}', [EducatorController::class, 'day45followupget'])->name('educator.day45followupget');
+    Route::get('/counsellor/day60-Followup-get/{patient_id}', [EducatorController::class, 'day60followupget'])->name('educator.day60followupget');
+    Route::get('/counsellor/day90-Followup-get/{patient_id}', [EducatorController::class, 'day90followupget'])->name('educator.day90followupget');
+    Route::get('/counsellor/day120-Followup-get/{patient_id}', [EducatorController::class, 'day120followupget'])->name('educator.day120followupget');
+    Route::get('/counsellor/day150-Followup-get/{patient_id}', [EducatorController::class, 'day150followupget'])->name('educator.day150followupget');
+    Route::get('/counsellor/day180-Followup-get/{patient_id}', [EducatorController::class, 'day180followupget'])->name('educator.day180followupget');
 
 });
 Route::middleware(['check.session', 'role:digitaleducator'])->group(function () {

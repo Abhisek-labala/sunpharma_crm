@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\LoginLog;
 use App\Models\Rmuser;
 use App\Models\User;
+use App\Models\EducatorAttendance;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -39,8 +41,26 @@ class AuthController extends Controller
                     'time' => now(),
                     'ip' => $request->ip(),
                 ]);
+
+                // Auto Attendance for Educator
+                if ($user->role === 'counsellor') {
+                    $today = Carbon::today();
+                    $attendance = EducatorAttendance::where('educator_id', $user->id)
+                        ->whereDate('date', $today)
+                        ->first();
+
+                    if (!$attendance) {
+                        EducatorAttendance::create([
+                            'educator_id' => $user->id,
+                            'date' => $today,
+                            'in_time' => Carbon::now()->toTimeString(),
+                            'ip_address' => $request->ip(),
+                        ]);
+                    }
+                }
+
                 $redirectRoute = match ($user->role) {
-                    'counsellor' => route('dashboard.educator'),
+                    'counsellor' => route('educator.attendance.index'),
                     'pm' => route('dashboard.pm'),
                     'mis' => route('dashboard.mis'),
                     'digitaleducator' => route('dashboard.digitaleducator'),
@@ -126,6 +146,15 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        if (Auth::check() && Auth::user()->role === 'counsellor') {
+            $user_id = Auth::id();
+            $today = Carbon::today();
+            // Update out_time on logout (capture last logout)
+            EducatorAttendance::where('educator_id', $user_id)
+                ->whereDate('date', $today)
+                ->update(['out_time' => Carbon::now()->toTimeString()]);
+        }
+        
         Auth::logout();
 
         $request->session()->invalidate();
@@ -133,6 +162,7 @@ class AuthController extends Controller
 
         return redirect('/login')->with('status', 'Logged out successfully.');
     }
+
     public function rmlogout(Request $request)
     {
         Auth::logout();

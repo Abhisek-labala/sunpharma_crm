@@ -18,6 +18,13 @@
                     </li>
 
                     <li>
+                        <a href="{{ route('educator.attendance.index') }}">
+                            <i class="fa fa-clock-o" aria-hidden="true"></i>
+                            <span>Attendance</span>
+                        </a>
+                    </li>
+
+                    <li>
                         <a href="{{ route('campinfo') }}">
                             <i class="fa-solid fa-snowflake"></i>
                             <span>Camp</span>
