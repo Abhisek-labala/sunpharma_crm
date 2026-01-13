@@ -36,7 +36,7 @@
                     <div class="card card-success card-outline">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="fas fa-prescription-bottle-alt me-1"></i> Doctors Prescribed Cipla Brands
+                                <i class="fas fa-prescription-bottle-alt me-1"></i> Doctors Prescribed Sun pharma Brands
                             </h3>
                         </div>
                         <div class="card-body">

@@ -40,7 +40,7 @@ class AuthController extends Controller
                     'ip' => $request->ip(),
                 ]);
                 $redirectRoute = match ($user->role) {
-                    'educator' => route('dashboard.educator'),
+                    'counsellor' => route('dashboard.educator'),
                     'pm' => route('dashboard.pm'),
                     'mis' => route('dashboard.mis'),
                     'digitaleducator' => route('dashboard.digitaleducator'),

@@ -57,13 +57,13 @@
 
                 <div class="card mb-4">
                     <div class="card-header thembutton text-white">
-                        <h5 class="mb-0">HCP Details</h5>
+                        <h5 class="mb-0">Doctor Details</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 col-lg-6">
                                 <div class="mb-3 row">
-                                    <label class="col-form-label col-md-4" for="hcp_name">HCP Name <span
+                                    <label class="col-form-label col-md-4" for="hcp_name">Doctor Name <span
                                             class='mandatory'>*</span></label>
                                     <div class="col-md-8">
                                         <select class="form-select form-control" name="hcp_name" id="hcp_name" required>
@@ -75,37 +75,11 @@
                             </div>
                             <div class="col-md-6 col-lg-6">
                                 <div class="mb-3 row">
-                                    <label class="col-form-label col-md-4" for="msl_code">MSL Code<span
+                                    <label class="col-form-label col-md-4" for="msl_code">Doctor Code<span
                                             class='mandatory'>*</span></label>
                                     <div class="col-md-8">
                                         <input type="text" maxlength="50" class="form-control" name="msl_code"
                                             id="msl_code" value="" required readonly>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 col-lg-6">
-                                <div class="mb-3 row">
-                                    <label class="col-form-label col-md-4" for="city">State <span
-                                            class='mandatory'>*</span></label>
-                                    <div class="col-md-8">
-                                        <select class="form-select form-control" name="state" id="state" required>
-                                            <option selected="selected" value="">-- Select --</option>
-
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-6">
-                                <div class="mb-3 row">
-                                    <label class="col-form-label col-md-4" for="city">City<span
-                                            class='mandatory'>*</span></label>
-                                    <div class="col-md-8">
-                                        <select class="form-select form-control" name="city" id="city" required>
-                                            <option selected="selected" value="">-- Select --</option>
-
-                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -125,9 +99,34 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="mb-3 row">
+                                    <label class="col-form-label col-md-4" for="city">State <span
+                                            class='mandatory'>*</span></label>
+                                    <div class="col-md-8">
+                                        <select class="form-select form-control" name="state" id="state" required>
+                                            <option selected="selected" value="">-- Select --</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
 
 
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6">
+                                <div class="mb-3 row">
+                                    <label class="col-form-label col-md-4" for="city">City<span
+                                            class='mandatory'>*</span></label>
+                                    <div class="col-md-8">
+                                        <select class="form-select form-control" name="city" id="city" required>
+                                            <option selected="selected" value="">-- Select --</option>
 
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="card mb-4">
@@ -163,7 +162,7 @@
                             <div class="row">
                                 <div class="col-md-6 col-lg-6">
                                     <div class="mb-3 row">
-                                        <label class="col-form-label col-md-4" for="mobile_number">Mobile Number<span
+                                        <label class="col-form-label col-md-4" for="mobile_number">Contact Number<span
                                                 class='mandatory'>*</span></label>
                                         <div class="col-md-8">
                                             <input type="text" maxlength="10" class="form-control" name="mobile_number"

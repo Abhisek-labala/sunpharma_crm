@@ -1,4 +1,3 @@
-{{-- resources/views/educator/change-password.blade.php --}}
 @include('educator.header')
 
 <div class="main-wrapper">

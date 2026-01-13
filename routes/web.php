@@ -32,7 +32,7 @@ Route::middleware(['check.session'])->group(function () {
         ->where('path', '.*')
         ->name('private.file');
 });
-Route::middleware(['check.session', 'role:educator'])->group(function () {
+Route::middleware(['check.session', 'role:counsellor'])->group(function () {
     Route::get('/educator/dashboard', [DashboardController::class, 'educator'])->name('dashboard.educator');
     Route::get('educator/analytics', [EducatorController::class, 'analytics']);
     Route::prefix('charts')->group(function () {

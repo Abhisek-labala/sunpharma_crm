@@ -23,7 +23,7 @@
                                 <th>Cipla Brand Prescribed</th>
                                 <th>Camp</th>
                                 <th>Date</th>
-                                <th>RM Approved Status</th>
+                                <th>RC Approved Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>

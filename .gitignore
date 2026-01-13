@@ -27,5 +27,4 @@ INSERT INTO common.sql
 /sqlcode
 # /routes/web.php
 /public/uploads_old
-/resources/views/educator/patient2form.blade.php
 

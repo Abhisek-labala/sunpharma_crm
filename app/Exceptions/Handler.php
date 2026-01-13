@@ -21,24 +21,24 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      */
-    public function render($request, Throwable $exception)
-    {
-        // CSRF token mismatch (419)
-        if ($exception instanceof TokenMismatchException) {
-            return response()->view('errors.419', [], 419);
-        }
+    // public function render($request, Throwable $exception)
+    // {
+    //     // CSRF token mismatch (419)
+    //     if ($exception instanceof TokenMismatchException) {
+    //         return response()->view('errors.419', [], 419);
+    //     }
 
-        // Page not found (404)
-        if ($exception instanceof NotFoundHttpException) {
-            return response()->view('errors.404', [], 404);
-        }
+    //     // Page not found (404)
+    //     if ($exception instanceof NotFoundHttpException) {
+    //         return response()->view('errors.404', [], 404);
+    //     }
 
-        // Forbidden (403)
-        if ($exception instanceof AccessDeniedHttpException) {
-            return response()->view('errors.403', [], 403);
-        }
+    //     // Forbidden (403)
+    //     if ($exception instanceof AccessDeniedHttpException) {
+    //         return response()->view('errors.403', [], 403);
+    //     }
 
-        // Fallback for all other errors (500)
-        return response()->view('errors.500', [], 500);
-    }
+    //     // Fallback for all other errors (500)
+    //     return response()->view('errors.500', [], 500);
+    // }
 }
