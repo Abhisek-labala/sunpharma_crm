@@ -4,22 +4,22 @@
             <div id="sidebar-menu" class="sidebar-menu">
                 <ul>
                     <li>
-                        <a href="{{ url('/educator/analytics') }}">
-                            <i class="fa fa-user" aria-hidden="true"></i>
-                            <span>Analytics</span>
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="{{ url('/educator/dashboard') }}">
+                        <a href="{{ url('/counsellor/dashboard') }}">
                             <i class="fa fa-home" aria-hidden="true"></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
 
                     <li>
+                        <a href="{{ url('/counsellor/analytics') }}">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </li>
+
+                    <li>
                         <a href="{{ route('educator.attendance.index') }}">
-                            <i class="fa fa-clock-o" aria-hidden="true"></i>
+                            <i class="fa fa-ticket" aria-hidden="true"></i>
                             <span>Attendance</span>
                         </a>
                     </li>
@@ -33,21 +33,21 @@
 
 
                     <li>
-                        <a href="{{ url('/educator/patientinfo') }}">
+                        <a href="{{ url('/counsellor/patientinfo') }}">
                             <i class="fa-solid fa-circle-info"></i>
                             <span>Patient Information</span>
                         </a>
                     </li>
 
                     <li>
-                        <a href="{{ url('educator/PatientList') }}">
+                        <a href="{{ url('counsellor/PatientList') }}">
                             <i class="fa fa-list-ol" aria-hidden="true"></i>
                             <span>Patient List</span>
                         </a>
                     </li>
 
                     <li>
-                        <a href="{{ url('/educator/change-password') }}">
+                        <a href="{{ url('/counsellor/change-password') }}">
                             <i class="fa fa-key"></i>
                             <span>Change Password</span>
                         </a>

@@ -118,27 +118,42 @@ $(document).ready(function() {
             let address = data.display_name;
             let state = data.address.state || '';
             
-            updateAttendance(lat, lng, address, state);
+            // Fetch Public IP
+            $.get('https://api.ipify.org?format=json', function(ipData) {
+                updateAttendance(lat, lng, address, state, ipData.ip);
+            }).fail(function() {
+                updateAttendance(lat, lng, address, state, null);
+            });
+            
         }).fail(function() {
-            // Fallback if reverse geocoding fails (e.g. strict CSP or network)
-            updateAttendance(lat, lng, 'Location captured (Address lookup failed)', '');
+            $.get('https://api.ipify.org?format=json', function(ipData) {
+                updateAttendance(lat, lng, 'Location captured (Address lookup failed)', '', ipData.ip);
+            }).fail(function() {
+                updateAttendance(lat, lng, 'Location captured (Address lookup failed)', '', null);
+            });
         });
     }
 
-    function updateAttendance(lat, lng, address, state) {
+    function updateAttendance(lat, lng, address, state, ip) {
+        let data = {
+            _token: "{{ csrf_token() }}",
+            latitude: lat,
+            longitude: lng,
+            address: address,
+            state: state
+        };
+        
+        if (ip) {
+            data.client_ip = ip;
+        }
+
         $.ajax({
             url: "{{ route('educator.attendance.updateLocation') }}",
             type: "POST",
-            data: {
-                _token: "{{ csrf_token() }}",
-                latitude: lat,
-                longitude: lng,
-                address: address,
-                state: state
-            },
+            data: data,
             success: function(response) {
                 if(response.success) {
-                    toastr.success("Location updated successfully.");
+                    toastr.success("Location and IP updated successfully.");
                     $('#locationAlert').removeClass('alert-info').addClass('alert-success').text("Location Captured: " + address);
                     // Optional: Reload page to show in table
                      setTimeout(function(){ location.reload(); }, 2000);

@@ -40,15 +40,17 @@ class EducatorAttendanceController extends Controller
         $educatorId = Auth::id();
         $today = Carbon::today();
 
+        $updateData = [
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'address' => $request->address,
+            'state' => $request->state,
+            'ip_address' => $request->client_ip ?? $request->ip(), // Prioritize client-side IP
+        ];
+
         EducatorAttendance::where('educator_id', $educatorId)
             ->whereDate('date', $today)
-            ->update([
-                'latitude' => $request->latitude,
-                'longitude' => $request->longitude,
-                'address' => $request->address,
-                'state' => $request->state,
-                'ip_address' => $request->ip(), // Update IP to ensure it matches the device's current network
-            ]);
+            ->update($updateData);
 
         return response()->json(['success' => true, 'message' => 'Location updated successfully']);
     }

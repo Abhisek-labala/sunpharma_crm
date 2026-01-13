@@ -50,7 +50,7 @@
         loadCampData();
 
         function loadDoctors() {
-            $.get('{{ url("/educator/get-doctors") }}', function (data) {
+            $.get('{{ url("/counsellor/get-doctors") }}', function (data) {
                 let options = '<option value="">-- Select Doctor --</option>';
                 $.each(data, function (i, doctor) {
                     options += `<option value="${doctor.id}">${doctor.name}</option>`;
@@ -60,7 +60,7 @@
         }
 
         function loadCampData() {
-            $.get('{{ url("/educator/get-ongoing-camp") }}', function (camp) {
+            $.get('{{ url("/counsellor/get-ongoing-camp") }}', function (camp) {
                 let rows = '';
                 for (let c = 1; c <= 3; c++) {
                     let in_time = '', out_time = '', remarks = '', camp_id = '', date = '';
@@ -92,7 +92,7 @@
                                 <select class="form-control remarks-dropdown" data-camp-id="${camp_id || ''}">
                                     <option value="">Select Remark</option>
                                     <option value="Doctor on leave" ${remarks == 'Doctor on leave' ? 'selected' : ''}>Doctor on leave</option>
-                                    <option value="Educator on leave" ${remarks == 'Educator on leave' ? 'selected' : ''}>Educator on leave</option>
+                                    <option value="Counsellor on leave" ${remarks == 'Counsellor on leave' ? 'selected' : ''}>Counsellor on leave</option>
                                 </select>
                             </td>
                             <td>
@@ -120,7 +120,7 @@
                 return;
             }
 
-            $.post('{{ url("/educator/start-camp") }}', {
+            $.post('{{ url("/counsellor/start-camp") }}', {
                 _token: '{{ csrf_token() }}',
                 camp_id: campId,
                 doctor_id: doctorId,
@@ -134,7 +134,7 @@
         window.stopCamp = function (campId) {
             const remark = $(`.remarks-dropdown[data-camp-id="${campId}"]`).val();
 
-            $.post('{{ url("/educator/stop-camp") }}', {
+            $.post('{{ url("/counsellor/stop-camp") }}', {
                 _token: '{{ csrf_token() }}',
                 camp_id: campId,
                 remarks: remark
@@ -145,7 +145,7 @@
         };
 
         window.executed = function (campId) {
-            $.post('{{ url("/educator/executed") }}', {
+            $.post('{{ url("/counsellor/executed") }}', {
                 _token: '{{ csrf_token() }}',
                 camp_id: campId,
                 execution_status: 'EXECUTED'
@@ -163,7 +163,7 @@
                 return;
             }
 
-            $.post('{{ url("/educator/not-executed") }}', {
+            $.post('{{ url("/counsellor/not-executed") }}', {
                 _token: '{{ csrf_token() }}',
                 camp_id: campId,
                 remarks: remark,
