@@ -120,7 +120,7 @@
 
         // Define global function for form redirection
         window.openForm = function (patientId) {
-    window.location.href = '/digitaleducator/educator-follow-up-form?patient_id=' + patientId;
+    window.location.href = '/digitalcounsellor/counsellor-follow-up-form?patient_id=' + patientId;
 };
     });
 </script>

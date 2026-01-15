@@ -127,8 +127,8 @@
       <h2>Select Your Role</h2>
       <div class="role-buttons">
         <a href="{{ url('/login') }}" class="role-btn">Counsellor</a>
-        <a href="{{ url('/rmlogin') }}" class="role-btn">Regional Counsellor</a>
-        <a href="{{ url('/login') }}" class="role-btn">Digital Coordinator</a>
+        <a href="{{ url('/rclogin') }}" class="role-btn">Regional Counsellor</a>
+        <a href="{{ url('/login') }}" class="role-btn">Digital Counsellor</a>
         <a href="{{ url('/login') }}" class="role-btn">National Coordinator </a>
         <a href="{{ url('/login') }}" class="role-btn">Admin</a>
       </div>

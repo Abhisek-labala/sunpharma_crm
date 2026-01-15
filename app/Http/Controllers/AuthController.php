@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\LoginLog;
 use App\Models\Rmuser;
 use App\Models\User;
-use App\Models\EducatorAttendance;
+use App\Models\Attendance;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -42,16 +42,19 @@ class AuthController extends Controller
                     'ip' => $request->ip(),
                 ]);
 
-                // Auto Attendance for Educator
-                if ($user->role === 'counsellor') {
+                // Auto Attendance for Educator and Digital Educator
+                if (in_array($user->role, ['counsellor', 'digitalcounsellor'])) {
                     $today = Carbon::today();
-                    $attendance = EducatorAttendance::where('educator_id', $user->id)
+                    $attendance = Attendance::where('authenticatable_id', $user->id)
+                        ->where('authenticatable_type', User::class)
                         ->whereDate('date', $today)
                         ->first();
 
                     if (!$attendance) {
-                        EducatorAttendance::create([
-                            'educator_id' => $user->id,
+                        Attendance::create([
+                            'authenticatable_id' => $user->id,
+                            'authenticatable_type' => User::class,
+                            'role' => $user->role,
                             'date' => $today,
                             'in_time' => Carbon::now()->toTimeString(),
                             'ip_address' => $request->ip(),
@@ -63,7 +66,7 @@ class AuthController extends Controller
                     'counsellor' => route('educator.attendance.index'),
                     'pm' => route('dashboard.pm'),
                     'mis' => route('dashboard.mis'),
-                    'digitaleducator' => route('dashboard.digitaleducator'),
+                    'digitalcounsellor' => route('digitaleducator.attendance.index'),
                     'yogaeducator' => route('dashboard.yogaeducator'),
                     default => route('login'),
                 };
@@ -117,8 +120,27 @@ class AuthController extends Controller
                     'time' => now(),
                     'ip' => $request->ip(),
                 ]);
+
+                // Auto Attendance for RM
+                $today = Carbon::today();
+                $attendance = Attendance::where('authenticatable_id', $user->id)
+                    ->where('authenticatable_type', Rmuser::class)
+                    ->whereDate('date', $today)
+                    ->first();
+
+                if (!$attendance) {
+                    Attendance::create([
+                        'authenticatable_id' => $user->id,
+                        'authenticatable_type' => Rmuser::class,
+                        'role' => 'rc',
+                        'date' => $today,
+                        'in_time' => Carbon::now()->toTimeString(),
+                        'ip_address' => $request->ip(),
+                    ]);
+                }
+
                 $redirectRoute = match ($user->role) {
-                    'rm' => route('dashboard.rm'),
+                    'rc' => route('rm.attendance.index'),
                     default => route('rmlogin'),
                 };
 
@@ -146,11 +168,12 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        if (Auth::check() && Auth::user()->role === 'counsellor') {
+        if (Auth::check() && in_array(Auth::user()->role, ['counsellor', 'digitalcounsellor'])) {
             $user_id = Auth::id();
             $today = Carbon::today();
             // Update out_time on logout (capture last logout)
-            EducatorAttendance::where('educator_id', $user_id)
+            Attendance::where('authenticatable_id', $user_id)
+                ->where('authenticatable_type', User::class)
                 ->whereDate('date', $today)
                 ->update(['out_time' => Carbon::now()->toTimeString()]);
         }
@@ -165,12 +188,23 @@ class AuthController extends Controller
 
     public function rmlogout(Request $request)
     {
+        if (session()->has('id')) {
+            $user_id = session('id');
+            // Verify role if possible, or just assume RM since this is rmlogout
+            // But verify existing attendance to be safe
+            $today = Carbon::today();
+            Attendance::where('authenticatable_id', $user_id)
+                ->where('authenticatable_type', Rmuser::class)
+                ->whereDate('date', $today)
+                ->update(['out_time' => Carbon::now()->toTimeString()]);
+        }
+        
         Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/rmlogin')->with('status', 'Logged out successfully.');
+        return redirect('/rclogin')->with('status', 'Logged out successfully.');
     }
 
     public function rmLogin()

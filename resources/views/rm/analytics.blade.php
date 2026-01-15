@@ -13,7 +13,7 @@
                 <div class="col-md-6 col-lg-3">
                     <div class="card kpi-card kpi-card-success">
                         <div class="card-body">
-                            <h5 class="kpi-card-title">Cipla Brands</h5>
+                            <h5 class="kpi-card-title">Sun Pharma Brands</h5>
                             <div class="kpi-chart-wrapper">
                                 <canvas id="ciplaChart" width="150" height="150"></canvas>
                                 <div id="ciplaChartText" class="kpi-chart-text"></div>
@@ -25,7 +25,7 @@
                 <div class="col-md-6 col-lg-3">
                     <div class="card kpi-card kpi-card-danger">
                         <div class="card-body">
-                            <h5 class="kpi-card-title">Non-Cipla Brands</h5>
+                            <h5 class="kpi-card-title">Non-Sun Pharma Brands</h5>
                             <div class="kpi-chart-wrapper">
                                 <canvas id="nonCiplaChart" width="150" height="150"></canvas>
                                 <div id="nonCiplaChartText" class="kpi-chart-text"></div>
@@ -83,7 +83,7 @@
                     <div class="card card-primary card-outline">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="fas fa-prescription-bottle-alt me-1"></i> Doctors Prescribed Cipla Brands
+                                <i class="fas fa-prescription-bottle-alt me-1"></i> Doctors Prescribed Sun Pharma Brands
                             </h3>
                         </div>
                         <div class="card-body">
@@ -96,7 +96,7 @@
                     <div class="card card-danger card-outline">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="fas fa-ban me-1"></i> Doctors Not Prescribed Cipla Brands
+                                <i class="fas fa-ban me-1"></i> Doctors Not Prescribed Sun Pharma Brands
                             </h3>
                         </div>
                         <div class="card-body">

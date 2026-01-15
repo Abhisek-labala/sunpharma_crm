@@ -12,6 +12,7 @@ use App\Http\Controllers\digitalController;
 use App\Http\Controllers\RmController;
 use App\Http\Controllers\yogaController;
 use App\Http\Controllers\EducatorAttendanceController;
+use App\Http\Controllers\RmAttendanceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -22,11 +23,11 @@ Route::get('/', function () {
 Route::get('/login', function () {
     return view('login.Login');
 });
-Route::get('/rmlogin', [AuthController::class, 'rmLogin'])->name('rmlogin');
+Route::get('/rclogin', [AuthController::class, 'rmLogin'])->name('rmlogin');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-Route::post('/rmlogin', [AuthController::class, 'rmloginpost'])->name('rmlogin.submit');
+Route::post('/rclogin', [AuthController::class, 'rmloginpost'])->name('rmlogin.submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::post('/rmlogout', [AuthController::class, 'rmlogout'])->name('rmlogout');
+Route::post('/rclogout', [AuthController::class, 'rmlogout'])->name('rmlogout');
 Route::middleware(['check.session'])->group(function () {
     // Protected routes go here
     Route::get('/private-file/{path}', [FileController::class, 'show'])
@@ -67,6 +68,7 @@ Route::middleware(['check.session', 'role:counsellor'])->group(function () {
     // Attendance
     Route::get('/counsellor/attendance', [EducatorAttendanceController::class, 'index'])->name('educator.attendance.index');
     Route::post('/counsellor/attendance/location', [EducatorAttendanceController::class, 'updateLocation'])->name('educator.attendance.updateLocation');
+    Route::post('/educator/attendance/mark-out', [EducatorAttendanceController::class, 'markOut'])->name('educator.attendance.markOut');
 
     Route::get('/counsellor/getHCPNames', [PatientController::class, 'gethcpnames']);
     Route::get('/counsellor/getMedicines', [PatientController::class, 'getMedicines']);
@@ -91,49 +93,55 @@ Route::middleware(['check.session', 'role:counsellor'])->group(function () {
     Route::get('/counsellor/day180-Followup-get/{patient_id}', [EducatorController::class, 'day180followupget'])->name('educator.day180followupget');
 
 });
-Route::middleware(['check.session', 'role:digitaleducator'])->group(function () {
-    Route::get('/dashboard/digitaleducator', [DashboardController::class, 'digitaleducator'])->name('dashboard.digitaleducator');
+Route::middleware(['check.session', 'role:digitalcounsellor'])->group(function () {
+    Route::get('/dashboard/digitalcounsellor', [DashboardController::class, 'digitaleducator'])->name('dashboard.digitaleducator');
+    
+    // Attendance
+    Route::get('/digitalcounsellor/attendance', [EducatorAttendanceController::class, 'index'])->name('digitaleducator.attendance.index');
+    Route::post('/digitalcounsellor/attendance/location', [EducatorAttendanceController::class, 'updateLocation'])->name('digitaleducator.attendance.updateLocation');
+    Route::post('/digitalcounsellor/attendance/mark-out', [EducatorAttendanceController::class, 'markOut'])->name('digitaleducator.attendance.markOut');
+
     Route::get('digital-patient-form', [digitalController::class, 'digitsalPatientInquary'])->name('digital.patient.form');
     Route::get('digital-Patient-List', [digitalController::class, 'digitalPatientList'])->name('digital.patient.list');
     Route::get('Digital-Educator-Dashboard', [digitalController::class, 'digitalEducatorDashboard'])->name('digital.educator.dashboard');
-    Route::post('/digitaleducator/Patient-Inquiry-Post', [PatientController::class, 'DigitalcreatePatientInquiryPost']);
-    Route::get('/digitaleducator/getHCPNames', [PatientController::class, 'gethcpnamesall']);
-    Route::post('/digitaleducator/getHCLDetails', [PatientController::class, 'getHCLDetailsall']);
-    Route::get('/digitaleducator/patientlist', [digitalController::class, 'getPatientList'])->name('digitaleducator.patientslist');
-    Route::get('Digital-educator-change-password', [ChangePasswordController::class, 'digitaleducatorchangePassword']);
-    Route::post('/digitaleducator/change-password-post', [ChangePasswordController::class, 'educatorchangePasswordpost'])->name('digitaleducator.change-password-post');
-    Route::get('/digitaleducator/educator-follow-up-form', [FeedBackController::class, 'followupForm'])->name('educator.followup-form');
-    Route::post('/digitaleducator/day3-Followup-Create', [digitalController::class, 'day3followup'])->name('digitaleducator.day3followup');
-    Route::post('/digitaleducator/day7-Followup-Create', [digitalController::class, 'day7followup'])->name('digitaleducator.day7followup');
-    Route::post('/digitaleducator/day15-Followup-Create', [digitalController::class, 'day15followup'])->name('digitaleducator.day15followup');
-    Route::post('/digitaleducator/day30-Followup-Create', [digitalController::class, 'day30followup'])->name('digitaleducator.day30followup');
-    Route::post('/digitaleducator/day45-Followup-Create', [digitalController::class, 'day45followup'])->name('digitaleducator.day45followup');
-    Route::post('/digitaleducator/day60-Followup-Create', [digitalController::class, 'day60followup'])->name('digitaleducator.day60followup');
-    Route::post('/digitaleducator/day90-Followup-Create', [digitalController::class, 'day90followup'])->name('digitaleducator.day90followup');
-    Route::post('/digitaleducator/day120-Followup-Create', [digitalController::class, 'day120followup'])->name('digitaleducator.day120followup');
-    Route::post('/digitaleducator/day150-Followup-Create', [digitalController::class, 'day150followup'])->name('digitaleducator.day150followup');
-    Route::post('/digitaleducator/day180-Followup-Create', [digitalController::class, 'day180followup'])->name('digitaleducator.day180followup');
-    Route::post('/digitaleducator/day3-Followup-Update', [digitalController::class, 'day3followup']);
-    Route::post('/digitaleducator/day7-Followup-Update', [digitalController::class, 'day7followup']);
-    Route::post('/digitaleducator/day15-Followup-Update', [digitalController::class, 'day15followup']);
-    Route::post('/digitaleducator/day30-Followup-Update', [digitalController::class, 'day30followup']);
-    Route::post('/digitaleducator/day45-Followup-Update', [digitalController::class, 'day45followup']);
-    Route::post('/digitaleducator/day60-Followup-Update', [digitalController::class, 'day60followup']);
-    Route::post('/digitaleducator/day90-Followup-Update', [digitalController::class, 'day90followup']);
-    Route::post('/digitaleducator/day120-Followup-Update', [digitalController::class, 'day120followup']);
-    Route::post('/digitaleducator/day150-Followup-Update', [digitalController::class, 'day150followup']);
-    Route::post('/digitaleducator/day180-Followup-Update', [digitalController::class, 'day180followup']);
-    Route::get('/digitaleducator/max-day/{patientId}', [digitalController::class, 'getMaxDay']);
-    Route::get('/digitaleducator/day3-Followup-get/{patient_id}', [digitalController::class, 'day3followupget'])->name('digitaleducator.day3followupget');
-    Route::get('/digitaleducator/day7-Followup-get/{patient_id}', [digitalController::class, 'day7followupget'])->name('digitaleducator.day7followupget');
-    Route::get('/digitaleducator/day15-Followup-get/{patient_id}', [digitalController::class, 'day15followupget'])->name('digitaleducator.day15followupget');
-    Route::get('/digitaleducator/day30-Followup-get/{patient_id}', [digitalController::class, 'day30followupget'])->name('digitaleducator.day30followupget');
-    Route::get('/digitaleducator/day45-Followup-get/{patient_id}', [digitalController::class, 'day45followupget'])->name('digitaleducator.day45followupget');
-    Route::get('/digitaleducator/day60-Followup-get/{patient_id}', [digitalController::class, 'day60followupget'])->name('digitaleducator.day60followupget');
-    Route::get('/digitaleducator/day90-Followup-get/{patient_id}', [digitalController::class, 'day90followupget'])->name('digitaleducator.day90followupget');
-    Route::get('/digitaleducator/day120-Followup-get/{patient_id}', [digitalController::class, 'day120followupget'])->name('digitaleducator.day120followupget');
-    Route::get('/digitaleducator/day150-Followup-get/{patient_id}', [digitalController::class, 'day150followupget'])->name('digitaleducator.day150followupget');
-    Route::get('/digitaleducator/day180-Followup-get/{patient_id}', [digitalController::class, 'day180followupget'])->name('digitaleducator.day180followupget');
+    Route::post('/digitalcounsellor/Patient-Inquiry-Post', [PatientController::class, 'DigitalcreatePatientInquiryPost']);
+    Route::get('/digitalcounsellor/getHCPNames', [PatientController::class, 'gethcpnamesall']);
+    Route::post('/digitalcounsellor/getHCLDetails', [PatientController::class, 'getHCLDetailsall']);
+    Route::get('/digitalcounsellor/patientlist', [digitalController::class, 'getPatientList'])->name('digitaleducator.patientslist');
+    Route::get('Digital-Counsellor-change-password', [ChangePasswordController::class, 'digitaleducatorchangePassword']);
+    Route::post('/digitalcounsellor/change-password-post', [ChangePasswordController::class, 'educatorchangePasswordpost'])->name('digitaleducator.change-password-post');
+    Route::get('/digitalcounsellor/counsellor-follow-up-form', [FeedBackController::class, 'followupForm'])->name('educator.followup-form');
+    Route::post('/digitalcounsellor/day3-Followup-Create', [digitalController::class, 'day3followup'])->name('digitaleducator.day3followup');
+    Route::post('/digitalcounsellor/day7-Followup-Create', [digitalController::class, 'day7followup'])->name('digitaleducator.day7followup');
+    Route::post('/digitalcounsellor/day15-Followup-Create', [digitalController::class, 'day15followup'])->name('digitaleducator.day15followup');
+    Route::post('/digitalcounsellor/day30-Followup-Create', [digitalController::class, 'day30followup'])->name('digitaleducator.day30followup');
+    Route::post('/digitalcounsellor/day45-Followup-Create', [digitalController::class, 'day45followup'])->name('digitaleducator.day45followup');
+    Route::post('/digitalcounsellor/day60-Followup-Create', [digitalController::class, 'day60followup'])->name('digitaleducator.day60followup');
+    Route::post('/digitalcounsellor/day90-Followup-Create', [digitalController::class, 'day90followup'])->name('digitaleducator.day90followup');
+    Route::post('/digitalcounsellor/day120-Followup-Create', [digitalController::class, 'day120followup'])->name('digitaleducator.day120followup');
+    Route::post('/digitalcounsellor/day150-Followup-Create', [digitalController::class, 'day150followup'])->name('digitaleducator.day150followup');
+    Route::post('/digitalcounsellor/day180-Followup-Create', [digitalController::class, 'day180followup'])->name('digitaleducator.day180followup');
+    Route::post('/digitalcounsellor/day3-Followup-Update', [digitalController::class, 'day3followup']);
+    Route::post('/digitalcounsellor/day7-Followup-Update', [digitalController::class, 'day7followup']);
+    Route::post('/digitalcounsellor/day15-Followup-Update', [digitalController::class, 'day15followup']);
+    Route::post('/digitalcounsellor/day30-Followup-Update', [digitalController::class, 'day30followup']);
+    Route::post('/digitalcounsellor/day45-Followup-Update', [digitalController::class, 'day45followup']);
+    Route::post('/digitalcounsellor/day60-Followup-Update', [digitalController::class, 'day60followup']);
+    Route::post('/digitalcounsellor/day90-Followup-Update', [digitalController::class, 'day90followup']);
+    Route::post('/digitalcounsellor/day120-Followup-Update', [digitalController::class, 'day120followup']);
+    Route::post('/digitalcounsellor/day150-Followup-Update', [digitalController::class, 'day150followup']);
+    Route::post('/digitalcounsellor/day180-Followup-Update', [digitalController::class, 'day180followup']);
+    Route::get('/digitalcounsellor/max-day/{patientId}', [digitalController::class, 'getMaxDay']);
+    Route::get('/digitalcounsellor/day3-Followup-get/{patient_id}', [digitalController::class, 'day3followupget'])->name('digitaleducator.day3followupget');
+    Route::get('/digitalcounsellor/day7-Followup-get/{patient_id}', [digitalController::class, 'day7followupget'])->name('digitaleducator.day7followupget');
+    Route::get('/digitalcounsellor/day15-Followup-get/{patient_id}', [digitalController::class, 'day15followupget'])->name('digitaleducator.day15followupget');
+    Route::get('/digitalcounsellor/day30-Followup-get/{patient_id}', [digitalController::class, 'day30followupget'])->name('digitaleducator.day30followupget');
+    Route::get('/digitalcounsellor/day45-Followup-get/{patient_id}', [digitalController::class, 'day45followupget'])->name('digitaleducator.day45followupget');
+    Route::get('/digitalcounsellor/day60-Followup-get/{patient_id}', [digitalController::class, 'day60followupget'])->name('digitaleducator.day60followupget');
+    Route::get('/digitalcounsellor/day90-Followup-get/{patient_id}', [digitalController::class, 'day90followupget'])->name('digitaleducator.day90followupget');
+    Route::get('/digitalcounsellor/day120-Followup-get/{patient_id}', [digitalController::class, 'day120followupget'])->name('digitaleducator.day120followupget');
+    Route::get('/digitalcounsellor/day150-Followup-get/{patient_id}', [digitalController::class, 'day150followupget'])->name('digitaleducator.day150followupget');
+    Route::get('/digitalcounsellor/day180-Followup-get/{patient_id}', [digitalController::class, 'day180followupget'])->name('digitaleducator.day180followupget');
     Route::post('/get-digital-patient-table', [DashboardController::class, 'getpmPatientTable'])->name('common.getdigitaleduPatientTable');
     Route::prefix('common')->group(function () {
         Route::post('/get-camp-digi-detail-by-edu', [DashboardController::class, 'getCampbyeducator'])->name('common.getdigiCampbyeducator');
@@ -142,8 +150,8 @@ Route::middleware(['check.session', 'role:digitaleducator'])->group(function () 
         Route::post('/get-edu-detail-by-digi-rm', [DashboardController::class, 'getEducatorbyzoneandRm'])->name('common.getEducatorbydigizoneandRm');
         Route::post('/get-doctorsby-digi-camp', [DashboardController::class, 'getDoctorsByEdu'])->name('common.getDoctorsdigiByEdu');
     });
-    Route::get('/digitaleducator/getMedicines', [PatientController::class, 'getMedicines']);
-    Route::get('/digitaleducator/getCompetitors', [PatientController::class, 'getCompetitors']);
+    Route::get('/digitalcounsellor/getMedicines', [PatientController::class, 'getMedicines']);
+    Route::get('/digitalcounsellor/getCompetitors', [PatientController::class, 'getCompetitors']);
     Route::get('digital-Patient-report', [digitalController::class, 'digitalPatientReport']);
     Route::get('/digitalgeteducatorsname', [digitalController::class, 'getEducatorsName'])->name('digitalget.educators.name');
     Route::post('/Digital-Feedback-Details', [digitalController::class, 'getFeedbackDetails']);
@@ -355,7 +363,7 @@ Route::middleware(['check.session', 'role:mis'])->group(function () {
 });
 
 Route::middleware(['check.session'])->group(function () {
-    Route::get('/rm/dashboard', [DashboardController::class, 'rm'])->name('dashboard.rm');
+    Route::get('/rc/dashboard', [DashboardController::class, 'rm'])->name('dashboard.rm');
     Route::post('/get-rm-patient-table', [DashboardController::class, 'getrmPatientTable'])->name('common.getrmPatientTable');
     Route::prefix('common')->group(function () {
         Route::post('/get-doctorsbyrm-camp', [DashboardController::class, 'getDoctorsByEdu'])->name('common.getDoctorsByrmEdu');
@@ -363,9 +371,9 @@ Route::middleware(['check.session'])->group(function () {
         Route::post('/get-edu-detail-byrm-rm', [DashboardController::class, 'getEducatorbyRm'])->name('common.getEducatorbyrmzoneandRm');
         Route::post('/get-camp-detail-byrm-edu', [DashboardController::class, 'getCampbyeducator'])->name('common.getCampbyrmeducators');
     });
-    Route::get('/rm/patients/export', [DashboardController::class, 'downloadrmPatientExcel'])->name('rm.patients.export');
-    Route::get('/rm/analytics', [RmController::class, 'rmAnalytics'])->name('rm.analytics');
-    Route::prefix('Charts/rm')->group(function () {
+    Route::get('/rc/patients/export', [DashboardController::class, 'downloadrmPatientExcel'])->name('rm.patients.export');
+    Route::get('/rc/analytics', [RmController::class, 'rmAnalytics'])->name('rm.analytics');
+    Route::prefix('Charts/rc')->group(function () {
         Route::get('monthly_counseling', [RmController::class, 'rmmonthlyCounseling']);
         Route::get('top_educators', [RmController::class, 'rmtopeducators']);
         Route::get('brand_distribution', [RmController::class, 'rmbrandDistribution']);
@@ -373,12 +381,17 @@ Route::middleware(['check.session'])->group(function () {
         Route::get('doc_metrics', [RmController::class, 'rmdocmetrics']);
         Route::get('docnot_metrics', [RmController::class, 'rmdoctorNotMetrics']);
     });
-    Route::get('/rm/change-password', [ChangePasswordController::class, 'rmchangepassword'])->name('rm.change-password');
-    Route::post('/rm/change-password-post', [ChangePasswordController::class, 'rmchangePasswordpost'])->name('rm.change-password-post');
-    Route::get('/rm/patientlist', [RmController::class, 'getPatientpage'])->name('rm.patientlist');
-    Route::get('/rm/patientdata', [RmController::class, 'getPatientdata'])->name('rm.patientdata');
-    Route::post('/rm/reject-patient', [RmController::class, 'rejectPatient'])->name('rm.reject-patient');
-    Route::post('/rm/approve-patient', [RmController::class, 'approvePatient'])->name('rm.approve-patient');
+    Route::get('/rc/change-password', [ChangePasswordController::class, 'rmchangepassword'])->name('rm.change-password');
+    Route::post('/rc/change-password-post', [ChangePasswordController::class, 'rmchangePasswordpost'])->name('rm.change-password-post');
+    Route::get('/rc/patientlist', [RmController::class, 'getPatientpage'])->name('rm.patientlist');
+    Route::get('/rc/patientdata', [RmController::class, 'getPatientdata'])->name('rm.patientdata');
+    Route::post('/rc/reject-patient', [RmController::class, 'rejectPatient'])->name('rm.reject-patient');
+    Route::post('/rc/approve-patient', [RmController::class, 'approvePatient'])->name('rm.approve-patient');
+
+    // Attendance
+    Route::get('/rc/attendance', [RmAttendanceController::class, 'index'])->name('rm.attendance.index');
+    Route::post('/rm/attendance/location', [RmAttendanceController::class, 'updateLocation'])->name('rm.attendance.updateLocation');
+    Route::post('/rm/attendance/mark-out', [RmAttendanceController::class, 'markOut'])->name('rm.attendance.markOut');
 
 });
 

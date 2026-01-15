@@ -19,7 +19,7 @@
 
                     <li>
                         <a href="{{ route('educator.attendance.index') }}">
-                            <i class="fa fa-ticket" aria-hidden="true"></i>
+                            <i class="fa fa-clock" aria-hidden="true"></i>
                             <span>Attendance</span>
                         </a>
                     </li>

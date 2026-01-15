@@ -58,7 +58,7 @@
                     </div>
                     <div class="user-text">
                         <h6>{{ $profileData->full_name  ?? '' }}</h6>
-                        <p class="text-muted mb-0">Digital Educator</p>
+                        <p class="text-muted mb-0">Digital Counsellor</p>
                     </div>
                 </div>
                 <form id="logout-form1" action="{{ route('logout') }}" method="POST" class="d-none">

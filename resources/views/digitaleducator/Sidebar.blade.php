@@ -5,9 +5,16 @@
                 <ul>
 
                     <li>
-                        <a href="{{ url('/Digital-Educator-Dashboard') }}">
+                        <a href="{{ url('/dashboard/digitalcounsellor') }}">
                             <i class="fa fa-home" aria-hidden="true"></i>
                             <span>Dashboard</span>
+                        </a>
+                    </li>
+                    
+                    <li>
+                        <a href="{{ route('digitaleducator.attendance.index') }}">
+                            <i class="fa fa-clock" aria-hidden="true"></i>
+                            <span>Attendance</span>
                         </a>
                     </li>
 
@@ -32,7 +39,7 @@
                     </li>
 
                     <li>
-                        <a href="{{ url('Digital-educator-change-password') }}">
+                        <a href="{{ url('Digital-Counsellor-change-password') }}">
                             <i class="fa fa-key"></i>
                             <span>Change Password</span>
                         </a>

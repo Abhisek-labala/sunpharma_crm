@@ -1,5 +1,5 @@
-@include('educator/head')
-@include('educator/header')
+@include('rm/head')
+@include('rm/header')
 <style>
     .card-body {
         padding: 1.5rem;
@@ -11,7 +11,7 @@
 
 <div class="main-wrapper">
     {{-- Sidebar --}}
-    @include('educator.Sidebar')
+    @include('rm.Sidebar')
     <div class="page-wrapper" style="min-height: 653px;">
         <div class="content container-fluid">
             <!-- Breadcrumb -->
@@ -20,7 +20,7 @@
                     <div class="col">
                         <h3 class="page-title">Attendance</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('dashboard.educator') }}">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard.rm') }}">Dashboard</a></li>
                             <li class="breadcrumb-item active">Attendance</li>
                         </ul>
                     </div>
@@ -89,7 +89,7 @@
     </div>
 </div>
 
-@include('educator/footer')
+@include('rm/footer')
 
 <script>
 $(document).ready(function() {
@@ -129,6 +129,7 @@ $(document).ready(function() {
             });
             
         }).fail(function() {
+            // Fallback if reverse geocoding fails
             $.get('https://api.ipify.org?format=json', function(ipData) {
                 updateAttendance(lat, lng, 'Location captured (Address lookup failed)', '', ipData.ip);
             }).fail(function() {
@@ -145,20 +146,19 @@ $(document).ready(function() {
             address: address,
             state: state
         };
-        
+
         if (ip) {
             data.client_ip = ip;
         }
 
         $.ajax({
-            url: "{{ route('educator.attendance.updateLocation') }}",
+            url: "{{ route('rm.attendance.updateLocation') }}",
             type: "POST",
             data: data,
             success: function(response) {
                 if(response.success) {
                     toastr.success("Location and IP updated successfully.");
                     $('#locationAlert').removeClass('alert-info').addClass('alert-success').text("Location Captured: " + address);
-                    // Optional: Reload page to show in table
                      setTimeout(function(){ location.reload(); }, 2000);
                 }
             },
@@ -201,7 +201,7 @@ $(document).ready(function() {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "{{ route('educator.attendance.markOut') }}",
+                    url: "{{ route('rm.attendance.markOut') }}",
                     type: "POST",
                     data: {
                         _token: "{{ csrf_token() }}"

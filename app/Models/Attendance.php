@@ -5,14 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EducatorAttendance extends Model
+class Attendance extends Model
 {
     use HasFactory;
 
-    protected $table = 'educator_attendances';
+    protected $table = 'attendances';
 
     protected $fillable = [
-        'educator_id',
+        'authenticatable_id',
+        'authenticatable_type',
+        'role',
         'date',
         'in_time',
         'out_time',
@@ -20,11 +22,11 @@ class EducatorAttendance extends Model
         'latitude',
         'longitude',
         'address',
-        'state'
+        'state',
     ];
 
-    public function educator()
+    public function authenticatable()
     {
-        return $this->belongsTo(User::class, 'educator_id');
+        return $this->morphTo();
     }
 }

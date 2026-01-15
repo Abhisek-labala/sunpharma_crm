@@ -50,7 +50,7 @@
             <!-- Page Header -->
             @include('digitaleducator.breadcum')
             <!-- /Page Header -->
-            <form action="{{ url('digitaleducator/Patient-Inquiry-Post') }}" name="createPatientInquiry"
+            <form action="{{ url('digitalcounsellor/Patient-Inquiry-Post') }}" name="createPatientInquiry"
                 id="createPatientInquiry" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="card mb-4">
@@ -1344,7 +1344,7 @@
 
     function loadHCPNames() {
         $.ajax({
-            url: '/digitaleducator/getHCPNames',
+            url: '/digitalcounsellor/getHCPNames',
             type: 'GET',
             dataType: 'json',
             success: function (response) {
@@ -1372,7 +1372,7 @@
 
     function loadMedicines() {
         $.ajax({
-            url: '/digitaleducator/getMedicines',
+            url: '/digitalcounsellor/getMedicines',
             type: 'GET',
             dataType: 'json',
             success: function (response) {
@@ -1392,7 +1392,7 @@
 
     function loadCompetitors() {
         $.ajax({
-            url: '/digitaleducator/getCompetitors',
+            url: '/digitalcounsellor/getCompetitors',
             type: 'GET',
             dataType: 'json',
             success: function (response) {
@@ -1415,7 +1415,7 @@
 
     function getHCPDetails(doctorId) {
         $.ajax({
-            url: '/digitaleducator/getHCLDetails',
+            url: '/digitalcounsellor/getHCLDetails',
             type: 'POST',
             data: {
                 doctor_id: doctorId,

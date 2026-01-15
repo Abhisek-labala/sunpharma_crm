@@ -20,6 +20,13 @@
                 </li>
 
                 <li>
+                    <a href="{{ route('rm.attendance.index') }}">
+                        <i class="fa fa-clock" aria-hidden="true"></i>
+                        <span>Attendance</span>
+                    </a>
+                </li>
+
+                <li>
                         <a href="{{route('rm.change-password') }}">
                             <i class="fa fa-key"></i>
                             <span>Change Password</span>
