@@ -293,6 +293,11 @@ Route::middleware(['check.session', 'role:admin'])->group(function () {
      Route::get('/admin/attendance-report', [misController::class, 'attendanceReport'])->name('mis.attendance.report');
     Route::get('/admin/attendance-report/data', [misController::class, 'getAttendanceReportData'])->name('mis.attendance.data');
     Route::get('/admin/attendance-report/export', [misController::class, 'exportAttendanceReport'])->name('mis.attendance.export');
+
+    // NC Attendance Report
+    Route::get('/nc/attendance-report', [PmController::class, 'attendanceReport'])->name('nc.attendance.report');
+    Route::get('/nc/attendance-report/data', [PmController::class, 'getAttendanceReportData'])->name('nc.attendance.data');
+    Route::get('/nc/attendance-report/export', [PmController::class, 'exportAttendanceReport'])->name('nc.attendance.export');
     Route::post('/adminget-state-detail', [misController::class, 'getState'])->name('common.misgetState');
     Route::post('admin-Delete-Educator/{id}', [misController::class, 'deleteEducator'])->name('mis.deleteEducator');
     Route::post('admin-Delete-DigiEducator/{id}', [misController::class, 'deleteDigiEducator'])->name('mis.deleteDigiEducator');
