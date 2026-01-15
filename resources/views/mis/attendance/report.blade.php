@@ -21,9 +21,6 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">Attendance Report</h4>
-                        </div>
                         <div class="card-body">
                             <div class="row mb-3">
                                 <div class="col-md-3">
