@@ -64,24 +64,103 @@ class misController extends Controller
         // Your logic here
         return view('mis.campReport');
     }
-    public function getdigiEducatorsname()
+    public function attendanceReport()
     {
-        // Check session (replace with Laravel auth check if needed)
-        if (!session()->has('emp_id')) {
-            return response()->json(['error' => 'Session expired'], 401);
-        }
+        return view('mis.attendance.report');
+    }
 
+    public function getAttendanceReportData(Request $request)
+    {
         try {
-            $educators = DB::table('common.users')
-                ->where('role', 'digitalcounsellor')
-                ->select('id', 'full_name')
+            // DataTables params
+            $draw = intval($request->input('draw', 0));
+            $start = intval($request->input('start', 0));
+            $length = intval($request->input('length', 10));
+            $searchValue = trim($request->input('search.value', ''));
+            $startDate = $request->input('startDate');
+            $endDate = $request->input('endDate');
+            $role = $request->input('role');
+
+            // Ordering
+            $orderColumnIndex = intval($request->input('order.0.column', 0));
+            $orderDir = strtoupper($request->input('order.0.dir', 'DESC')) === 'ASC' ? 'ASC' : 'DESC';
+
+            $columns = [
+                'date',
+                'role',
+                'name',
+                'in_time',
+                'out_time',
+                'location'
+            ];
+            $orderBy = $columns[$orderColumnIndex] ?? 'date';
+
+            $query = \App\Models\Attendance::query();
+
+            // Filters
+            if ($startDate && $endDate) {
+                $query->whereBetween('date', [$startDate, $endDate]);
+            }
+            if ($role) {
+                $query->where('role', $role);
+            }
+
+            // Search (searching by name requires join, complex for polymorphic. 
+            // For now, simple search on date/role/ip or separate logic if name search needed)
+            if (!empty($searchValue)) {
+               $query->where(function($q) use ($searchValue) {
+                   $q->where('date', 'like', "%{$searchValue}%")
+                     ->orWhere('role', 'like', "%{$searchValue}%")
+                     ->orWhere('ip_address', 'like', "%{$searchValue}%");
+               });
+            }
+            
+            $filteredCount = $query->count();
+
+            // Pagination
+            $attendances = $query->orderBy($orderBy === 'name' || $orderBy === 'location' ? 'date' : $orderBy, $orderDir)
+                ->skip($start)
+                ->take($length)
+                ->with('authenticatable') // Eager load
                 ->get();
 
-            return response()->json($educators);
+            $data = $attendances->map(function($record) {
+                $name = 'N/A';
+                if ($record->authenticatable) {
+                    $name = $record->authenticatable->full_name ?? $record->authenticatable->name ?? 'N/A';
+                }
+                
+                return [
+                    'date' => $record->date,
+                    'role' => ucfirst($record->role),
+                    'name' => $name,
+                    'in_time' => $record->in_time,
+                    'out_time' => $record->out_time ?? '-',
+                    'location' => $record->address ?? ($record->latitude ? $record->latitude . ',' . $record->longitude : 'N/A'),
+                    'ip_address' => $record->ip_address
+                ];
+            });
+
+            return response()->json([
+                'draw' => $draw,
+                'recordsTotal' => \App\Models\Attendance::count(),
+                'recordsFiltered' => $filteredCount,
+                'data' => $data
+            ]);
+
         } catch (\Exception $e) {
-            Log::error('Get Digital Counsellor Name Error: ' . $e->getMessage());
+            Log::error('Attendance Report Data Error: ' . $e->getMessage());
             return response()->json(['error' => 'Server error'], 500);
         }
+    }
+
+    public function exportAttendanceReport(Request $request)
+    {
+        $startDate = $request->input('startDate', Carbon::today()->toDateString());
+        $endDate = $request->input('endDate', Carbon::today()->toDateString());
+        $role = $request->input('role');
+
+        return Excel::download(new \App\Exports\AttendanceExport($startDate, $endDate, $role), 'attendance_report.xlsx');
     }
     public function pmassignEducatorPost(Request $request)
     {

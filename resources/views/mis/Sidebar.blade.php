@@ -47,6 +47,11 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ url('admin/attendance-report') }}">
+                        <i class="fa fa-calendar-check-o"></i> <span>Attendance Report</span>
+                    </a>
+                </li>
+                <li>
                         <a href="{{ url('admin-feedbackreport') }}"><i class="fa-solid fa-file-excel"></i> <span>Feedback
                                 Report</span></a>
                     </li>

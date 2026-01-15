@@ -256,6 +256,9 @@ Route::middleware(['check.session', 'role:nc'])->group(function () {
     Route::get('/nc/day120-Followup-get/{patient_id}', [PmController::class, 'day120followupget'])->name('nc.day120followupget');
     Route::get('/nc/day150-Followup-get/{patient_id}', [PmController::class, 'day150followupget'])->name('nc.day150followupget');
     Route::get('/nc/day180-Followup-get/{patient_id}', [PmController::class, 'day180followupget'])->name('nc.day180followupget');
+    Route::get('/nc/attendance-report', [PmController::class, 'attendanceReport'])->name('nc.attendance.report');
+    Route::get('/nc/attendance-report/data', [PmController::class, 'getAttendanceReportData'])->name('nc.attendance.data');
+    Route::get('/nc/attendance-report/export', [PmController::class, 'exportAttendanceReport'])->name('nc.attendance.export');
 
 
 });
@@ -287,6 +290,9 @@ Route::middleware(['check.session', 'role:admin'])->group(function () {
     Route::get('admingetdigiEducatorsname', [misController::class, 'getdigiEducatorsname'])->name('misgetdigiEducatorsname');
     Route::get('admingetrmsname', [misController::class, 'getrmsname']);
     Route::post('admin-Assign-DigitalEducator-Post', [misController::class, 'pmassignDigitalEducatorPost']);
+     Route::get('/admin/attendance-report', [misController::class, 'attendanceReport'])->name('mis.attendance.report');
+    Route::get('/admin/attendance-report/data', [misController::class, 'getAttendanceReportData'])->name('mis.attendance.data');
+    Route::get('/admin/attendance-report/export', [misController::class, 'exportAttendanceReport'])->name('mis.attendance.export');
     Route::post('/adminget-state-detail', [misController::class, 'getState'])->name('common.misgetState');
     Route::post('admin-Delete-Educator/{id}', [misController::class, 'deleteEducator'])->name('mis.deleteEducator');
     Route::post('admin-Delete-DigiEducator/{id}', [misController::class, 'deleteDigiEducator'])->name('mis.deleteDigiEducator');
