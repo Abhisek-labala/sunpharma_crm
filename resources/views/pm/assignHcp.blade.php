@@ -71,7 +71,7 @@ $(document).ready(function() {
         success: function(data) {
             let educatorSelect = $('#educator_id');
             educatorSelect.empty();
-            educatorSelect.append('<option value="">-- Select Educator --</option>');
+            educatorSelect.append('<option value="">-- Select Counsellor --</option>');
 
             data.forEach(function(educator) {
                 educatorSelect.append('<option value="' + educator.id + '">' + educator.full_name + '</option>');
@@ -93,7 +93,7 @@ $(document).ready(function() {
             success: function(data) {
                 let hcpSelect = $('#hcp_id');
                 hcpSelect.empty();
-                hcpSelect.append('<option value="">-- Select HCP --</option>');
+                hcpSelect.append('<option value="">-- Select Doctor --</option>');
 
                 data.forEach(function(hcp) {
                     hcpSelect.append('<option value="' + hcp.id + '">' + hcp.name + '</option>');

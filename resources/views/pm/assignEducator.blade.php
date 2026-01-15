@@ -76,7 +76,7 @@ $(document).ready(function() {
         success: function(data) {
             let educatorSelect = $('#educator_id');
             educatorSelect.empty();
-            educatorSelect.append('<option value="">-- Select Educator --</option>');
+            educatorSelect.append('<option value="">-- Select Counsellor --</option>');
 
             data.forEach(function(educator) {
                 educatorSelect.append('<option value="' + educator.id + '">' + educator.full_name + '</option>');
