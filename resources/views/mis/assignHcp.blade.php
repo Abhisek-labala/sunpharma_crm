@@ -18,20 +18,20 @@
                                 @csrf
 
                                 <div class="mb-3 row">
-                                    <label class="col-form-label col-md-2">Select HCP</label>
+                                    <label class="col-form-label col-md-2">Select Doctor</label>
                                     <div class="col-md-10">
                                         <select name="hcp_id" id="hcp_id" class="form-select form-control" required>
-                                            <option value="">-- Select HCP --</option>
+                                            <option value="">-- Select Doctor --</option>
                                           
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="mb-3 row">
-                                    <label class="col-form-label col-md-2">Assign to Educator</label>
+                                    <label class="col-form-label col-md-2">Assign to Counsellor</label>
                                     <div class="col-md-10">
                                         <select name="educator_id" id="educator_id" class="form-select form-control" required>
-                                            <option value="">-- Select Educator --</option>
+                                            <option value="">-- Select Counsellor --</option>
                                            
                                         </select>
                                     </div>
@@ -40,7 +40,7 @@
                                 <div class="mb-3 row">
                                     <label class="col-form-label col-md-2"></label>
                                     <div class="col-md-10">
-                                        <button type="submit" class="btn btn-primary">Assign HCP</button>
+                                        <button type="submit" class="btn btn-primary">Assign Doctor</button>
                                         <div id="responseMessage" class="mt-2"></div>
                                     </div>
                                 </div>
@@ -65,13 +65,13 @@
         loadHCPs();
         function loadEducators() {
         $.ajax({
-            url: "misgetEducatorsname",
+            url: "admingetEducatorsname",
             method: 'GET',
             dataType: 'json', // ensures JSON parsing
             success: function(data) {
                 let educatorSelect = $('#educator_id');
                 educatorSelect.empty();
-                educatorSelect.append('<option value="">-- Select Educator --</option>');
+                educatorSelect.append('<option value="">-- Select Counsellor --</option>');
                 
                 data.forEach(function(educator) {
                     educatorSelect.append('<option value="' + educator.id + '">' + educator.full_name + '</option>');
@@ -86,14 +86,14 @@
     }
     function loadHCPs() {
         $.ajax({
-            url: "misgetDoctorsname",
+            url: "admingetDoctorsname",
              method: 'GET',
             dataType: 'json',
             
             success: function(data) {
                 let hcpSelect = $('#hcp_id');
                 hcpSelect.empty();
-                hcpSelect.append('<option value="">-- Select HCP --</option>');
+                hcpSelect.append('<option value="">-- Select Doctor --</option>');
                 
                 data.forEach(function(hcp) {
                     hcpSelect.append('<option value="' + hcp.id + '">' + hcp.name + '</option>');
@@ -126,7 +126,7 @@
         $('button[type="submit"]').prop('disabled', true).html('Processing...');
 
         $.ajax({
-            url: "{{ url('mis-Assign-Hcp-Post') }}",
+            url: "{{ url('admin-Assign-Hcp-Post') }}",
             method: 'POST',
             data: formData,
             success: function(response) {

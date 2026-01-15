@@ -46,7 +46,7 @@
                                             <th>City</th>
                                             <th>State</th>
                                             <th>Address</th>
-                                            <th>Rm Name</th>
+                                            <th>RC Name</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -199,7 +199,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: 'Pm-Get-Educators',
+                url: 'nc-Get-Educators',
                 type: 'POST',
                 dataType: 'json',
                 contentType: 'application/json',
@@ -295,7 +295,7 @@
         var id = $('#delete_id').val();
 
         $.ajax({
-            url: 'Pm-Delete-Educator/' + id,
+            url: 'nc-Delete-Educator/' + id,
             type: 'POST',
             data: {
                 _token: $('meta[name="csrf-token"]').attr('content')
@@ -328,7 +328,7 @@
 
         if (validateEducatorForm()) {
             var formData = new FormData(this);
-            var url = $('#educator_id').val() ? 'Pm-Update-Educator-Post' : 'Pm-Create-Educator-Post';
+            var url = $('#educator_id').val() ? 'nc-Update-Educator-Post' : 'nc-Create-Educator-Post';
             var stateText = $('#state option:selected').text();
             formData.set('state', stateText);
 

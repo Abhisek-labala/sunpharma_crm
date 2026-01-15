@@ -64,7 +64,7 @@ $(document).ready(function() {
     // Load educators and RMs dynamically
     function loaddigiEducators() {
     $.ajax({
-        url: "misgetdigiEducatorsname",
+        url: "admingetdigiEducatorsname",
         method: 'GET',
         dataType: 'json', // ensures JSON parsing
         success: function(data) {
@@ -86,7 +86,7 @@ $(document).ready(function() {
 
     function loadRegionalManagers() {
         $.ajax({
-            url: "misgetrmsname",
+            url: "admingetrmsname",
              method: 'GET',
             dataType: 'json',
             
@@ -125,7 +125,7 @@ $(document).ready(function() {
         $('button[type="submit"]').prop('disabled', true).html('Processing...');
 
         $.ajax({
-            url: "{{ url('mis-Assign-DigitalEducator-Post') }}",
+            url: "{{ url('admin-Assign-DigitalEducator-Post') }}",
             method: 'POST',
             data: formData,
             success: function(response) {

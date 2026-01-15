@@ -74,7 +74,7 @@ $.ajaxSetup({
         responsive: true,
         scrollX: true,
         ajax: {
-            url: "{{ url('mis-Get-Patients') }}",   // <-- create this route in Laravel
+            url: "{{ url('admin-Get-Patients') }}",   // <-- create this route in Laravel
             type: 'POST',
             dataType: 'json',
             contentType: 'application/json',
@@ -135,7 +135,7 @@ $.ajaxSetup({
 $('#myTable1').on('draw.dt', function () {
     // Fetch educators list once per draw
     $.ajax({
-        url: 'mis-Get-Digital-Educators-patient',
+        url: 'admin-Get-Digital-Educators-patient',
         type: 'GET',
         success: function (res) {
             $('.digital-educator-select').each(function () {
@@ -162,7 +162,7 @@ $(document).on('click', '.assign-inline-btn', function () {
     }
 
     $.ajax({
-        url: 'mis-Assign-Digital-Educator-patient',
+        url: 'admin-Assign-Digital-Educator-patient',
         type: 'POST',
         data: {
             uuid: uuid,

@@ -133,7 +133,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: 'Pm-Get-Medicine',
+                url: 'nc-Get-Medicine',
                 type: 'POST',
                 dataType: 'json',
                 contentType: 'application/json',
@@ -209,7 +209,7 @@
         var id = $('#delete_id').val();
 
         $.ajax({
-            url: 'Pm-Delete-Medicine/' + id,
+            url: 'nc-Delete-Medicine/' + id,
             type: 'POST',
             dataType: 'json',
             data: { _token: $('meta[name="csrf-token"]').attr('content') },
@@ -239,7 +239,7 @@
 
         if (validateMedicineForm()) {
             var formData = new FormData(this);
-            var url = $('#medicine_id').val() ? 'Pm-Update-Medicine-Post' : 'Pm-Create-Medicine-Post';
+            var url = $('#medicine_id').val() ? 'nc-Update-Medicine-Post' : 'nc-Create-Medicine-Post';
 
             $.ajax({
                 url: url,
@@ -326,7 +326,7 @@
     }
     function loadMedicineHeaders() {
     $.ajax({
-        url: 'Pm-Get-Medicine-Headers',
+        url: 'nc-Get-Medicine-Headers',
         type: 'POST',
         dataType: 'json',
         data: { _token: $('meta[name="csrf-token"]').attr('content') },

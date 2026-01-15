@@ -34,7 +34,7 @@
                                 </div>
 
                                 <div class="mb-3 row">
-                                    <label class="col-form-label col-md-2">Rm</label>
+                                    <label class="col-form-label col-md-2">Rc</label>
                                     <div class="col-md-10">
                                         <select class="form-control" name="rm" id="rm">
                                             <option value=""> -- Select -- </option>
@@ -43,7 +43,7 @@
                                 </div>
 
                                 <div class="mb-3 row">
-                                    <label class="col-form-label col-md-2">Educator</label>
+                                    <label class="col-form-label col-md-2">Counsellor</label>
                                     <div class="col-md-10">
                                         <select class="form-control" name="educator" id="educator">
                                             <option value=""> -- Select -- </option>
@@ -61,7 +61,7 @@
                                 </div>
 
                                 <div class="mb-3 row">
-                                    <label class="col-form-label col-md-2">HCP Name</label>
+                                    <label class="col-form-label col-md-2">Doctor Name</label>
                                     <div class="col-md-10">
                                         <select class="form-control" name="doctor" id="doctor">
                                             <option value=""> -- Select -- </option>
@@ -96,8 +96,8 @@
                                 <th>BMI</th>
                                 <th>Consent Form</th>
                                 <th>Prescription</th>
-                                <th>Educator Name</th>
-                                <th>Rm Name</th>
+                                <th>Counsellor Name</th>
+                                <th>Rc Name</th>
                                 <th>City</th>
                             </tr>
                         </thead>

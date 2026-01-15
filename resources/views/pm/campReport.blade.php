@@ -25,7 +25,7 @@
                                         <th>Sr</th>
                                         <th>Camp id</th>
                                         <th>Employee ID</th>
-                                        <th>Educator Name</th>
+                                        <th>Counsellor Name</th>
                                         <th>Doctor Name</th>
                                         <th>In Time</th>
                                         <th>Out Time</th>
@@ -66,7 +66,7 @@ $(document).ready(function() {
                 { targets: '_all', orderable: true }
             ],
         ajax: {
-            url: '{{ url("PM-Get-Camp-Details") }}',
+            url: '{{ url("nc-Get-Camp-Details") }}',
             type: 'POST',
             dataType: 'json',
             contentType: 'application/json',
@@ -111,6 +111,6 @@ $(document).ready(function() {
     });
 });
 function openNewWindow() {
-    window.location.href = '{{ url("pmcampreport_excel") }}';
+    window.location.href = '{{ url("nccampreport_excel") }}';
 }
 </script>

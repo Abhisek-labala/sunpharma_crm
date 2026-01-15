@@ -46,7 +46,7 @@
                                             <th>City</th>
                                             <th>State</th>
                                             <th>Address</th>
-                                            <th>Rm Name</th>
+                                            <th>RC Name</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -201,7 +201,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: 'mis-Get-Educators',
+                url: 'admin-Get-Educators',
                 type: 'POST',
                 dataType: 'json',
                 contentType: 'application/json',
@@ -311,7 +311,7 @@
         var id = $('#delete_id').val();
 
         $.ajax({
-            url: 'mis-Delete-Educator/' + id,
+            url: 'admin-Delete-Educator/' + id,
             type: 'POST',
             dataType: 'json',
             data: {
@@ -347,7 +347,7 @@
 
         if (validateEducatorForm()) {
             var formData = new FormData(this);
-            var url = $('#educator_id').val() ? 'mis-Update-Educator-Post' : 'mis-Create-Educator-Post';
+            var url = $('#educator_id').val() ? 'admin-Update-Educator-Post' : 'admin-Create-Educator-Post';
             var stateText = $('#state option:selected').text();
             formData.set('state', stateText);
             $.ajax({

@@ -4,45 +4,41 @@
             <div id="sidebar-menu" class="sidebar-menu">
                 <ul>
                     <li>
-                        <a href="{{ url('dashboard/pm') }}"><i class="fa fa-home"></i> <span>Dashboard</span></a>
+                        <a href="{{ url('dashboard/nc') }}"><i class="fa fa-home"></i> <span>Dashboard</span></a>
                     </li>
 
                     <li class="submenu">-
                         <a href="#"> <span> ADD/DELETE </span> <span class="menu-arrow"></span></a>
                         <ul style="display: none;">
-                            <li><a href="{{ url('Pm-Create-Educator') }}">EDUCATOR</a></li>
-                            <li><a href="{{ url('Pm-Create-Hcp') }}">HCP</a></li>
-                            <li><a href="{{ url('Pm-Create-RM') }}">RM</a></li>
-                            <li><a href="{{ url('Pm-Create-DigitalEducator') }}"> Digital Educator</a></li>
-                            <li><a href="{{ url('Pm-medicine') }}"> Medicine</a></li>
-                            <li><a href="{{ url('Pm-compitetor') }}"> Compitetor</a></li>
+                            <li><a href="{{ url('nc-Create-Educator') }}">Counsellor</a></li>
+                            <li><a href="{{ url('nc-Create-Hcp') }}">Doctor</a></li>
+                            <li><a href="{{ url('nc-Create-RM') }}">RC</a></li>
+                            <li><a href="{{ url('nc-Create-DigitalEducator') }}"> Digital Counsellor</a></li>
+                            <li><a href="{{ url('nc-medicine') }}"> Medicine</a></li>
+                            <li><a href="{{ url('nc-compitetor') }}"> Compitetor</a></li>
                         </ul>
                     </li>
 
                     <li class="submenu">
                         <a href="#"> <span> Assign </span> <span class="menu-arrow"></span></a>
                         <ul style="display: none;">
-                            <li><a href="{{ url('PM-Assign-EDUCATOR') }}">EDUCATOR</a></li>
-                            <li><a href="{{ url('PM-Assign-HCP') }}">HCP</a></li>
-                            <li><a href="{{ url('PM-Assign-DM') }}"> Patient to Digital Educator</a></li>
-                            <li><a href="{{ url('PM-Assign-digital-educator-RM') }}">Digital Educator to RM</a></li>
-
-
+                            <li><a href="{{ url('nc-Assign-EDUCATOR') }}">Counsellor</a></li>
+                            <li><a href="{{ url('nc-Assign-HCP') }}">Doctor</a></li>
                         </ul>
                     </li>
 
                     <li>
-                        <a href="{{ url('pm-Analytics') }}"><i class="fa-solid fa-chart-simple"></i>
+                        <a href="{{ url('nc-Analytics') }}"><i class="fa-solid fa-chart-simple"></i>
                             <span>Analytics</span></a>
                     </li>
                     <li>
-                        <a href="{{ url('pm-Patient-List') }}"><i class="fa fa-user"></i> <span>Feedbacks</span></a>
+                        <a href="{{ url('nc-Patient-List') }}"><i class="fa fa-user"></i> <span>Feedbacks</span></a>
                     </li>
                     <li>
-                        <a href="{{ url('pm-campreport') }}"><i class="fa fa-ticket"></i> <span>Camp Report</span></a>
+                        <a href="{{ url('nc-campreport') }}"><i class="fa fa-ticket"></i> <span>Camp Report</span></a>
                     </li>
                     <li>
-                        <a href="{{ url('pm-feedbackreport') }}"><i class="fa-solid fa-file-excel"></i> <span>Feedback
+                        <a href="{{ url('nc-feedbackreport') }}"><i class="fa-solid fa-file-excel"></i> <span>Feedback
                                 Report</span></a>
                     </li>
 

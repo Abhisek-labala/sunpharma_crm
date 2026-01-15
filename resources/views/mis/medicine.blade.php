@@ -133,7 +133,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: 'mis-Get-Medicine',
+                url: 'admin-Get-Medicine',
                 type: 'POST',
                 dataType: 'json',
                 contentType: 'application/json',
@@ -209,7 +209,7 @@
         var id = $('#delete_id').val();
 
         $.ajax({
-            url: 'mis-Delete-Medicine/' + id,
+            url: 'admin-Delete-Medicine/' + id,
             type: 'POST',
             dataType: 'json',
             data: { _token: $('meta[name="csrf-token"]').attr('content') },
@@ -239,7 +239,7 @@
 
         if (validateMedicineForm()) {
             var formData = new FormData(this);
-            var url = $('#medicine_id').val() ? 'mis-Update-Medicine-Post' : 'mis-Create-Medicine-Post';
+            var url = $('#medicine_id').val() ? 'admin-Update-Medicine-Post' : 'admin-Create-Medicine-Post';
 
             $.ajax({
                 url: url,
@@ -326,7 +326,7 @@
     }
     function loadMedicineHeaders() {
     $.ajax({
-        url: 'mis-Get-Medicine-Headers',
+        url: 'admin-Get-Medicine-Headers',
         type: 'POST',
         dataType: 'json',
         data: { _token: $('meta[name="csrf-token"]').attr('content') },

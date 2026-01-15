@@ -156,7 +156,7 @@
 				processing: true,
 				serverSide: true,
 				ajax: {
-					url: 'mis-Get-Rm',
+					url: 'admin-Get-Rm',
 					type: 'POST',
 					dataType: 'json',
 					contentType: 'application/json',
@@ -254,7 +254,7 @@
     var id = $('#delete_id').val();
 
     $.ajax({
-        url: 'mis-Delete-Rm/' + id,
+        url: 'admin-Delete-Rm/' + id,
         type: 'POST',
         dataType: 'json',
         data: {
@@ -319,7 +319,7 @@ $('#submitBtn').prop('disabled', false);
 
     if (validateRmForm()) {
         var formData = new FormData(this);
-        var url = $('#rm_id').val() ? 'mis-Update-Rm-Post' : 'mis-Create-Rm-Post';
+        var url = $('#rm_id').val() ? 'admin-Update-Rm-Post' : 'admin-Create-Rm-Post';
         $.ajax({
             url: url,
             type: 'POST',

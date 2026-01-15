@@ -41,7 +41,7 @@
                                             <th>Emp Id</th>
                                             <th>Name</th>
                                             <th>Password</th>
-                                            <th>Rm Name</th>
+                                            <th>RC Name</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -146,7 +146,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: 'mis-Get-DigiEducators',
+                url: 'admin-Get-DigiEducators',
                 type: 'POST',
                 dataType: 'json',
                 contentType: 'application/json',
@@ -225,7 +225,7 @@
         var id = $('#delete_id').val();
 
         $.ajax({
-            url: 'mis-Delete-DigiEducator/' + id,
+            url: 'admin-Delete-DigiEducator/' + id,
             type: 'POST',
             dataType: 'json',
             data: {
@@ -261,7 +261,7 @@
 
         if (validateEducatorForm()) {
             var formData = new FormData(this);
-            var url = $('#educator_id').val() ? 'mis-Update-DigiEducator-Post' : 'mis-Create-DigiEducator-Post';
+            var url = $('#educator_id').val() ? 'admin-Update-DigiEducator-Post' : 'admin-Create-DigiEducator-Post';
 
             $.ajax({
                 url: url,

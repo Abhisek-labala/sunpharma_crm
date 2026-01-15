@@ -34,11 +34,11 @@
                                     <input type="date" class="form-control" id="toDate" value="{{ now()->format('Y-m-d') }}">
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="educatorFilter" class="form-label">Educator</label>
+                                    <label for="educatorFilter" class="form-label">Counsellor</label>
                                     <select class="form-control" id="educatorFilter"></select>
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="digitalEducatorFilter" class="form-label">Digital Educator</label>
+                                    <label for="digitalEducatorFilter" class="form-label">Digital Counsellor</label>
                                     <select class="form-control" id="digitalEducatorFilter"></select>
                                 </div>
                                 <div class="col-md-12 mt-3 text-end">
@@ -58,8 +58,8 @@
                                         <th>Patient Name</th>
                                         <th>Mobile Number</th>
                                         <th>Doctor Name</th>
-                                        <th>Educator Name</th>
-                                        <th>Digital Educator Name</th>
+                                        <th>Counsellor Name</th>
+                                        <th>Digital Counsellor Name</th>
                                         <th>Created At</th>
                                         <th>Day 3 planned Date</th>
                                         <th>Day 3 Actual Date</th>
@@ -137,7 +137,7 @@
     // Populate educator and digital educator dropdowns
     function populateFilters() {
         $.getJSON('{{ route("get.educators.name") }}', function(data) {
-            let educatorOptions = '<option value="">All Educators</option>';
+            let educatorOptions = '<option value="">All Counsellors</option>';
             data.forEach(item => {
                 educatorOptions += `<option value="${item.id}">${item.full_name}</option>`;
             });
@@ -145,7 +145,7 @@
         });
 
         $.getJSON('{{ route("get.digi.educators.name") }}', function(data) {
-            let digitalEducatorOptions = '<option value="">All Digital Educators</option>';
+            let digitalEducatorOptions = '<option value="">All Digital Counsellors</option>';
             data.forEach(item => {
                 digitalEducatorOptions += `<option value="${item.id}">${item.full_name}</option>`;
             });
@@ -166,7 +166,7 @@
                 { targets: '_all', orderable: true }
             ],
             ajax: {
-                url: '{{ url("PM-Feedback-Details") }}',
+                url: '{{ url("nc-Feedback-Details") }}',
                 type: 'POST',
                 data: function (d) {
                     d.fromDate = $('#fromDate').val();

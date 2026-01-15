@@ -27,7 +27,7 @@
                                     <tr>
                                         <th>Sr</th>
                                         <th>id</th>
-                                        <th>Educator Name</th>
+                                        <th>Counsellor Name</th>
 
                                         <th>Name</th>
                                         <th>Gender</th>
@@ -36,7 +36,7 @@
                                         <th>Height</th>
                                         <th>Doctor Name</th>
                                         <th>Date</th>
-                                        <th>Digital Educator</th>
+                                        <th>Digital Counsellor</th>
                                     </tr>
                                 </thead>
 
@@ -73,7 +73,7 @@ $.ajaxSetup({
             // responsive: true,
             scrollX: true,
         ajax: {
-            url: "{{ url('Pm-Get-Patients') }}",   // <-- create this route in Laravel
+            url: "{{ url('nc-Get-Patients') }}",   // <-- create this route in Laravel
             type: 'POST',
             dataType: 'json',
             contentType: 'application/json',
@@ -140,7 +140,7 @@ $('#myTable1').on('draw.dt', function () {
             $('.digital-educator-select').each(function () {
                 let uuid = $(this).data('uuid');
                 if ($(this).find('option').length <= 1) { // only "Loading..." exists
-                    let options = '<option value="">Select Educator</option>';
+                    let options = '<option value="">Select Counsellor</option>';
                     $.each(res, function (i, e) {
                         options += `<option value="${e.id}">${e.full_name}</option>`;
                     });
@@ -156,12 +156,12 @@ $(document).on('click', '.assign-inline-btn', function () {
     let educatorId = select.val();
 
     if (!educatorId) {
-        alert("Please select a digital educator.");
+        alert("Please select a digital counsellor.");
         return;
     }
 
     $.ajax({
-        url: 'Pm-Assign-Digital-Educator-patient',
+        url: 'nc-Assign-Digital-Educator-patient',
         type: 'POST',
         data: {
             uuid: uuid,

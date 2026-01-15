@@ -18,20 +18,20 @@
                                 @csrf
 
                                 <div class="mb-3 row">
-                                    <label class="col-form-label col-md-2">Select HCP</label>
+                                    <label class="col-form-label col-md-2">Select Doctor</label>
                                     <div class="col-md-10">
                                         <select name="hcp_id" id="hcp_id" class="form-select form-control" required>
-                                            <option value="">-- Select HCP --</option>
+                                            <option value="">-- Select Doctor --</option>
 
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="mb-3 row">
-                                    <label class="col-form-label col-md-2">Assign to Educator</label>
+                                    <label class="col-form-label col-md-2">Assign to Counsellor</label>
                                     <div class="col-md-10">
                                         <select name="educator_id" id="educator_id" class="form-select form-control" required>
-                                            <option value="">-- Select Educator --</option>
+                                            <option value="">-- Select Counsellor --</option>
 
                                         </select>
                                     </div>
@@ -40,7 +40,7 @@
                                 <div class="mb-3 row">
                                     <label class="col-form-label col-md-2"></label>
                                     <div class="col-md-10">
-                                        <button type="submit" class="btn btn-primary">Assign HCP</button>
+                                        <button type="submit" class="btn btn-primary">Assign Doctor</button>
                                         <div id="responseMessage" class="mt-2"></div>
                                     </div>
                                 </div>
@@ -126,7 +126,7 @@ $(document).ready(function() {
         $('button[type="submit"]').prop('disabled', true).html('Processing...');
 
         $.ajax({
-            url: "{{ url('pm-Assign-Hcp-Post') }}",
+            url: "{{ url('nc-Assign-Hcp-Post') }}",
             method: 'POST',
             data: formData,
             success: function(response) {

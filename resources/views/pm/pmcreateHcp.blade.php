@@ -38,14 +38,14 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>MSL CODE</th>
+                                            <th>Doctor CODE</th>
                                             <th>Name</th>
                                             <th>City</th>
                                             <th>State</th>
                                             <th>Zone</th>
                                             <th>Speciality</th>
                                             <th>First Visit</th>
-                                            <th>Educator Name</th>
+                                            <th>Counsellor Name</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -69,16 +69,16 @@
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle">Add HCP</h5>
+                    <h5 class="modal-title" id="modalTitle">Add Doctor</h5>
                 </div>
                 <div class="modal-body">
-                    <form action="Pm-Create-Doctor-Post" name="createDoctor" id="createDoctor" method="post"
+                    <form action="nc-Create-Doctor-Post" name="createDoctor" id="createDoctor" method="post"
                         enctype="multipart/form-data">
                         <input type="hidden" name="doctor_id" id="doctor_id">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>MSL CODE <span class="text-danger">*</span></label>
+                                    <label>Doctor CODE <span class="text-danger">*</span></label>
                                     <input type="text" maxlength="50" class="form-control" name="msl_code"
                                         id="msl_code">
                                 </div>
@@ -191,7 +191,7 @@
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: 'Pm-Get-Doctors',
+                    url: 'nc-Get-Doctors',
                     type: 'POST',
                     dataType: 'json',
                     contentType: 'application/json',
@@ -345,7 +345,7 @@
             var id = $('#delete_id').val();
 
             $.ajax({
-                url: 'Pm-Delete-Doctor/' + id,
+                url: 'nc-Delete-Doctor/' + id,
                 type: 'POST',
                 dataType: 'json',
                 data: {
@@ -383,7 +383,7 @@
                 var cityText = $('#city option:selected').text();
                 formData.set('state', stateText);
                 formData.set('city', cityText);
-                var url = $('#doctor_id').val() ? 'Pm-Update-Doctor-Post' : 'Pm-Create-Doctor-Post';
+                var url = $('#doctor_id').val() ? 'nc-Update-Doctor-Post' : 'nc-Create-Doctor-Post';
 
                 $.ajax({
                     url: url,
@@ -496,7 +496,7 @@
             $('.invalid-feedback').remove();
             $('.required-star span.text-danger').remove();
             $.ajax({
-                url: 'Pm-Get-Doctor/' + id,
+                url: 'nc-Get-Doctor/' + id,
                 type: 'GET',
                 dataType: 'json',
                 success: function (response) {

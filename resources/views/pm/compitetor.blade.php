@@ -120,7 +120,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: 'Pm-Get-Compitetor',
+                url: 'nc-Get-Compitetor',
                 type: 'POST',
                 dataType: 'json',
                 contentType: 'application/json',
@@ -194,7 +194,7 @@
         var id = $('#delete_id').val();
 
         $.ajax({
-            url: 'Pm-Delete-Compitetor/' + id,
+            url: 'nc-Delete-Compitetor/' + id,
             type: 'POST',
             dataType: 'json',
             data: { _token: $('meta[name="csrf-token"]').attr('content') },
@@ -224,7 +224,7 @@
 
         if (validateCompitetorForm()) {
             var formData = new FormData(this);
-            var url = $('#compitetor_id').val() ? 'Pm-Update-Compitetor-Post' : 'Pm-Create-Compitetor-Post';
+            var url = $('#compitetor_id').val() ? 'nc-Update-Compitetor-Post' : 'nc-Create-Compitetor-Post';
 
             $.ajax({
                 url: url,

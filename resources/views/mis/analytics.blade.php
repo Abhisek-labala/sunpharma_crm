@@ -13,7 +13,7 @@
                 <div class="col-md-6 col-lg-3">
                     <div class="card dashboard-chart-card bg-success text-white">
                         <div class="card-body">
-                            <h5 class="card-title text-white">Cipla Brands</h5>
+                            <h5 class="card-title text-white">Sun Pharma Brands</h5>
                             <div class="chart-container-wrapper">
                                 <canvas id="ciplaChart" width="150" height="150"></canvas>
                                 <div id="ciplaChartText" class="chart-text text-white"></div>
@@ -25,7 +25,7 @@
                 <div class="col-md-6 col-lg-3">
                     <div class="card dashboard-chart-card bg-danger text-white">
                         <div class="card-body">
-                            <h5 class="card-title text-white">Non-Cipla Brands</h5>
+                            <h5 class="card-title text-white">Non-Sunpharma Brands</h5>
                             <div class="chart-container-wrapper">
                                 <canvas id="nonCiplaChart" width="150" height="150"></canvas>
                                 <div id="nonCiplaChartText" class="chart-text text-white"></div>
@@ -55,7 +55,7 @@
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fas fa-user-check mr-1"></i>
-                                Top 5 Educators (Prescribed Cipla)
+                                Top 5 Educators (Prescribed Sun Pharma)
                             </h3>
                         </div>
                         <div class="card-body" id="topEducatorsListContainer">
@@ -99,7 +99,7 @@
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fas fa-prescription-bottle-alt mr-1"></i>
-                                Doctors Prescribed Cipla Brands
+                                Doctors Prescribed Sun Pharma Brands
                             </h3>
                         </div>
                         <div class="card-body">
@@ -113,7 +113,7 @@
                         <div class="card-header">
                             <h3 class="card-title">
                                 <i class="fas fa-ban mr-1"></i>
-                                Doctors Not Prescribed Cipla Brands
+                                Doctors Not Prescribed Sun Pharma Brands
                             </h3>
                         </div>
                         <div class="card-body">
@@ -223,7 +223,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const API_BASE_URL = "{{ url('Charts') }}/mis";
+      const API_BASE_URL = "{{ url('Charts') }}/admin";
 
         async function fetchChartData(endpoint, params = {}) {
             const chartContainer = document.getElementById(endpoint.replace(/_/g, '-') + 'Container');

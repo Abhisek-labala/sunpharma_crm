@@ -59,7 +59,7 @@
                 <h5 class="modal-title" id="modalTitle">Add Compitetor</h5>
             </div>
             <div class="modal-body">
-                <form action="mis-Create-Compitetor-Post" name="createCompitetor" id="createCompitetor" method="post"
+                <form action="admin-Create-Compitetor-Post" name="createCompitetor" id="createCompitetor" method="post"
                     enctype="multipart/form-data">
                     <input type="hidden" name="compitetor_id" id="compitetor_id">
                     <div class="row">
@@ -120,7 +120,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                url: 'mis-Get-Compitetor',
+                url: 'admin-Get-Compitetor',
                 type: 'POST',
                 dataType: 'json',
                 contentType: 'application/json',
@@ -194,7 +194,7 @@
         var id = $('#delete_id').val();
 
         $.ajax({
-            url: 'mis-Delete-Compitetor/' + id,
+            url: 'admin-Delete-Compitetor/' + id,
             type: 'POST',
             dataType: 'json',
             data: { _token: $('meta[name="csrf-token"]').attr('content') },
@@ -224,7 +224,7 @@
 
         if (validateCompitetorForm()) {
             var formData = new FormData(this);
-            var url = $('#compitetor_id').val() ? 'mis-Update-Compitetor-Post' : 'mis-Create-Compitetor-Post';
+            var url = $('#compitetor_id').val() ? 'admin-Update-Compitetor-Post' : 'admin-Create-Compitetor-Post';
 
             $.ajax({
                 url: url,

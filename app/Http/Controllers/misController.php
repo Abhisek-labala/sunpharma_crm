@@ -22,92 +22,10 @@ use Auth;
 
 class misController extends Controller
 {
-    // public function getpatientdetails(Request $request)
-    // {
-    //     date_default_timezone_set("Asia/Calcutta");
-
-    //     $fromDate = $request->input('fromDate');
-    //     $toDate = $request->input('toDate');
-    //     $educatorId = $request->input('educatorId');
-    //     $doctorId = $request->input('doctorId');
-    //     $campId = $request->input('campId');
-    //     $zoneId = $request->input('zoneId');
-    //     $rmId = $request->input('rmId');
-
-    //     $query = DB::table('public.patient_details as pin');
-
-    //     // Join educator if zone or rm is selected
-    //     if (!empty($zoneId) || !empty($rmId)) {
-    //         $query->leftJoin('users as e', 'pin.educator_id', '=', 'e.id');
-
-    //         if (!empty($zoneId)) {
-    //             $query->leftJoin('users as r', 'e.rm_mis_id', '=', 'r.id');
-    //             $query->where('r.zone_id', $zoneId);
-    //         }
-
-    //         if (!empty($rmId)) {
-    //             $query->where('e.rm_mis_id', $rmId);
-    //         }
-    //     }
-
-    //     // Where conditions
-    //     if (!empty($fromDate) && !empty($toDate)) {
-    //         $query->whereBetween('pin.date', [$fromDate, $toDate]);
-    //     } else {
-    //         $query->whereDate('pin.date', Carbon::now()->format('Y-m-d'));
-    //     }
-
-    //     if (!empty($educatorId)) {
-    //         $query->where('pin.educator_id', $educatorId);
-    //     }
-
-    //     if (!empty($doctorId)) {
-    //         $query->where('pin.hcp_id', $doctorId);
-    //     }
-
-    //     if (!empty($campId)) {
-    //         $query->where('pin.camp_id', $campId);
-    //     }
-
-    //     $query->where('pin.patient_name', '!=', '');
-    //     $query->orderBy('pin.patient_name');
-
-    //     $patients = $query->get();
-    // print($patients);die;
-    //     $data = [];
-    //     $sr = 1;
-
-    //     foreach ($patients as $item) {
-
-    //         $data[] = [
-    //             'sr' => $sr++,
-    //             'date' => $item->date,
-    //             'patient_name' => $item->patient_name,
-    //             'mobile_number' => $item->mobile_number,
-    //             'gender' => $item->gender,
-    //             'blood_pressure' => $item->blood_pressure,
-    //             'bmi' => $item->bmi,
-    //             'educator_name' => $item->full_name,
-    //             'rm_name' => $rmName,
-    //             'city' => $cityName,
-    //         ];
-    //     }
-
-    //     return response()->json([
-    //         'status' => 'success',
-    //         'data' => $data,
-    //     ]);
-    // }
     public function misassignEducatorView()
     {
         // Your logic here
         return view('mis.assignEducator');
-    }
-
-    public function misassignEducatorPost(Request $request)
-    {
-        // Handle educator assignment form submission
-        // $request->input('field_name')...
     }
 
     public function misassigndigiEducatorView()
@@ -115,29 +33,9 @@ class misController extends Controller
         return view('mis.assigndigiEducator');
     }
 
-    public function misassignDigitalEducatorPost(Request $request)
-    {
-        // Handle digital educator assignment post
-    }
-
     public function misassignHcpView()
     {
         return view('mis.assignHcp');
-    }
-
-    public function misassignHcpPost(Request $request)
-    {
-        // Handle HCP assignment form submission
-    }
-
-    public function misassigndigital()
-    {   // Join 3 tables via uuid
-        return view('mis.assigndigital');
-    }
-
-    public function misassign_digitaleducator_post(Request $request)
-    {
-        // Handle digital educator post form
     }
 
     public function miscreateEducatorView()
@@ -175,13 +73,13 @@ class misController extends Controller
 
         try {
             $educators = DB::table('common.users')
-                ->where('role', 'digitaleducator')
+                ->where('role', 'digitalcounsellor')
                 ->select('id', 'full_name')
                 ->get();
 
             return response()->json($educators);
         } catch (\Exception $e) {
-            Log::error('Get Digital Educators Name Error: ' . $e->getMessage());
+            Log::error('Get Digital Counsellor Name Error: ' . $e->getMessage());
             return response()->json(['error' => 'Server error'], 500);
         }
     }
@@ -191,7 +89,7 @@ class misController extends Controller
             'educator_id' => 'required|integer',
             'rm_id' => 'nullable|integer'
         ], [
-            'educator_id.required' => 'Please select an educator'
+            'educator_id.required' => 'Please select an counsellor'
         ]);
 
         try {
@@ -207,20 +105,20 @@ class misController extends Controller
             // Update record in users table
             $result = DB::table('common.users')
                 ->where('id', $educatorId)
-                ->where('role', 'educator')
+                ->where('role', 'counsellor')
                 ->update($updateData);
 
             if ($result) {
                 $message = is_null($updateData['rm_pm_id'])
-                    ? 'Educator successfully unassigned from RM'
-                    : 'Educator successfully assigned to RM';
+                    ? 'Counsellor successfully unassigned from RC'
+                    : 'Counsellor successfully assigned to RC';
 
                 return response()->json(['success' => true, 'message' => $message]);
             } else {
-                return response()->json(['success' => false, 'message' => 'Failed to assign educator']);
+                return response()->json(['success' => false, 'message' => 'Failed to assign counsellor']);
             }
         } catch (\Exception $e) {
-            Log::error('Assign Educator Error: ' . $e->getMessage());
+            Log::error('Assign Counsellor Error: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Server error']);
         }
     }
@@ -424,7 +322,7 @@ class misController extends Controller
     {
         try {
             // Example delete
-            $deleted = DB::table('common.users')->where('id', $id)->where('role', 'digitaleducator')->delete();
+            $deleted = DB::table('common.users')->where('id', $id)->where('role', 'digitalcounsellor')->delete();
 
             if ($deleted > 0) {
                 return response()->json(['status' => true, 'message' => 'DigiEducator deleted successfully']);
@@ -440,7 +338,7 @@ class misController extends Controller
     {
         try {
             // Example delete
-            $deleted = DB::table('common.users')->where('id', $id)->where('role', 'educator')->delete();
+            $deleted = DB::table('common.users')->where('id', $id)->where('role', 'counsellor')->delete();
 
             if ($deleted > 0) {
                 return response()->json(['status' => true, 'message' => 'Educator deleted successfully']);
@@ -459,12 +357,12 @@ class misController extends Controller
             $deleted = DB::table('public.doctor')->where('id', $id)->delete();
 
             if ($deleted > 0) {
-                return response()->json(['status' => true, 'message' => 'Healthcare provider deleted successfully']);
+                return response()->json(['status' => true, 'message' => 'Doctor deleted successfully']);
             } else {
-                return response()->json(['status' => false, 'message' => 'Healthcare provider not found or already deleted']);
+                return response()->json(['status' => false, 'message' => 'Doctor not found or already deleted']);
             }
         } catch (\Exception $e) {
-            Log::error('Delete Healthcare provider Error: ' . $e->getMessage());
+            Log::error('Delete Doctor Error: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Server error']);
         }
     }
@@ -554,7 +452,7 @@ class misController extends Controller
                 'state' => $request->state,
                 'address' => $request->address,
                 'profile_pic' => $profileImagePath, // store file path
-                'role' => 'educator',
+                'role' => 'counsellor',
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
@@ -564,13 +462,13 @@ class misController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => 'Educator created successfully',
+                'message' => 'Counsellor created successfully',
                 'id' => $request->emp_id,
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack(); // rollback if file upload or insert fails
-            Log::error('Create Educator Error: ' . $e->getMessage());
+            Log::error('Create Counsellor Error: ' . $e->getMessage());
 
             return response()->json([
                 'status' => false,
@@ -721,7 +619,7 @@ class misController extends Controller
                     'rm.full_name as rm'
                     // DB::raw("COALESCE(rm_name.name, 'N/A') as rm")
                 )
-                ->where('educator.role', '=', 'educator');
+                ->where('educator.role', '=', 'counsellor');
 
             // Search
             if (!empty($searchValue)) {
@@ -749,7 +647,7 @@ class misController extends Controller
 
             // Total count without search filter
             $recordsTotal = DB::table('common.users')
-                ->where('role', '=', 'educator')
+                ->where('role', '=', 'counsellor')
                 ->count();
 
             // Format response
@@ -763,7 +661,7 @@ class misController extends Controller
             return response()->json($response);
 
         } catch (\Exception $e) {
-            Log::error('Educators DataTable Error: ' . $e->getMessage());
+            Log::error('Counsellor DataTable Error: ' . $e->getMessage());
             return response()->json(['error' => 'Server error'], 500);
         }
     }
@@ -810,7 +708,7 @@ class misController extends Controller
                     'rm.full_name as rm'
                     // DB::raw("COALESCE(rm_name.name, 'N/A') as rm")
                 )
-                ->where('digital_educator.role', '=', 'digitaleducator');
+                ->where('digital_educator.role', '=', 'digitalcounsellor');
 
             // Search
             if (!empty($searchValue)) {
@@ -839,7 +737,7 @@ class misController extends Controller
 
             // Total count without search filter
             $recordsTotal = DB::table('common.users')
-                ->where('role', '=', 'digitaleducator')
+                ->where('role', '=', 'digitalcounsellor')
                 ->count();
 
             $response = [
@@ -975,7 +873,7 @@ class misController extends Controller
                 ->leftJoin('common.zones as z', 'z.id', '=', DB::raw("NULLIF(doc.zone, '')::integer"))
                  ->leftJoin('common.users as u', function ($join) {
                     $join->on('u.id', '=', 'doc.educator_id')
-                        ->where('u.role', '=', 'educator');
+                        ->where('u.role', '=', 'counsellor');
                 })->select(
                     'doc.id',
                     'doc.msl_code',
@@ -1015,7 +913,7 @@ class misController extends Controller
             // Total count without search
             $recordsTotal = DB::table('public.doctor as doc')
                 ->leftJoin('common.users as u', 'u.id', '=', 'doc.educator_id')
-                ->where('u.role', 'educator')
+                ->where('u.role', 'counsellor')
                 ->count();
 
             return response()->json([
@@ -1316,7 +1214,7 @@ class misController extends Controller
                 'user_name' => $userName, // generated username
                 'password' => $hashedPassword,
                 'raw_password' => $request->password, // ⚠️ consider removing
-                'role' => 'digitaleducator',
+                'role' => 'digitalcounsellor',
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
@@ -1325,14 +1223,14 @@ class misController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => 'Digital Educator created successfully',
+                'message' => 'Digital counsellor created successfully',
                 'id' => $educatorId,
                 'username' => $userName
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Create Digital Educator Error: ' . $e->getMessage());
+            Log::error('Create Digital counsellor Error: ' . $e->getMessage());
 
             return response()->json([
                 'status' => false,
@@ -1370,20 +1268,20 @@ class misController extends Controller
             DB::table('common.users')
                 ->where('id', $request->educator_id)
 
-                ->where('role', 'digitaleducator') // safety check
+                ->where('role', 'digitalcounsellor') // safety check
                 ->update($updateData);
 
             DB::commit();
 
             return response()->json([
                 'status' => true,
-                'message' => 'Digital Educator updated successfully',
+                'message' => 'Digital counsellor updated successfully',
                 'id' => $request->educator_id
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Update Digital Educator Error: ' . $e->getMessage());
+            Log::error('Update Digital counsellor Error: ' . $e->getMessage());
 
             return response()->json([
                 'status' => false,
@@ -1480,7 +1378,7 @@ class misController extends Controller
     {
         $educators = DB::table('common.users')
             ->select('id', 'full_name')
-            ->where('role', 'digitaleducator')
+            ->where('role', 'digitalcounsellor')
             ->get();
 
         return response()->json($educators);
@@ -1494,13 +1392,13 @@ class misController extends Controller
 
         try {
             $educators = DB::table('common.users')
-                ->where('role', 'educator')
+                ->where('role', 'counsellor')
                 ->select('id', 'full_name')
                 ->get();
 
             return response()->json($educators);
         } catch (\Exception $e) {
-            Log::error('Get Educators Name Error: ' . $e->getMessage());
+            Log::error('Get counsellors Name Error: ' . $e->getMessage());
             return response()->json(['error' => 'Server error'], 500);
         }
     }
@@ -1519,8 +1417,8 @@ class misController extends Controller
             'educator_id' => 'required|integer',
             'hcp_id' => 'required|integer'
         ], [
-            'educator_id.required' => 'Please select an educator',
-            'hcp_id.required' => 'Please select a healthcare provider'
+            'educator_id.required' => 'Please select an counsellor',
+            'hcp_id.required' => 'Please select a Doctor'
         ]);
 
         try {
@@ -1539,9 +1437,9 @@ class misController extends Controller
                 ->update($updateData);
 
             if ($result) {
-                return response()->json(['success' => true, 'message' => 'Healthcare provider successfully assigned']);
+                return response()->json(['success' => true, 'message' => 'Doctor successfully assigned']);
             } else {
-                return response()->json(['success' => false, 'message' => 'Failed to assign healthcare provider']);
+                return response()->json(['success' => false, 'message' => 'Failed to assign Doctor']);
             }
         } catch (\Exception $e) {
             Log::error('Assign HCP Error: ' . $e->getMessage());
@@ -1675,7 +1573,7 @@ class misController extends Controller
         $data = DB::table('public.patient_details as pin')
             ->leftJoin('common.users as e', function ($join) {
                 $join->on('e.id', '=', 'pin.educator_id')
-                    ->where('e.role', '=', 'educator');
+                    ->where('e.role', '=', 'counsellor');
             })
             ->leftJoin('public.doctor as h', function ($join) {
                 $join->on(DB::raw('pin.hcp_id::text'), '=', DB::raw('h.id::text'))
@@ -1705,7 +1603,7 @@ class misController extends Controller
         $data = DB::table('public.patient_details as pin')
             ->leftJoin('common.users as e', function ($join) {
                 $join->on('e.id', '=', 'pin.educator_id')
-                    ->where('e.role', '=', 'educator');
+                    ->where('e.role', '=', 'counsellor');
             })
             ->leftJoin('public.doctor as h', function ($join) {
                 $join->on(DB::raw('pin.hcp_id::text'), '=', DB::raw('h.id::text'))
@@ -1729,7 +1627,7 @@ class misController extends Controller
         $data = DB::table('common.users as u')
             ->select('u.full_name as educator_name', DB::raw('COUNT(p.uuid) as session_count'))
             ->leftJoin('patient_details as p', 'u.id', '=', 'p.educator_id')
-            ->where('u.role', 'educator')
+            ->where('u.role', 'counsellor')
             ->whereNotNull('p.medicine')
             ->groupBy('u.id', 'u.full_name')
             ->orderBy('session_count', 'desc')
@@ -1751,7 +1649,7 @@ class misController extends Controller
                 DB::raw('COUNT(p.id) as session_count')
             )
             ->leftJoin('patient_details as p', 'u.id', '=', 'p.educator_id')
-            ->where('u.role', 'educator')
+            ->where('u.role', 'counsellor')
             ->whereNull('p.medicine')
             ->groupBy('u.id', 'u.full_name')
             ->orderBy('session_count', 'desc')
@@ -2486,10 +2384,10 @@ class misController extends Controller
             $baseQuery = DB::table('public.patient_details as a')
                 ->leftJoin('public.doctor as b', DB::raw('a.hcp_id::int'), '=', 'b.id')
                 ->leftJoin('common.users as c', function ($join) {
-                    $join->on(DB::raw('c.id'), '=', DB::raw('a.educator_id::int'))->where('c.role', '=', 'educator');
+                    $join->on(DB::raw('c.id'), '=', DB::raw('a.educator_id::int'))->where('c.role', '=', 'counsellor');
                 })
                 ->leftJoin('common.users as d', function ($join) {
-                    $join->on(DB::raw('d.id'), '=', DB::raw('a.digital_educator_id::int'))->where('d.role', '=', 'digitaleducator');
+                    $join->on(DB::raw('d.id'), '=', DB::raw('a.digital_educator_id::int'))->where('d.role', '=', 'digitalcounsellor');
                 })
                 ->leftJoin('public.feedback_submitted as e', DB::raw('a.id'), '=', DB::raw('e.patient_id::int'))
                 ->leftJoin('public.day3_followup as o', DB::raw('o.patient_id'), '=', DB::raw('e.patient_id::int'))

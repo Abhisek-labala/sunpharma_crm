@@ -52,20 +52,20 @@ class PmController extends Controller
             // Update record in users table
             $result = DB::table('common.users')
                 ->where('id', $educatorId)
-                ->where('role', 'educator')
+                ->where('role', 'counsellor')
                 ->update($updateData);
 
             if ($result) {
                 $message = is_null($updateData['rm_pm_id'])
-                    ? 'Educator successfully unassigned from RM'
-                    : 'Educator successfully assigned to RM';
+                    ? 'Counsellor successfully unassigned from RM'
+                    : 'Counsellor successfully assigned to RM';
 
                 return response()->json(['success' => true, 'message' => $message]);
             } else {
-                return response()->json(['success' => false, 'message' => 'Failed to assign educator']);
+                return response()->json(['success' => false, 'message' => 'Failed to assign counsellor']);
             }
         } catch (\Exception $e) {
-            Log::error('Assign Educator Error: ' . $e->getMessage());
+            Log::error('Assign Counsellor Error: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Server error']);
         }
     }
@@ -82,7 +82,7 @@ class PmController extends Controller
             'educator_id' => 'required|integer',
             'rm_id' => 'nullable|integer'
         ], [
-            'educator_id.required' => 'Please select an educator'
+            'educator_id.required' => 'Please select an counsellor'
         ]);
 
         try {
@@ -98,20 +98,20 @@ class PmController extends Controller
             // Update record in users table
             $result = DB::table('common.users')
                 ->where('id', $educatorId)
-                ->where('role', 'digitaleducator')
+                ->where('role', 'digitalcounsellor')
                 ->update($updateData);
 
             if ($result) {
                 $message = is_null($updateData['rm_pm_id'])
-                    ? 'DigitalEducator successfully unassigned from RM'
-                    : 'DigitalEducator successfully assigned to RM';
+                    ? 'DigitalCounsellor successfully unassigned from RM'
+                    : 'DigitalCounsellor successfully assigned to RM';
 
                 return response()->json(['success' => true, 'message' => $message]);
             } else {
-                return response()->json(['success' => false, 'message' => 'Failed to assign educator']);
+                return response()->json(['success' => false, 'message' => 'Failed to assign counsellor']);
             }
         } catch (\Exception $e) {
-            Log::error('Assign Educator Error: ' . $e->getMessage());
+            Log::error('Assign DigitalCounsellor Error: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Server error']);
         }
     }
@@ -128,8 +128,8 @@ class PmController extends Controller
             'educator_id' => 'required|integer',
             'hcp_id' => 'required|integer'
         ], [
-            'educator_id.required' => 'Please select an educator',
-            'hcp_id.required' => 'Please select a healthcare provider'
+            'educator_id.required' => 'Please select an counsellor',
+            'hcp_id.required' => 'Please select a doctor'
         ]);
 
         try {
@@ -148,12 +148,12 @@ class PmController extends Controller
                 ->update($updateData);
 
             if ($result) {
-                return response()->json(['success' => true, 'message' => 'Healthcare provider successfully assigned']);
+                return response()->json(['success' => true, 'message' => 'Doctor successfully assigned']);
             } else {
-                return response()->json(['success' => false, 'message' => 'Failed to assign healthcare provider']);
+                return response()->json(['success' => false, 'message' => 'Failed to assign doctor']);
             }
         } catch (\Exception $e) {
-            Log::error('Assign HCP Error: ' . $e->getMessage());
+            Log::error('Assign Doctor Error: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Server error']);
         }
     }
@@ -318,7 +318,7 @@ class PmController extends Controller
                     'rm.full_name as rm'
                     // DB::raw("COALESCE(rm_name.name, 'N/A') as rm")
                 )
-                ->where('educator.role', '=', 'educator');
+                ->where('educator.role', '=', 'counsellor');
 
             // Search
             if (!empty($searchValue)) {
@@ -347,7 +347,7 @@ class PmController extends Controller
 
             // Total count without search filter
             $recordsTotal = DB::table('common.users')
-                ->where('role', '=', 'educator')
+                ->where('role', '=', 'counsellor')
                 ->count();
 
             // Format response
@@ -361,7 +361,7 @@ class PmController extends Controller
             return response()->json($response);
 
         } catch (\Exception $e) {
-            Log::error('Educators DataTable Error: ' . $e->getMessage());
+            Log::error('Counsellors DataTable Error: ' . $e->getMessage());
             return response()->json(['error' => 'Server error'], 500);
         }
     }
@@ -408,7 +408,7 @@ class PmController extends Controller
                     'rm.full_name as rm'
                     // DB::raw("COALESCE(rm_name.name, 'N/A') as rm")
                 )
-                ->where('digital_educator.role', '=', 'digitaleducator');
+                ->where('digital_educator.role', '=', 'digitalcounsellor');
 
             // Search
             if (!empty($searchValue)) {
@@ -437,7 +437,7 @@ class PmController extends Controller
 
             // Total count without search filter
             $recordsTotal = DB::table('common.users')
-                ->where('role', '=', 'digitaleducator')
+                ->where('role', '=', 'digitalcounsellor')
                 ->count();
 
             $response = [
@@ -450,7 +450,7 @@ class PmController extends Controller
             return response()->json($response);
 
         } catch (\Exception $e) {
-            Log::error('Digital Educators DataTable Error: ' . $e->getMessage());
+            Log::error('Digital Counsellors DataTable Error: ' . $e->getMessage());
             return response()->json(['error' => 'Server error'], 500);
         }
     }
@@ -574,7 +574,7 @@ class PmController extends Controller
                 ->leftJoin('common.zones as z', 'z.id', '=', DB::raw("NULLIF(doc.zone, '')::integer"))
                 ->leftJoin('common.users as u', function ($join) {
                     $join->on('u.id', '=', 'doc.educator_id')
-                        ->where('u.role', '=', 'educator');
+                        ->where('u.role', '=', 'counsellor');
                 })->select(
                     'doc.id',
                     'doc.msl_code',
@@ -585,8 +585,7 @@ class PmController extends Controller
                     'doc.speciality',
                     'doc.first_visit',
                     'u.full_name as full_name'
-                )
-                ->where('u.role', '=', 'educator');
+                );
 
             // Search filter
             if (!empty($searchValue)) {
@@ -615,7 +614,7 @@ class PmController extends Controller
             // Total count without search
             $recordsTotal = DB::table('public.doctor as doc')
                 ->leftJoin('common.users as u', 'u.id', '=', 'doc.educator_id')
-                ->where('u.role', 'educator')
+                ->where('u.role', 'counsellor')
                 ->count();
 
             return response()->json([
@@ -670,7 +669,7 @@ class PmController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => 'Regional Manager updated successfully',
+                'message' => 'Regional Cordinator updated successfully',
                 'id' => $request->rm_id
             ]);
 
@@ -688,15 +687,15 @@ class PmController extends Controller
     {
         try {
             // Example delete
-            $deleted = DB::table('common.users')->where('id', $id)->where('role', 'digitaleducator')->delete();
+            $deleted = DB::table('common.users')->where('id', $id)->where('role', 'digitalcounsellor')->delete();
 
             if ($deleted > 0) {
-                return response()->json(['status' => true, 'message' => 'DigiEducator deleted successfully']);
+                return response()->json(['status' => true, 'message' => 'Digital Counsellor deleted successfully']);
             } else {
-                return response()->json(['status' => false, 'message' => 'DigiEducator not found or already deleted']);
+                return response()->json(['status' => false, 'message' => 'Digital Counsellor not found or already deleted']);
             }
         } catch (\Exception $e) {
-            Log::error('Delete DigiEducator Error: ' . $e->getMessage());
+            Log::error('Delete Digital Counsellor Error: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Server error']);
         }
     }
@@ -704,12 +703,12 @@ class PmController extends Controller
     {
         try {
             // Example delete
-            $deleted = DB::table('common.users')->where('id', $id)->where('role', 'educator')->delete();
+            $deleted = DB::table('common.users')->where('id', $id)->where('role', 'counsellor')->delete();
 
             if ($deleted > 0) {
-                return response()->json(['status' => true, 'message' => 'Educator deleted successfully']);
+                return response()->json(['status' => true, 'message' => 'Counsellor deleted successfully']);
             } else {
-                return response()->json(['status' => false, 'message' => 'Educator not found or already deleted']);
+                return response()->json(['status' => false, 'message' => 'Counsellor not found or already deleted']);
             }
         } catch (\Exception $e) {
             Log::error('Delete DigiEducator Error: ' . $e->getMessage());
@@ -723,12 +722,12 @@ class PmController extends Controller
             $deleted = DB::table('public.doctor')->where('id', $id)->delete();
 
             if ($deleted > 0) {
-                return response()->json(['status' => true, 'message' => 'Healthcare provider deleted successfully']);
+                return response()->json(['status' => true, 'message' => 'Doctor deleted successfully']);
             } else {
-                return response()->json(['status' => false, 'message' => 'Healthcare provider not found or already deleted']);
+                return response()->json(['status' => false, 'message' => 'Doctor not found or already deleted']);
             }
         } catch (\Exception $e) {
-            Log::error('Delete Healthcare provider Error: ' . $e->getMessage());
+            Log::error('Delete Doctor Error: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Server error']);
         }
     }
@@ -739,12 +738,12 @@ class PmController extends Controller
             $deleted = DB::table('common.rm_users')->where('id', $id)->delete();
 
             if ($deleted > 0) {
-                return response()->json(['status' => true, 'message' => 'Regional Manager deleted successfully']);
+                return response()->json(['status' => true, 'message' => 'Regional Cordinator deleted successfully']);
             } else {
-                return response()->json(['status' => false, 'message' => 'Regional Manager  not found or already deleted']);
+                return response()->json(['status' => false, 'message' => 'Regional Cordinator  not found or already deleted']);
             }
         } catch (\Exception $e) {
-            Log::error('Regional Manager  provider Error: ' . $e->getMessage());
+            Log::error('Regional Cordinator  provider Error: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Server error']);
         }
     }
@@ -784,13 +783,13 @@ class PmController extends Controller
 
         try {
             $educators = DB::table('common.users')
-                ->where('role', 'educator')
+                ->where('role', 'counsellor')
                 ->select('id', 'full_name')
                 ->get();
 
             return response()->json($educators);
         } catch (\Exception $e) {
-            Log::error('Get Educators Name Error: ' . $e->getMessage());
+            Log::error('Get Counsellor Name Error: ' . $e->getMessage());
             return response()->json(['error' => 'Server error'], 500);
         }
     }
@@ -803,13 +802,13 @@ class PmController extends Controller
 
         try {
             $educators = DB::table('common.users')
-                ->where('role', 'digitaleducator')
+                ->where('role', 'digitalcounsellor')
                 ->select('id', 'full_name')
                 ->get();
 
             return response()->json($educators);
         } catch (\Exception $e) {
-            Log::error('Get Digital Educators Name Error: ' . $e->getMessage());
+            Log::error('Get Digital Counsellor Name Error: ' . $e->getMessage());
             return response()->json(['error' => 'Server error'], 500);
         }
     }
@@ -827,7 +826,7 @@ class PmController extends Controller
 
             return response()->json($rms);
         } catch (\Exception $e) {
-            Log::error('Get RMs Name Error: ' . $e->getMessage());
+            Log::error('Get RCs Name Error: ' . $e->getMessage());
             return response()->json(['error' => 'Server error'], 500);
         }
     }
@@ -1336,7 +1335,7 @@ class PmController extends Controller
         $data = DB::table('public.patient_details as pin')
             ->leftJoin('common.users as e', function ($join) {
                 $join->on('e.id', '=', 'pin.educator_id')
-                    ->where('e.role', '=', 'educator');
+                    ->where('e.role', '=', 'counsellor');
             })
             ->leftJoin('public.doctor as h', function ($join) {
                 $join->on(DB::raw('pin.hcp_id::text'), '=', DB::raw('h.id::text'))
@@ -1366,7 +1365,7 @@ class PmController extends Controller
         $data = DB::table('public.patient_details as pin')
             ->leftJoin('common.users as e', function ($join) {
                 $join->on('e.id', '=', 'pin.educator_id')
-                    ->where('e.role', '=', 'educator');
+                    ->where('e.role', '=', 'counsellor');
             })
             ->leftJoin('public.doctor as h', function ($join) {
                 $join->on(DB::raw('pin.hcp_id::text'), '=', DB::raw('h.id::text'))
@@ -1390,7 +1389,7 @@ class PmController extends Controller
         $data = DB::table('common.users as u')
             ->select('u.full_name as educator_name', DB::raw('COUNT(p.uuid) as session_count'))
             ->leftJoin('patient_details as p', 'u.id', '=', 'p.educator_id')
-            ->where('u.role', 'educator')
+            ->where('u.role', 'counsellor')
             ->whereNotNull('p.medicine')
             ->groupBy('u.id', 'u.full_name')
             ->orderBy('session_count', 'desc')
@@ -1412,7 +1411,7 @@ class PmController extends Controller
                 DB::raw('COUNT(p.id) as session_count')
             )
             ->leftJoin('patient_details as p', 'u.id', '=', 'p.educator_id')
-            ->where('u.role', 'educator')
+            ->where('u.role', 'counsellor')
             ->whereNull('p.medicine')
             ->groupBy('u.id', 'u.full_name')
             ->orderBy('session_count', 'desc')
@@ -1471,14 +1470,14 @@ class PmController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => 'Regional Manager created successfully',
+                'message' => 'Regional Cordinator created successfully',
                 'id' => $rmId,
                 'username' => $userName
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Create RM Error: ' . $e->getMessage());
+            Log::error('Create RC Error: ' . $e->getMessage());
 
             return response()->json([
                 'status' => false,
@@ -1587,7 +1586,7 @@ class PmController extends Controller
                 'user_name' => $userName, // generated username
                 'password' => $hashedPassword,
                 'raw_password' => $request->password, // ⚠️ consider removing
-                'role' => 'digitaleducator',
+                'role' => 'digitalcounsellor',
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
@@ -1596,14 +1595,14 @@ class PmController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => 'Digital Educator created successfully',
+                'message' => 'Digital Counsellor created successfully',
                 'id' => $educatorId,
                 'username' => $userName
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Create Digital Educator Error: ' . $e->getMessage());
+            Log::error('Create Digital Counsellor Error: ' . $e->getMessage());
 
             return response()->json([
                 'status' => false,
@@ -1641,20 +1640,20 @@ class PmController extends Controller
             DB::table('common.users')
                 ->where('id', $request->educator_id)
 
-                ->where('role', 'digitaleducator') // safety check
+                ->where('role', 'digitalcounsellor') // safety check
                 ->update($updateData);
 
             DB::commit();
 
             return response()->json([
                 'status' => true,
-                'message' => 'Digital Educator updated successfully',
+                'message' => 'Digital Counsellor updated successfully',
                 'id' => $request->educator_id
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Update Digital Educator Error: ' . $e->getMessage());
+            Log::error('Update Digital Counsellor Error: ' . $e->getMessage());
 
             return response()->json([
                 'status' => false,
@@ -1722,7 +1721,7 @@ class PmController extends Controller
                 'state' => $request->state,
                 'address' => $request->address,
                 'profile_pic' => $profileImagePath, // store file path
-                'role' => 'educator',
+                'role' => 'counsellor',
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
@@ -1732,13 +1731,13 @@ class PmController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => 'Educator created successfully',
+                'message' => 'Counsellor created successfully',
                 'id' => $request->emp_id,
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack(); // rollback if file upload or insert fails
-            Log::error('Create Educator Error: ' . $e->getMessage());
+            Log::error('Create Counsellor Error: ' . $e->getMessage());
 
             return response()->json([
                 'status' => false,
@@ -1776,7 +1775,7 @@ class PmController extends Controller
     {
         $educators = DB::table('common.users')
             ->select('id', 'full_name')
-            ->where('role', 'digitaleducator')
+            ->where('role', 'digitalcounsellor')
             ->get();
 
         return response()->json($educators);
@@ -1825,7 +1824,7 @@ class PmController extends Controller
             $educator = DB::table('common.users')->where('id', $request->educator_id)->first();
 
             if (!$educator) {
-                throw new \Exception("Educator not found");
+                throw new \Exception("Counsellor not found");
             }
 
             $profileImagePath = $educator->profile_pic; // keep old if no new upload
@@ -1882,13 +1881,13 @@ class PmController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => 'Educator updated successfully',
+                'message' => 'Counsellor updated successfully',
                 'id' => $request->educator_id,
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Update Educator Error: ' . $e->getMessage());
+            Log::error('Update Counsellor Error: ' . $e->getMessage());
 
             return response()->json([
                 'status' => false,

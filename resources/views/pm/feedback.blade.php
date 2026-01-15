@@ -26,15 +26,15 @@
                                 <thead>
                                     <tr>
                                         <th>Sr</th>
-                                        <th>Educator Name</th>
-                                        <th>Digital Educator Name</th>
+                                        <th>Counsellor Name</th>
+                                        <th>Digital Counsellor Name</th>
                                         <th>Name</th>
                                         <th>Gender</th>
                                         <th>Age</th>
                                         <th>Height</th>
                                         <th>Weight</th>
                                         <th>Doctor Name</th>
-                                        <th>Cipla Brand Prescribed</th>
+                                        <th>Sun Pharma Brand Prescribed</th>
                                         <th>Date</th>
                                         <th>Actions</th>
                                     </tr>
@@ -94,6 +94,6 @@
 
 <script>
     function openform(id) {
-        window.location.href = '{{ url('pm-feedbackform') }}?patient_id=' + id;
+        window.location.href = '{{ url('nc-feedbackform') }}?patient_id=' + id;
     }
 </script>

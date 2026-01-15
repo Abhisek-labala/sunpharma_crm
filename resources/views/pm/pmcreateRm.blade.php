@@ -27,10 +27,10 @@
 				<div class="col-lg-12">
 					<div class="card">
 						<div class="card-header">
-							<h4 class="card-title">RM Management</h4>
+							<h4 class="card-title">RC Management</h4>
 							<button type="button" class="btn btn-primary float-right" data-toggle="modal"
 								data-target="#rmModal" onclick="resetForm()">
-								<i class="fa fa-plus"></i> Add RM
+								<i class="fa fa-plus"></i> Add RC
 							</button>
 						</div>
 						<div class="card-body">
@@ -69,10 +69,10 @@
 	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="modalTitle">Add Rm</h5>
+				<h5 class="modal-title" id="modalTitle">Add RC</h5>
 			</div>
 			<div class="modal-body">
-				<form action="Pm-Create-Rm-Post" name="createRm" id="createRm" method="post"
+				<form action="nc-Create-Rm-Post" name="createRm" id="createRm" method="post"
 					enctype="multipart/form-data">
 					<input type="hidden" name="rm_id" id="rm_id">
 					<div class="row">
@@ -128,7 +128,7 @@
 				<h5 class="modal-title">Confirm Delete</h5>
 			</div>
 			<div class="modal-body">
-				<p>Are you sure you want to delete this rm?</p>
+				<p>Are you sure you want to delete this rc?</p>
 				<input type="hidden" id="delete_id">
 			</div>
 			<div class="modal-footer">
@@ -155,7 +155,7 @@
 				processing: true,
 				serverSide: true,
 				ajax: {
-					url: 'Pm-Get-Rm',
+					url: 'nc-Get-Rm',
 					type: 'POST',
 					dataType: 'json',
 					contentType: 'application/json',
@@ -253,7 +253,7 @@
     var id = $('#delete_id').val();
 
     $.ajax({
-        url: 'Pm-Delete-Rm/' + id,
+        url: 'nc-Delete-Rm/' + id,
         type: 'POST',
         dataType: 'json',
         data: {
@@ -284,12 +284,12 @@
     var rowData = table.rows().data().toArray().find(r => r.id == id);
 
     if (!rowData) {
-        toastr.error("RM not found");
+        toastr.error("RC not found");
         return;
     }
 
     // Change modal title
-    $('#modalTitle').text("Edit RM");
+    $('#modalTitle').text("Edit RC");
 $('#rm_id').val(rowData.id);
 $('#submitBtn').prop('disabled', false);
     // Populate form fields
@@ -318,7 +318,7 @@ $('#submitBtn').prop('disabled', false);
 
     if (validateRmForm()) {
         var formData = new FormData(this);
-        var url = $('#rm_id').val() ? 'Pm-Update-Rm-Post' : 'Pm-Create-Rm-Post';
+        var url = $('#rm_id').val() ? 'nc-Update-Rm-Post' : 'nc-Create-Rm-Post';
         $.ajax({
             url: url,
             type: 'POST',

@@ -18,21 +18,21 @@
                                 @csrf
 
                                 <div class="mb-3 row">
-                                    <label class="col-form-label col-md-2">Select Educator</label>
+                                    <label class="col-form-label col-md-2">Select Counsellor</label>
                                     <div class="col-md-10">
                                         <select name="educator_id" id="educator_id" class="form-select form-control" required>
-                                            <option value="">-- Select Educator --</option>
+                                            <option value="">-- Select Counsellor --</option>
 
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="mb-3 row">
-                                    <label class="col-form-label col-md-2">Assign to RM</label>
+                                    <label class="col-form-label col-md-2">Assign to RC</label>
                                     <div class="col-md-10">
                                         <select name="rm_id" id="rm_id" class="form-select form-control" required>
-                                            <option value="">-- Select Regional Manager --</option>
-                                            <option value="0">Unassign (No RM)</option>
+                                            <option value="">-- Select Regional Cordinator --</option>
+                                            <option value="0">Unassign (No RC)</option>
 
                                         </select>
                                     </div>
@@ -41,7 +41,7 @@
                                 <div class="mb-3 row">
                                     <label class="col-form-label col-md-2"></label>
                                     <div class="col-md-10">
-                                        <button type="submit" class="btn btn-primary">Assign Educator</button>
+                                        <button type="submit" class="btn btn-primary">Assign Counsellor</button>
                                         <div id="responseMessage" class="mt-2"></div>
                                     </div>
                                 </div>
@@ -99,8 +99,8 @@ $(document).ready(function() {
             success: function(data) {
                 let rmSelect = $('#rm_id');
                 rmSelect.empty();
-                rmSelect.append('<option value="">-- Select Regional Manager --</option>');
-                rmSelect.append('<option value="0">Unassign (No RM)</option>');
+                rmSelect.append('<option value="">-- Select Regional Cordinator --</option>');
+                rmSelect.append('<option value="0">Unassign (No RC)</option>');
                 data.forEach(function(rm) {
                     rmSelect.append('<option value="' + rm.id + '">' + rm.full_name + '</option>');
                 });
@@ -133,7 +133,7 @@ $(document).ready(function() {
         $('button[type="submit"]').prop('disabled', true).html('Processing...');
 
         $.ajax({
-             url: "{{ url('pm-Assign-Educator-Post') }}",
+             url: "{{ url('nc-Assign-Educator-Post') }}",
             method: 'POST',
             data: formData,
             success: function(response) {

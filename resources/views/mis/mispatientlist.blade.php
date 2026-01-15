@@ -47,7 +47,7 @@ $(document).ready(function () {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ route('mis.patientslist') }}",
+            url: "{{ route('admin.patientslist') }}",
             type: 'GET',
             data: function (d) {
                 // You can add additional parameters here if needed
@@ -124,7 +124,7 @@ $(document).ready(function () {
 
     // Define global function for form redirection
     window.openForm = function (patientId) {
-        window.location.href = '/mis/educator-follow-up-form?patient_id=' + patientId;
+        window.location.href = '/admin/educator-follow-up-form?patient_id=' + patientId;
     };
 });
 </script>

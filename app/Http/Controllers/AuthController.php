@@ -64,8 +64,8 @@ class AuthController extends Controller
 
                 $redirectRoute = match ($user->role) {
                     'counsellor' => route('educator.attendance.index'),
-                    'pm' => route('dashboard.pm'),
-                    'mis' => route('dashboard.mis'),
+                    'nc' => route('dashboard.pm'),
+                    'admin' => route('dashboard.mis'),
                     'digitalcounsellor' => route('digitaleducator.attendance.index'),
                     'yogaeducator' => route('dashboard.yogaeducator'),
                     default => route('login'),
