@@ -38,7 +38,7 @@
                         <a href="{{ url('nc-campreport') }}"><i class="fa fa-ticket"></i> <span>Camp Report</span></a>
                     </li>
                     <li>
-                        <a href="{{ url('nc/attendance-report') }}"><i class="fa fa-calendar-check-o"></i> <span>Attendance Report</span></a>
+                        <a href="{{ url('nc/attendance-report') }}"><i class="fa fa-calendar-check"></i> <span>Attendance Report</span></a>
                     </li>
                     <li>
                         <a href="{{ url('nc-feedbackreport') }}"><i class="fa-solid fa-file-excel"></i> <span>Feedback

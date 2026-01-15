@@ -48,7 +48,7 @@
                 </li>
                 <li>
                     <a href="{{ url('admin/attendance-report') }}">
-                        <i class="fa fa-calendar-check-o"></i> <span>Attendance Report</span>
+                        <i class="fa fa-calendar-check"></i> <span>Attendance Report</span>
                     </a>
                 </li>
                 <li>
