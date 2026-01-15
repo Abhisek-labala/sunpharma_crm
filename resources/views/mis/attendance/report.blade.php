@@ -37,7 +37,7 @@
                                         <option value="">All Roles</option>
                                         <option value="counsellor">Counsellor</option>
                                         <option value="digitalcounsellor">Digital Counsellor</option>
-                                        <option value="rm">RC (Regional Coordinator)</option>
+                                        <option value="rc">RC (Regional Coordinator)</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3 d-flex align-items-end">
