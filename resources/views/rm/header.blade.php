@@ -84,7 +84,7 @@
     }
 
     .thembutton {
-        background: linear-gradient(135deg, #1d3557, #6c0636);
+        background: linear-gradient(135deg, #7b1fa2, #c2185b);
         border: 0px;
     }
 </style>

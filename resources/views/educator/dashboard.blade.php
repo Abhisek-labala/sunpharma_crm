@@ -106,7 +106,6 @@
                                 <th>Patient Name</th>
                                 <th>Mobile</th>
                                 <th>Gender</th>
-                                <th>Blood Pressure</th>
                                 <th>BMI</th>
                                 <th>Consent Form</th>
                                 <th>Prescription</th>
@@ -178,7 +177,6 @@
                 { data: 'patient_name', name: 'patient_name' },
                 { data: 'mobile_number', name: 'mobile_number' },
                 { data: 'gender', name: 'gender' },
-                { data: 'blood_pressure', name: 'blood_pressure', defaultContent: '-' },
                 { data: 'bmi', name: 'bmi', defaultContent: '-' },
                 {
                     data: 'consent_form_file',

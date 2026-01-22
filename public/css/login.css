@@ -6,7 +6,7 @@
     }
 
     body {
-        background: #e6f3fb center center no-repeat;
+        background: #f3e5f5 center center no-repeat;
         background-size: cover;
         min-height: 100vh;
         display: flex;
@@ -37,7 +37,7 @@
     }
 
     .left {
-        background: linear-gradient(135deg, #1d3557, #6c0636);
+        background: linear-gradient(135deg, #7b1fa2, #c2185b);
         color: white;
         text-align: center;
         margin-left: -14px;
@@ -63,7 +63,7 @@
     .right h2 {
         text-align: center;
         margin-bottom: 30px;
-        color: #1d3557;
+        color: #6a1b9a;
     }
 
     .input-box {
@@ -76,7 +76,7 @@
         padding: 12px 15px;
         border-radius: 8px;
         border: none;
-        background-color: #eaf4fb;
+        background-color: #fce4ec;
         border: 1px solid #e9e9e9;
     }
 
@@ -85,7 +85,7 @@
         left: 10px;
         top: 50%;
         transform: translateY(-50%);
-        color: #1d3557;
+        color: #6a1b9a;
     }
 
     .options {
@@ -97,7 +97,7 @@
     }
 
     .login-btn {
-        background: linear-gradient(to right, #2d2d75, #c42942);
+        background: linear-gradient(to right, #7b1fa2, #e91e63);
         color: white;
         padding: 12px;
         border: none;
@@ -110,12 +110,12 @@
     .signup {
         text-align: center;
         margin-top: 20px;
-        color: #1d3557;
+        color: #6a1b9a;
         font-size: 14px;
     }
 
     .signup a {
-        color: #c42942;
+        color: #c2185b;
         text-decoration: none;
     }
 
@@ -183,7 +183,7 @@
         top: 50%;
         transform: translateY(-50%);
         cursor: pointer;
-        color: #1d3557;
+        color: #6a1b9a;
         font-size: 18px;
         user-select: none;
     }

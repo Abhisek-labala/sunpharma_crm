@@ -7,6 +7,18 @@
     <div class="page-wrapper" style="min-height: 653px;">
         <div class="content container-fluid">
             @include('educator/breadcum')
+            
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">Patient List</h4>
+                        <a href="{{ route('educator.patient.step1') }}" class="btn btn-primary">
+                            <i class="fa fa-plus"></i> Add New Patient
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <div class="card">
                 <div class="card-body">
                     <table id="patientTable" class="table table-bordered">
@@ -20,7 +32,7 @@
                                 <th>Weight</th>
                                 <th>Height</th>
                                 <th>Doctor Name</th>
-                                <th>Cipla Brand Prescribed</th>
+                                <th>Brand Prescribed</th>
                                 <th>Camp</th>
                                 <th>Date</th>
                                 <th>RC Approved Status</th>
@@ -152,7 +164,7 @@ $(document).ready(function () {
                 orderable: false
             }
         ],
-        order: [[0, 'desc']], // Default ordering
+        order: [[10, 'desc']], // Default ordering by date column
         scrollX: true,
         language: {
             processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span> '

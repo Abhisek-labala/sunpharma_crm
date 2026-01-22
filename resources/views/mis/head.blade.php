@@ -1,6 +1,6 @@
 <head>
     @php
-        $ProjectName = config('app.name', 'Hridayam');
+        $ProjectName = config('app.name', 'SunPharma');
     @endphp
 
     <meta charset="utf-8">

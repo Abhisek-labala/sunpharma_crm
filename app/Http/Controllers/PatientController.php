@@ -25,8 +25,38 @@ class PatientController extends Controller
 {
     public function patientform(Request $request)
     {
-        return view('educator.patientform');
+        return redirect()->route('educator.patient.step1');
     }
+
+    public function step1View(Request $request, $uuid = null)
+    {
+        $data = [];
+        if($uuid) {
+            $data['patient'] = Patient::where('uuid', $uuid)->first();
+            $data['uuid'] = $uuid;
+        }
+        return view('educator.patientform_step1', $data);
+    }
+
+    public function step2View($uuid)
+    {
+        $patient = Patient::where('uuid', $uuid)->firstOrFail();
+        return view('educator.patientform_step2', ['patient' => $patient, 'uuid' => $uuid]);
+    }
+
+    public function step3View($uuid)
+    {
+        $patient = Patient::where('uuid', $uuid)->firstOrFail();
+        $medication = PatientMedicationDetail::where('uuid', $uuid)->first();
+        return view('educator.patientform_step3', ['patient' => $patient, 'medication' => $medication, 'uuid' => $uuid]);
+    }
+
+    public function step4View($uuid)
+    {
+        $patient = Patient::where('uuid', $uuid)->firstOrFail();
+        return view('educator.patientform_step4', ['patient' => $patient, 'uuid' => $uuid]);
+    }
+
     public function patientlist()
     {
         return view('educator.patientlist');
@@ -107,240 +137,174 @@ class PatientController extends Controller
             'data' => $medicines,
         ]);
     }
+    public function saveStep1(Request $request)
+    {
+        try {
+            $educatorId = Auth::id();
+            $uuid = $request->input('patient_uuid');
+            $digitaleducatorid = User::where('id', $educatorId)->value('digital_educator_id');
+
+            if (!$uuid) {
+                $uuid = Str::uuid();
+                $patient = new Patient();
+                $patient->uuid = $uuid;
+                $patient->created_at = now();
+            } else {
+                $patient = Patient::where('uuid', $uuid)->firstOrFail();
+            }
+
+            $patient->educator_id = $educatorId;
+            $patient->digital_educator_id = $digitaleducatorid;
+            $patient->camp_id = $request->input('campId');
+            $patient->hcp_id = $request->input('hcp_name');
+            $patient->date = now()->format('Y-m-d');
+            $patient->save();
+
+            return response()->json(['success' => true, 'uuid' => $uuid]);
+        } catch (\Exception $e) {
+             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function saveStep2(Request $request)
+    {
+         try {
+            $uuid = $request->input('patient_uuid');
+            if (!$uuid) return response()->json(['success' => false, 'message' => 'UUID missing'], 400);
+
+            $patient = Patient::where('uuid', $uuid)->firstOrFail();
+            $patient->patient_name = $request->input('patient_name');
+            $patient->mobile_number = $request->input('mobile_number');
+            $patient->age = $request->input('age');
+            $patient->gender = $request->input('gender');
+            $patient->patient_city = $request->input('patient_city');
+            $patient->save();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function saveStep3(Request $request)
+    {
+        try {
+            $uuid = $request->input('patient_uuid');
+            if (!$uuid) return response()->json(['success' => false, 'message' => 'UUID missing'], 400);
+
+            $details = PatientMedicationDetail::firstOrNew(['uuid' => $uuid]);
+            $details->weight = $request->input('weight');
+            $details->height = $request->input('height');
+            $details->waist_circumference = $request->input('waist_circumference');
+            $details->bmi = $request->input('bmi');
+            $details->waist_to_height_ratio = $request->input('w_htr');
+            $details->metabolic_age = $request->input('metabolic_age');
+            $details->co_morbidities = $request->input('co_morbidities');
+            $details->remark = $request->input('additional_notes');
+            $details->date = now()->format('Y-m-d');
+            
+            if (!$details->exists) {
+                $details->created_at = now();
+            }
+            $details->update_at = now();
+            $details->save();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
     public function createPatientInquiryPost(Request $request)
     {
         $educatorId = Auth::id();
-        $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp']; // added webp
-        $uploadDirs = ['prescription', 'consent', 'purchasebill'];
-
-        $ciplaPrescribed = $request->input('ciplaBrandPrescribed', 'No');
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+        
+        $ciplaPrescribed = $request->input('sunpharma_prescribed', 'No'); // Changed input name from frontend
         $patientEnrolled = $request->input('patientEnrolled', 'No');
-        $prescription_available = $request->input('prescription_available', 'No');
-        $medicineString = null;
+        $prescription_available = $request->input('prescription_available', 'No'); // Frontend doesn't seem to send this explicitly in step 4 block? Checking form...
+        
+        $brandPrescribed = $request->input('brand_prescribed');
+        $competitorBrand = $request->input('competitor_brand');
+        
         $prescriptionFilenames = [];
-        $consentFilename = '';
-        $purchasebillname = '';
-
-        // Helper for optional inputs
-        $getOrNull = fn($key) => $request->has($key) ? $request->input($key) : null;
-
-        // ---------- Handle Prescription & Consent ----------
-        if ($ciplaPrescribed == 'Yes' && $patientEnrolled == 'Yes' && $prescription_available == 'Yes') {
-            if (!$request->hasFile('fileToUpload')) {
-                return response()->json(['success' => false, 'message' => "Please upload Prescription."], 422);
-            }
-            if (!$request->hasFile('consentForm')) {
-                return response()->json(['success' => false, 'message' => "Please upload Consent Form."], 422);
-            }
-
-            // Prescription images
-            foreach ($request->file('fileToUpload') as $file) {
-                $extension = strtolower($file->getClientOriginalExtension());
-                if (!in_array($extension, $allowedExtensions)) {
-                    return response()->json(['success' => false, 'message' => "Invalid prescription file format: {$file->getClientOriginalName()}"], 422);
-                }
-
-                // Convert to WebP and resize
+        $consentFilename = null;
+        $purchasebillname = null;
+        
+        // Handling File Uploads
+        if ($request->hasFile('prescription_file')) { // New field name
+            $file = $request->file('prescription_file');
+            $extension = strtolower($file->getClientOriginalExtension());
+             if (in_array($extension, $allowedExtensions)) {
                 $filename = time() . '_' . Str::random(10) . '.webp';
                 $image = Image::make($file)->resize(1024, null, function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 })->encode('webp', 75);
-
                 Storage::disk('private')->put('prescription/' . $filename, (string) $image);
                 $prescriptionFilenames[] = 'prescription/' . $filename;
-            }
-
-            // Consent Form
-            $consentFile = $request->file('consentForm');
-            $extension = strtolower($consentFile->getClientOriginalExtension());
-            if (!in_array($extension, $allowedExtensions)) {
-                return response()->json(['success' => false, 'message' => 'Invalid consent form file format.'], 422);
-            }
-
-            $consentFilename = 'consent/' . 'Consent_' . time() . '_' . Str::random(10) . '.webp';
-            $image = Image::make($consentFile)->resize(1024, null, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            })->encode('webp', 75);
-            Storage::disk('private')->put($consentFilename, (string) $image);
-
-            if ($request->filled('medicine')) {
-                $medicineString = implode(',', $request->input('medicine'));
-            }
-        } elseif ($ciplaPrescribed == 'Yes' && $patientEnrolled == 'Yes' && $prescription_available == 'No') {
-            if ($request->filled('medicine')) {
-                $medicineString = implode(',', $request->input('medicine'));
-            }
-        } elseif ($ciplaPrescribed == 'Yes' && $patientEnrolled == 'No' && $prescription_available == 'No') {
-            if ($request->hasFile('consentForm')) {
-                return response()->json(['success' => false, 'message' => 'Consent form not required. Please remove it.'], 422);
-            }
-            if ($request->filled('medicine')) {
-                $medicineString = implode(',', $request->input('medicine'));
-            }
-        } elseif ($ciplaPrescribed == 'Yes' && $patientEnrolled == 'No' && $prescription_available == 'Yes') {
-            if (!$request->hasFile('fileToUpload')) {
-                return response()->json(['success' => false, 'message' => "Please upload Prescription."], 422);
-            }
-
-            foreach ($request->file('fileToUpload') as $file) {
-                $extension = strtolower($file->getClientOriginalExtension());
-                if (!in_array($extension, $allowedExtensions)) {
-                    return response()->json(['success' => false, 'message' => "Invalid prescription file format: {$file->getClientOriginalName()}"], 422);
-                }
-
-                $filename = time() . '_' . Str::random(10) . '.webp';
+             }
+        }
+        
+        if ($request->hasFile('consent_form')) { // New field name
+             $file = $request->file('consent_form');
+             $extension = strtolower($file->getClientOriginalExtension());
+             if (in_array($extension, $allowedExtensions)) {
+                $filename = 'consent/' . 'Consent_' . time() . '_' . Str::random(10) . '.webp';
                 $image = Image::make($file)->resize(1024, null, function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 })->encode('webp', 75);
-
-                Storage::disk('private')->put('prescription/' . $filename, (string) $image);
-                $prescriptionFilenames[] = 'prescription/' . $filename;
-            }
-
-            if ($request->hasFile('consentForm')) {
-                return response()->json(['success' => false, 'message' => 'Consent form not required. Please remove it.'], 422);
-            }
-
-            if ($request->filled('medicine')) {
-                $medicineString = implode(',', $request->input('medicine'));
-            }
+                Storage::disk('private')->put($filename, (string) $image);
+                $consentFilename = $filename;
+             }
         }
 
-        // ---------- Handle Purchase Bill ----------
-        $prescribedselect = $request->input('prescribedselect', 'No');
-        if ($prescribedselect === 'Purchase Bill Available') {
-            if (!$request->hasFile('purchasebill')) {
-                return response()->json(['success' => false, 'message' => "Please upload purchasebill."], 422);
-            }
-
-            $purchasebillFile = $request->file('purchasebill');
-            $purchasebillname = 'purchasebill/' . 'purchasebill_' . time() . '_' . Str::random(10) . '.webp';
-            $image = Image::make($purchasebillFile)->resize(1024, null, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            })->encode('webp', 75);
-
-            Storage::disk('private')->put($purchasebillname, (string) $image);
+        // ---------- DB Insert/Update ----------
+        $uuid = $request->input('patient_uuid');
+        if (!$uuid) {
+            // Should not happen if wizard flow is followed, but fallback
+            $uuid = Str::uuid();
         }
-
-        // ---------- DB Insert ----------
-        $uuid = Str::uuid();
+        
         $currentDate = now()->format('Y-m-d');
-        $timestamp = now()->toDateTimeString(); // same as format('Y-m-d H:i:s')
+        $timestamp = now()->toDateTimeString();
         $digitaleducatorid = User::where('id', $educatorId)->value('digital_educator_id');
+        
         $hasPrescription = !empty($prescriptionFilenames);
         $hasConsent      = !empty($consentFilename);
-        $hasPurchaseBill = !empty($purchasebillname);
-
-        // Default Approved
+        
+        // Default Approved Logic
         $approvedStatus = 'Approved';
-
-        if ($hasPrescription || $hasConsent || $hasPurchaseBill) {
+        if ($hasPrescription || $hasConsent) {
             $approvedStatus = 'Pending';
         }
+
         DB::beginTransaction();
         try {
-            Patient::create([
-                'uuid' => $uuid,
-                'educator_id' => $educatorId,
-                'digital_educator_id' => $digitaleducatorid,
-                'camp_id' => $getOrNull('campId'),
-                'hcp_id' => $request->input('hcp_name'),
-                'patient_name' => $getOrNull('patient_name'),
-                'age' => $getOrNull('age'),
-                'mobile_number' => $getOrNull('mobile_number'),
-                'gender' => $getOrNull('gender'),
-                'medicine' => $medicineString,
-                'patient_enrolled' => $getOrNull('patientEnrolled'),
-                'patient_kit_enrolled' => $getOrNull('patient_kit_enrolled'),
-                'compititor' => $request->filled('Compititor') ? implode(',', $request->input('Compititor')) : null,
-                'consent_form_file' => $consentFilename ?: null,
-                'prescription_file' => !empty($prescriptionFilenames) ? implode(',', $prescriptionFilenames) : null,
-                'cipla_brand_prescribed' => $getOrNull('ciplaBrandPrescribed'),
-                'cipla_brand_prescribed_no_option' => $getOrNull('prescribedselect'),
-                'prescription_available' => $getOrNull('prescription_available'),
-                'purchase_bill' => $purchasebillname ?: null,
-                'date' => $currentDate,
-                'approved_status' => $approvedStatus,
-                'created_at' => $timestamp,
-                'updated_at' => $timestamp
-            ]);
+            $patient = Patient::updateOrCreate(
+                ['uuid' => $uuid],
+                [
+                    'educator_id' => $educatorId,
+                    'digital_educator_id' => $digitaleducatorid,
+                    'cipla_brand_prescribed' => $ciplaPrescribed, // Note: DB column might be cipla_brand_prescribed
+                    'medicine' => $brandPrescribed,
+                    'compititor' => $competitorBrand,
+                    'prescription_file' => !empty($prescriptionFilenames) ? implode(',', $prescriptionFilenames) : null,
+                    'consent_form_file' => $consentFilename,
+                    'approved_status' => $approvedStatus,
+                    'date' => $currentDate,
+                    'date' => $currentDate,
+                ]
+            );
 
-            PatientCardioDetail::create([
-                'uuid' => $uuid,
-                'date_of_discharge' => $getOrNull('date_of_discharge'),
-                'blood_pressure' => $getOrNull('blood_pressure'),
-                'urea' => $getOrNull('urea'),
-                'lv_ef' => $getOrNull('lv_ef'),
-                'heart_rate' => $getOrNull('heart_rate'),
-                'nt_pro_bnp' => $getOrNull('nt_pro_bnp'),
-                'egfr' => $getOrNull('egfr'),
-                'potassium' => $getOrNull('potassium'),
-                'sodium' => $getOrNull('sodium'),
-                'uric_acid' => $getOrNull('uric_acid'),
-                'creatinine' => $getOrNull('creatinine'),
-                'crp' => $getOrNull('crp'),
-                'uacr' => $getOrNull('uacr'),
-                'iron' => $getOrNull('iron'),
-                'hb' => $getOrNull('hb'),
-                'ldl' => $getOrNull('ldl'),
-                'hdl' => $getOrNull('hdl'),
-                'triglycerid' => $getOrNull('triglycerid'),
-                'total_cholesterol' => $getOrNull('total_cholesterol'),
-                'hba1c' => $getOrNull('hba1c'),
-                'sgot' => $getOrNull('sgot'),
-                'sgpt' => $getOrNull('sgpt'),
-                'vit_d' => $getOrNull('vit_d'),
-                'anti_diabetic_therapy' => $getOrNull('anti_diabetic_therapy'),
-                'sglt2_inhibitors' => $getOrNull('sglt2_inhibitors'),
-                't3' => $getOrNull('t3'),
-                't4' => $getOrNull('t4'),
-                'date' => $currentDate,
-                'created_at' => $timestamp,
-                'updated_at' => $timestamp
-            ]);
-
-            PatientMedicationDetail::create([
-                'uuid' => $uuid,
-                'arni' => $getOrNull('arni'),
-                'b_blockers' => $getOrNull('b_blockers'),
-                'mra' => $getOrNull('mra'),
-                'arni_remark' => $getOrNull('arni_remark'),
-                'b_blockers_remark' => $getOrNull('b_blockers_remark'),
-                'mra_remark' => $getOrNull('mra_remark'),
-                'remark' => $getOrNull('remark'),
-                'weight' => $getOrNull('weight'),
-                'height' => $getOrNull('height'),
-                'waist_circumference_remark' => $getOrNull('waist_circumference_remark'),
-                'bmi' => $getOrNull('bmi'),
-                'waist_to_height_ratio' => $getOrNull('waist_to_height_ratio'),
-                'vaccination' => $getOrNull('vaccination'),
-                'influenza' => $getOrNull('influenza'),
-                'pneumococcal' => $getOrNull('pneumococcal'),
-                'cardiac_rehab' => $getOrNull('cardiac_rehab'),
-                'nsaids_use' => $getOrNull('nsaids_use'),
-                'patient_kit_given' => $getOrNull('patient_kit_given'),
-                'exercise_30mins' => $getOrNull('exercise_30mins'),
-                'food_habits' => $getOrNull('food_habits'),
-                'sedentary_hours' => $getOrNull('sedentary_hours'),
-                'type_2_dm' => $getOrNull('type_2_dm'),
-                'hypertension' => $getOrNull('hypertension'),
-                'dyslipidemia' => $getOrNull('dyslipidemia'),
-                'pco' => $getOrNull('pco'),
-                'knee_pain' => $getOrNull('knee_pain'),
-                'asthma' => $getOrNull('asthma'),
-                'adl_bathing' => $getOrNull('adl_bathing'),
-                'adl_dressing' => $getOrNull('adl_dressing'),
-                'adl_walking' => $getOrNull('adl_walking'),
-                'adl_toileting' => $getOrNull('adl_toileting'),
-                'date' => $currentDate,
-                'created_at' => $timestamp,
-                'updated_at' => $timestamp,
-                'breakfast_days' => $getOrNull('breakfast_days')
-            ]);
+            PatientMedicationDetail::updateOrCreate(
+                ['uuid' => $uuid],
+                [
+                    'date' => $currentDate,
+                    'update_at' => $timestamp
+                ]
+            );
 
             DB::commit();
 
@@ -350,14 +314,6 @@ class PatientController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-
-            // Delete uploaded files if transaction fails
-            foreach (array_merge($prescriptionFilenames, [$consentFilename, $purchasebillname]) as $file) {
-                if ($file && Storage::disk('private')->exists($file)) {
-                    Storage::disk('private')->delete($file);
-                }
-            }
-
             return response()->json([
                 'success' => false,
                 'message' => 'Error: ' . $e->getMessage(),
@@ -368,17 +324,22 @@ class PatientController extends Controller
 
     public function getPatientList(Request $request)
     {
-        // echo 'g';die;
-        $user_id = Auth::id();
-        $draw = $request->get('draw');
-        $start = $request->get('start');
-        $length = $request->get('length');
-        $search = $request->get('search');
-        $searchValue = $search['value'];
+        // If this is not an AJAX request, return the view
+        if (!$request->ajax() && !$request->expectsJson()) {
+            return view('educator.patientlist');
+        }
 
-        $order = $request->get('order');
-        $orderColumn = $order[0]['column'];
-        $orderDir = $order[0]['dir'];
+        // AJAX request - return JSON data for DataTable
+        $user_id = Auth::id();
+        $draw = $request->get('draw', 1);
+        $start = $request->get('start', 0);
+        $length = $request->get('length', 10);
+        $search = $request->get('search', []);
+        $searchValue = $search['value'] ?? '';
+
+        $order = $request->get('order', []);
+        $orderColumn = $order[0]['column'] ?? 0;
+        $orderDir = $order[0]['dir'] ?? 'desc';
 
         // Column mapping for ordering
         $columns = [
@@ -398,7 +359,6 @@ class PatientController extends Controller
 
         $orderColumnName = $columns[$orderColumn] ?? 'a.id';
         $query = DB::table('public.patient_details as a')
-            ->leftJoin('public.patient_cardio_details as b', 'a.uuid', '=', 'b.uuid')
             ->leftJoin('public.patient_medication_details as c', 'a.uuid', '=', 'c.uuid')
             ->leftJoin('common.users as d', function ($join) {
                 $join->on('a.educator_id', '=', 'd.id')
@@ -593,18 +553,12 @@ class PatientController extends Controller
                 'mobile_number' => $getOrNull('mobile_number'),
                 'gender' => $getOrNull('gender'),
                 'medicine' => $medicineString,
-                'patient_enrolled' => $getOrNull('patientEnrolled'),
-                'patient_kit_enrolled' => $getOrNull('patient_kit_enrolled'),
                 'compititor' => $request->filled('Compititor') ? implode(',', $request->input('Compititor')) : null,
                 'consent_form_file' => $consentFilename ?: null,
                 'prescription_file' => !empty($prescriptionFilenames) ? implode(',', $prescriptionFilenames) : null,
                 'cipla_brand_prescribed' => $getOrNull('ciplaBrandPrescribed'),
-                'cipla_brand_prescribed_no_option' => $getOrNull('prescribedselect'),
-                'prescription_available' => $getOrNull('prescription_available'),
-                'purchase_bill' => $purchasebillname ?: null,
                 'date' => $currentDate,
-                'created_at' => $timestamp,
-                'updated_at' => $timestamp
+                'created_at' => $timestamp
             ]);
 
             PatientCardioDetail::create([
@@ -643,41 +597,17 @@ class PatientController extends Controller
 
             PatientMedicationDetail::create([
                 'uuid' => $uuid,
-                'arni' => $getOrNull('arni'),
-                'b_blockers' => $getOrNull('b_blockers'),
-                'mra' => $getOrNull('mra'),
-                'arni_remark' => $getOrNull('arni_remark'),
-                'b_blockers_remark' => $getOrNull('b_blockers_remark'),
-                'mra_remark' => $getOrNull('mra_remark'),
-                'remark' => $getOrNull('remark'),
                 'weight' => $getOrNull('weight'),
                 'height' => $getOrNull('height'),
-                'waist_circumference_remark' => $getOrNull('waist_circumference_remark'),
+                'waist_circumference' => $getOrNull('waist_circumference'),
                 'bmi' => $getOrNull('bmi'),
                 'waist_to_height_ratio' => $getOrNull('waist_to_height_ratio'),
-                'vaccination' => $getOrNull('vaccination'),
-                'influenza' => $getOrNull('influenza'),
-                'pneumococcal' => $getOrNull('pneumococcal'),
-                'cardiac_rehab' => $getOrNull('cardiac_rehab'),
-                'nsaids_use' => $getOrNull('nsaids_use'),
-                'patient_kit_given' => $getOrNull('patient_kit_given'),
-                'exercise_30mins' => $getOrNull('exercise_30mins'),
-                'food_habits' => $getOrNull('food_habits'),
-                'sedentary_hours' => $getOrNull('sedentary_hours'),
-                'type_2_dm' => $getOrNull('type_2_dm'),
-                'hypertension' => $getOrNull('hypertension'),
-                'dyslipidemia' => $getOrNull('dyslipidemia'),
-                'pco' => $getOrNull('pco'),
-                'knee_pain' => $getOrNull('knee_pain'),
-                'asthma' => $getOrNull('asthma'),
-                'adl_bathing' => $getOrNull('adl_bathing'),
-                'adl_dressing' => $getOrNull('adl_dressing'),
-                'adl_walking' => $getOrNull('adl_walking'),
-                'adl_toileting' => $getOrNull('adl_toileting'),
+                'metabolic_age' => $getOrNull('metabolic_age'),
+                'co_morbidities' => $getOrNull('co_morbidities'),
+                'remark' => $getOrNull('remark'),
                 'date' => $currentDate,
                 'created_at' => $timestamp,
-                'updated_at' => $timestamp,
-                'breakfast_days' => $getOrNull('breakfast_days')
+                'update_at' => $timestamp
             ]);
 
             DB::commit();

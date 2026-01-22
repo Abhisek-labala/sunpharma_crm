@@ -2,7 +2,7 @@
 <html lang="en"> <!-- Set language for accessibility & SEO -->
 <head>
     @php
-        $ProjectName = config('app.name', 'Hridayam');
+        $ProjectName = config('app.name', 'SunPharma');
     @endphp
 
     <!-- Meta Tags -->
@@ -13,7 +13,7 @@
 
     <!-- SEO -->
     <meta name="description" content="Your meta description goes here."> <!-- REQUIRED -->
-    <meta name="keywords" content="Hridayam, HR, Employee, Management, Portal"> <!-- Update as needed -->
+    <meta name="keywords" content="SunPharma, HR, Employee, Management, Portal"> <!-- Update as needed -->
     <meta name="author" content="Your Company Name">
     <meta name="robots" content="index, follow">
 

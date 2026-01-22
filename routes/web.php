@@ -76,6 +76,15 @@ Route::middleware(['check.session', 'role:counsellor'])->group(function () {
     Route::post('/counsellor/getHCLDetails', [PatientController::class, 'getHCLDetails']);
     Route::get('/counsellor/get-camp-id', [PatientController::class, 'getcampid']);
     Route::post('/counsellor/Patient-Inquiry-Post', [PatientController::class, 'createPatientInquiryPost']);
+    Route::post('/counsellor/patient-inquiry/save-step-1', [PatientController::class, 'saveStep1']);
+    Route::post('/counsellor/patient-inquiry/save-step-2', [PatientController::class, 'saveStep2']);
+    Route::post('/counsellor/patient-inquiry/save-step-3', [PatientController::class, 'saveStep3']);
+    
+    Route::get('/counsellor/patient-inquiry/step-1/{uuid?}', [PatientController::class, 'step1View'])->name('educator.patient.step1');
+    Route::get('/counsellor/patient-inquiry/step-2/{uuid}', [PatientController::class, 'step2View'])->name('educator.patient.step2');
+    Route::get('/counsellor/patient-inquiry/step-3/{uuid}', [PatientController::class, 'step3View'])->name('educator.patient.step3');
+    Route::get('/counsellor/patient-inquiry/step-4/{uuid}', [PatientController::class, 'step4View'])->name('educator.patient.step4');
+
     Route::get('/counsellor/patientlist', [PatientController::class, 'getPatientList'])->name('educator.patientslist');
     Route::post('/counsellor/upload-documents', [EducatorController::class, 'uploadDocuments'])->name('educator.uploadDocuments');
     Route::get('/counsellor/educator-follow-up-form', [FeedBackController::class, 'followupFormeducator'])->name('educator.followupform');

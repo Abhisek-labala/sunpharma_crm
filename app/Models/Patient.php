@@ -22,17 +22,14 @@ class Patient extends Model
         'gender',
         'medicine',
         'medicine_header',
-        'patient_enrolled',
-        'patient_kit_enrolled',
         'compititor',
         'consent_form_file',
         'prescription_file',
         'cipla_brand_prescribed',
-        'cipla_brand_prescribed_no_option',
-        'prescription_available',
-        'purchase_bill',
         'date',
-        'approved_status'
+        'approved_status',
+        'patient_city',
+        'created_at'
     ];
 
     // Example relationships

@@ -66,7 +66,7 @@ protected function calculateMaxPrescriptionFiles()
     public function collection()
     {
         $query = DB::table('public.patient_details as a')
-            ->leftJoin('public.patient_cardio_details as b', 'a.uuid', '=', 'b.uuid')
+            // ->leftJoin('public.patient_cardio_details as b', 'a.uuid', '=', 'b.uuid') // Table removed
             ->leftJoin('public.patient_medication_details as c', 'a.uuid', '=', 'c.uuid')
             ->leftJoin('common.users as d', function ($join) {
                 $join->on('a.educator_id', '=', 'd.id')
@@ -118,15 +118,10 @@ protected function calculateMaxPrescriptionFiles()
             'a.mobile_number',
             'a.gender',
             'a.medicine',
-            'a.patient_enrolled',
-            'a.patient_kit_enrolled',
             'a.compititor',
             'a.consent_form_file',
             'a.prescription_file',
             'a.cipla_brand_prescribed',
-            'a.cipla_brand_prescribed_no_option',
-            'a.prescription_available',
-            'a.purchase_bill',
             'a.date',
             'b.date_of_discharge',
             'b.blood_pressure',
@@ -156,43 +151,18 @@ protected function calculateMaxPrescriptionFiles()
             'b.anti_diabetic_therapy',
             'b.t3',
             'b.t4',
-            'c.arni',
-            'c.b_blockers',
-            'c.mra',
-            'c.arni_remark',
-            'c.b_blockers_remark',
-            'c.mra_remark',
-            'c.remark',
             'c.weight',
             'c.height',
-            'c.waist_circumference_remark',
+            'c.waist_circumference',
             'c.bmi',
             'c.waist_to_height_ratio',
-            'c.vaccination',
-            'c.influenza',
-            'c.pneumococcal',
-            'c.cardiac_rehab',
-            'c.nsaids_use',
-            'c.patient_kit_given',
-            'c.exercise_30mins',
-            'c.food_habits',
-            'c.sedentary_hours',
-            'c.type_2_dm',
-            'c.hypertension',
-            'c.dyslipidemia',
-            'c.pco',
-            'c.knee_pain',
-            'c.asthma',
-            'c.adl_bathing',
-            'c.adl_dressing',
-            'c.adl_walking',
-            'c.adl_toileting',
+            'c.metabolic_age',
+            'c.co_morbidities',
+            'c.remark',
         ])->orderBy('a.date','desc')->get();
 
-         // Map URLs for files
          return $data->map(function ($row) {
             $row->consent_form_file = $row->consent_form_file ? url("/private-file/{$row->consent_form_file}") : '';
-            $row->purchase_bill = $row->purchase_bill ? url("/private-file/{$row->purchase_bill}") : '';
 
             if ($row->prescription_file) {
                 $files = array_filter(array_map('trim', explode(',', $row->prescription_file)));
@@ -230,15 +200,10 @@ protected function calculateMaxPrescriptionFiles()
             $row->mobile_number,
             $row->gender,
             $row->medicine,
-            $row->patient_enrolled,
-            $row->patient_kit_enrolled,
             $row->compititor,
             $row->consent_form_file ? '=HYPERLINK("' . $row->consent_form_file . '", "View File")' : '',
            ...$prescriptionLinks,
             $row->cipla_brand_prescribed,
-            $row->cipla_brand_prescribed_no_option,
-            $row->prescription_available,
-            $row->purchase_bill ? '=HYPERLINK("' . $row->purchase_bill . '", "View File")' : '',
             $row->date,
             $row->approved_status,
             $row->date_of_discharge,
@@ -269,37 +234,14 @@ protected function calculateMaxPrescriptionFiles()
             $row->anti_diabetic_therapy,
             $row->t3,
             $row->t4,
-            $row->arni,
-            $row->b_blockers,
-            $row->mra,
-            $row->arni_remark,
-            $row->b_blockers_remark,
-            $row->mra_remark,
-            $row->remark,
             $row->weight,
             $row->height,
-            $row->waist_circumference_remark,
+            $row->waist_circumference,
             $row->bmi,
             $row->waist_to_height_ratio,
-            $row->vaccination,
-            $row->influenza,
-            $row->pneumococcal,
-            $row->cardiac_rehab,
-            $row->nsaids_use,
-            $row->patient_kit_given,
-            $row->exercise_30mins,
-            $row->food_habits,
-            $row->sedentary_hours,
-            $row->type_2_dm,
-            $row->hypertension,
-            $row->dyslipidemia,
-            $row->pco,
-            $row->knee_pain,
-            $row->asthma,
-            $row->adl_bathing,
-            $row->adl_dressing,
-            $row->adl_walking,
-            $row->adl_toileting,
+            $row->metabolic_age,
+            $row->co_morbidities,
+            $row->remark,
         ];
     }
 
@@ -309,9 +251,8 @@ protected function calculateMaxPrescriptionFiles()
 
         $headings = [
             'Patient Id',
-            'Educator Name', 'EMP Id', 'RM Name', 'Camp', 'MSL Code', 'Doctor Name', 'Speciality', 'City', 'State',
-            'Patient Name', 'Age', 'Mobile Number', 'Gender', 'Medicine', 'Patient Enrolled',
-            'Patient Kit Enrolled', 'Competitor', 'Consent Form File'
+            'Counselor Name', 'EMP Id', 'RC Name', 'Camp', 'Doctor Code', 'Doctor Name', 'Speciality', 'City', 'State',
+            'Patient Name', 'Age', 'Mobile Number', 'Gender', 'Medicine', 'Competitor', 'Consent Form File'
         ];
 
         // Add dynamic prescription headings
@@ -319,16 +260,9 @@ protected function calculateMaxPrescriptionFiles()
             $headings[] = "Prescription $i";
         }
          $headings = array_merge($headings, [
-            'Cipla Brand Prescribed', 'Cipla Brand Prescribed No Option', 'Prescription Available', 'Purchase Bill', 'Date','Rm Approved Status',
-            'Date of Discharge', 'Blood Pressure', 'Urea', 'LV EF', 'Heart Rate', 'NT Pro BNP', 'eGFR',
-            'Potassium', 'Sodium', 'Uric Acid', 'Creatinine', 'CRP', 'UACR', 'Iron', 'Hb', 'LDL', 'HDL',
-            'Triglyceride', 'Total Cholesterol', 'HbA1c', 'SGOT', 'SGPT', 'Vitamin D', 'SGLT2 Inhibitors',
-            'Hypertension Angina CKD', 'Anti Diabetic Therapy', 'T3', 'T4', 'ARNI', 'Beta Blockers', 'MRA',
-            'ARNI Remark', 'Beta Blockers Remark', 'MRA Remark', 'General Remark', 'Weight', 'Height',
-            'Waist Circumference Remark', 'BMI', 'Waist to Height Ratio', 'Vaccination', 'Influenza',
-            'Pneumococcal', 'Cardiac Rehab', 'NSAIDs Use', 'Patient Kit Given', 'Exercise 30 Mins', 'Food Habits',
-            'Sedentary Hours', 'Type 2 DM', 'Hypertension', 'Dyslipidemia', 'PCO', 'Knee Pain', 'Asthma',
-            'ADL Bathing', 'ADL Dressing', 'ADL Walking', 'ADL Toileting'
+            'Brand Prescribed', 'Date','RC Approved Status',
+            'Date of Discharge','Weight', 'Height',
+            'Waist Circumference', 'BMI', 'Waist to Height Ratio', 'Metabolic Age', 'Co-morbidities', 'Remark'
         ]);
          return $headings;
     }

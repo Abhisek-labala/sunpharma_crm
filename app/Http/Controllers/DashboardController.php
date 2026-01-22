@@ -65,7 +65,7 @@ class DashboardController extends Controller
         $eduDetails = User::leftJoin('common.rm_users as a', 'users.rm_pm_id', '=', 'a.id')
             ->where('a.zone_id', $ZoneId)
             ->where('users.rm_pm_id', $rmId)
-            ->where('users.role', 'educator')
+            ->where('users.role', 'counsellor')
             ->orderBy('users.full_name')
             ->get(['users.id', 'users.full_name']);
             $options = '<option value="">-- Select --</option>';
@@ -80,7 +80,7 @@ class DashboardController extends Controller
         $rmId = session()->get('id');
         $eduDetails = User::leftJoin('common.rm_users as a', 'users.rm_pm_id', '=', 'a.id')
             ->where('users.rm_pm_id', $rmId)
-            ->where('users.role', 'educator')
+            ->where('users.role', 'counsellor')
             ->orderBy('users.full_name')
             ->get(['users.id', 'users.full_name']);
             $options = '<option value="">-- Select --</option>';
@@ -159,11 +159,10 @@ public function getEducatorPatientTable(Request $request)
 
     // Build base query
     $query = DB::table('public.patient_details as a')
-        ->leftJoin('public.patient_cardio_details as b', 'a.uuid', '=', 'b.uuid')
         ->leftJoin('public.patient_medication_details as c', 'a.uuid', '=', 'c.uuid')
         ->leftJoin('common.users as d', function ($join) {
             $join->on('a.educator_id', '=', 'd.id')
-                ->where('d.role', '=', 'educator');
+                ->where('d.role', '=', 'counsellor');
         })
         ->leftJoin('common.rm_users as f', 'd.rm_pm_id', '=', 'f.id')
         ->leftJoin('public.doctor as g', DB::raw('CAST(a.hcp_id AS INTEGER)'), '=', 'g.id')
@@ -186,7 +185,6 @@ public function getEducatorPatientTable(Request $request)
             $q->where('a.patient_name', 'ILIKE', "%{$search}%")
               ->orWhere('a.mobile_number', 'ILIKE', "%{$search}%")
               ->orWhere('a.gender', 'ILIKE', "%{$search}%")
-              ->orWhere('b.blood_pressure', 'ILIKE', "%{$search}%")
               ->orWhere('c.bmi', 'ILIKE', "%{$search}%")
               ->orWhere('d.full_name', 'ILIKE', "%{$search}%")
               ->orWhere('f.full_name', 'ILIKE', "%{$search}%")
@@ -208,13 +206,12 @@ public function getEducatorPatientTable(Request $request)
         'a.patient_name',       // 2
         'a.mobile_number',      // 3
         'a.gender',             // 4
-        'b.blood_pressure',     // 5
-        'c.bmi',                // 6
-        'a.consent_form_file',  // 7
-        'a.prescription_file',  // 8
-        'd.full_name',          // 9
-        'f.full_name',          // 10
-        'g.city'                // 11
+        'c.bmi',                // 5
+        'a.consent_form_file',  // 6
+        'a.prescription_file',  // 7
+        'd.full_name',          // 8
+        'f.full_name',          // 9
+        'g.city'                // 10
     ];
 
     if ($orderColumnIndex > 0 && isset($columns[$orderColumnIndex - 1])) {
@@ -229,7 +226,6 @@ public function getEducatorPatientTable(Request $request)
         'a.patient_name',
         'a.mobile_number',
         'a.gender',
-        'b.blood_pressure',
         'c.bmi',
         'a.prescription_file',
         'a.consent_form_file',
@@ -262,11 +258,10 @@ $search = $request->input('search.value');
 
     // Build base query
     $query = DB::table('public.patient_details as a')
-        ->leftJoin('public.patient_cardio_details as b', 'a.uuid', '=', 'b.uuid')
         ->leftJoin('public.patient_medication_details as c', 'a.uuid', '=', 'c.uuid')
         ->leftJoin('common.users as d', function ($join) {
             $join->on('a.educator_id', '=', 'd.id')
-                ->where('d.role', '=', 'educator');
+                ->where('d.role', '=', 'counsellor');
         })
         ->leftJoin('common.rm_users as f', 'd.rm_pm_id', '=', 'f.id')
         ->leftJoin('public.doctor as g', DB::raw('CAST(a.hcp_id AS INTEGER)'), '=', 'g.id');
@@ -371,11 +366,10 @@ public function getrmPatientTable(Request $request)
 
     // Build base query
     $query = DB::table('public.patient_details as a')
-        ->leftJoin('public.patient_cardio_details as b', 'a.uuid', '=', 'b.uuid')
         ->leftJoin('public.patient_medication_details as c', 'a.uuid', '=', 'c.uuid')
         ->leftJoin('common.users as d', function ($join) {
             $join->on('a.educator_id', '=', 'd.id')
-                ->where('d.role', '=', 'educator');
+                ->where('d.role', '=', 'counsellor');
         })
         ->leftJoin('common.rm_users as f', 'd.rm_pm_id', '=', 'f.id')
         ->leftJoin('public.doctor as g', DB::raw('CAST(a.hcp_id AS INTEGER)'), '=', 'g.id')
