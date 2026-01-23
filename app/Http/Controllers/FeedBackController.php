@@ -100,7 +100,7 @@ class FeedBackController extends Controller
         ->orderByRaw('CAST(day AS INTEGER) ASC')
         ->get();
 
-        return view('mis.followupForm', ['patientId' => $id, 'day3_data_exists' => $day3_data_exists,
+        return view('mis.followupform', ['patientId' => $id, 'day3_data_exists' => $day3_data_exists,
         'day7_data_exists' => $day7_data_exists,
         'day15_data_exists' => $day15_data_exists,
         'day30_data_exists' => $day30_data_exists,
