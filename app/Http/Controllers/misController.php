@@ -2346,101 +2346,119 @@ class misController extends Controller
 
      public function getPatientList(Request $request)
     {
-        // Get request parameters from DataTable
-        $draw = $request->get('draw');
-        $start = $request->get('start');
-        $length = $request->get('length');
-        $search = $request->get('search');
-        $searchValue = $search['value'];
+        try {
+            // Get request parameters from DataTable
+            $draw = $request->get('draw');
+            $start = $request->get('start');
+            $length = $request->get('length');
+            $search = $request->get('search');
+            $searchValue = $search['value'] ?? '';
 
-        $order = $request->get('order');
-        $orderColumn = $order[0]['column'];
-        $orderDir = $order[0]['dir'];
+            $order = $request->get('order');
+            $orderColumn = $order[0]['column'] ?? 0;
+            $orderDir = $order[0]['dir'] ?? 'asc';
 
-        // Column mapping for ordering
-        $columns = [
-            'a.id',
-            'a.patient_name',
-            'a.mobile_number',
-            'a.gender',
-            'a.age',
-            'c.weight',
-            'c.height',
-            'g.name',
-            'a.cipla_brand_prescribed',
-            'h.camp_id',
-            'a.date',
-            'a.approved_status'
-            ,'d.full_name','e.full_name','f.full_name'
-        ];
-
-        $orderColumnName = $columns[$orderColumn] ?? 'a.id';
-
-        // Base query
-        $query = DB::table('public.patient_details as a')
-            ->leftJoin('public.patient_medication_details as c', 'a.uuid', '=', 'c.uuid')
-            ->leftJoin('public.doctor as g', DB::raw('CAST(a.hcp_id AS INTEGER)'), '=', 'g.id')
-            ->leftJoin('public.camp as h', 'a.camp_id', '=', 'h.id')
-            ->leftjoin('common.users as d', 'a.educator_id', '=', 'd.id')
-            ->leftJoin('common.users as e', 'a.digital_educator_id', '=', 'e.id')
-            ->leftJoin('common.rm_users as f', 'd.rm_pm_id', '=', 'f.id')
-            ->select(
+            // Column mapping for ordering
+            $columns = [
                 'a.id',
-                'a.date',
                 'a.patient_name',
                 'a.mobile_number',
                 'a.gender',
                 'a.age',
-                'c.height',
                 'c.weight',
+                'c.height',
+                'g.name',
                 'a.cipla_brand_prescribed',
                 'h.camp_id',
-                'g.name as doctor_name',
+                'a.date',
                 'a.approved_status',
-                'd.full_name as educator_name',
-                'e.full_name as digital_educator_name',
-                'f.full_name as rm_name'
-            )
-            ->whereNotNull('a.patient_name')
-            ->where('a.patient_enrolled', '=', 'Yes');
-        // Get total records count
-        $totalRecords = $query->count();
+                'd.full_name',
+                'e.full_name',
+                'f.full_name'
+            ];
 
-        // Apply search filter if provided
-        if (!empty($searchValue)) {
-            $query->where(function ($q) use ($searchValue) {
-                $q->where('a.patient_name', 'ilike', "%{$searchValue}%")
-                    ->orWhere('a.mobile_number', 'ilike', "%{$searchValue}%")
-                    ->orWhere('g.name', 'ilike', "%{$searchValue}%")
-                    ->orWhere('a.cipla_brand_prescribed', 'ilike', "%{$searchValue}%")
-                    ->orWhere('h.camp_id', 'ilike', "%{$searchValue}%")
-                    ->orWhere('a.gender', 'ilike', "%{$searchValue}%")
-                    ->orWhere('a.age', 'ilike', "%{$searchValue}%")
-                    ->orWhere('a.approved_status', 'ilike', "%{$searchValue}%")
-                    ->orWhere('d.full_name', 'ilike', "%{$searchValue}%")
-                    ->orWhere('e.full_name', 'ilike', "%{$searchValue}%")
-                    ->orWhere('f.full_name', 'ilike', "%{$searchValue}%");
-            });
+            $orderColumnName = $columns[$orderColumn] ?? 'a.id';
+
+            // Base query
+            $query = DB::table('public.patient_details as a')
+                ->leftJoin('public.patient_medication_details as c', 'a.uuid', '=', 'c.uuid')
+                ->leftJoin('public.doctor as g', DB::raw('CAST(a.hcp_id AS INTEGER)'), '=', 'g.id')
+                ->leftJoin('public.camp as h', 'a.camp_id', '=', 'h.id')
+                ->leftjoin('common.users as d', 'a.educator_id', '=', 'd.id')
+                ->leftJoin('common.users as e', 'a.digital_educator_id', '=', 'e.id')
+                ->leftJoin('common.rm_users as f', 'd.rm_pm_id', '=', 'f.id')
+                ->select(
+                    'a.id',
+                    'a.date',
+                    'a.patient_name',
+                    'a.mobile_number',
+                    'a.gender',
+                    'a.age',
+                    'c.height',
+                    'c.weight',
+                    'a.cipla_brand_prescribed',
+                    'h.camp_id',
+                    'g.name as doctor_name',
+                    'a.approved_status',
+                    'd.full_name as educator_name',
+                    'e.full_name as digital_educator_name',
+                    'f.full_name as rm_name'
+                )
+                ->whereNotNull('a.patient_name')
+                ->where('a.patient_enrolled', '=', 'Yes');
+            
+            // Get total records count
+            $totalRecords = $query->count();
+
+            // Apply search filter if provided
+            if (!empty($searchValue)) {
+                $query->where(function ($q) use ($searchValue) {
+                    $q->where('a.patient_name', 'ilike', "%{$searchValue}%")
+                        ->orWhere('a.mobile_number', 'ilike', "%{$searchValue}%")
+                        ->orWhere('g.name', 'ilike', "%{$searchValue}%")
+                        ->orWhere('a.cipla_brand_prescribed', 'ilike', "%{$searchValue}%")
+                        ->orWhere('h.camp_id', 'ilike', "%{$searchValue}%")
+                        ->orWhere('a.gender', 'ilike', "%{$searchValue}%")
+                        ->orWhere('a.age', 'ilike', "%{$searchValue}%")
+                        ->orWhere('a.approved_status', 'ilike', "%{$searchValue}%")
+                        ->orWhere('d.full_name', 'ilike', "%{$searchValue}%")
+                        ->orWhere('e.full_name', 'ilike', "%{$searchValue}%")
+                        ->orWhere('f.full_name', 'ilike', "%{$searchValue}%");
+                });
+            }
+
+            // Get filtered count
+            $filteredRecords = $query->count();
+
+            // Apply ordering and pagination
+            $data = $query->orderBy($orderColumnName, $orderDir)
+                ->offset($start)
+                ->limit($length)
+                ->get();
+
+            // Format the response for DataTables
+            $response = [
+                "draw" => intval($draw),
+                "recordsTotal" => $totalRecords,
+                "recordsFiltered" => $filteredRecords,
+                "data" => $data
+            ];
+
+            return response()->json($response);
+
+        } catch (\Exception $e) {
+            \Log::error('Get Patient List Error: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            
+            return response()->json([
+                'error' => 'Server error occurred',
+                'message' => $e->getMessage(),
+                'draw' => intval($request->get('draw', 0)),
+                'recordsTotal' => 0,
+                'recordsFiltered' => 0,
+                'data' => []
+            ], 500);
         }
-
-        // Get filtered count
-        $filteredRecords = $query->count();
-
-        // Apply ordering and pagination
-        $data = $query->orderBy($orderColumnName, $orderDir)
-            ->offset($start)
-            ->limit($length)
-            ->get();
-
-        // Format the response for DataTables
-        $response = [
-            "draw" => intval($draw),
-            "recordsTotal" => $totalRecords,
-            "recordsFiltered" => $filteredRecords,
-            "data" => $data
-        ];
-
-        return response()->json($response);
     }
       public function getFeedbackDetails(Request $request)
     {
