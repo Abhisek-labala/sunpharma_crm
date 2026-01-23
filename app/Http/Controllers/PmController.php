@@ -1886,7 +1886,17 @@ class PmController extends Controller
     }
     public function campReportExcel()
     {
-        return Excel::download(new CampReportExport, 'Camp_Report.csv');
+         try {
+            return Excel::download(new CampReportExport, 'Camp_Report.csv');
+        } catch (\Exception $e) {
+            \Log::error('Camp Report Excel Error (MIS): ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            
+            return response()->json([
+                'error' => 'Failed to generate camp report',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
     public function downloadDailyReport(Request $request)
     {

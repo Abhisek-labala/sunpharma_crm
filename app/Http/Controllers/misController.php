@@ -1562,10 +1562,6 @@ class misController extends Controller
             'data' => $doctor
         ]);
     }
-    public function campReportExcel()
-    {
-        return Excel::download(new CampReportExport, 'Camp_Report.csv');
-    }
 
     public function downloadDailyReport(Request $request)
     {
@@ -1576,6 +1572,21 @@ class misController extends Controller
             new DailyReportExport($fromDate, $toDate),
             'DailyReport.csv'
         );
+    }
+
+    public function campReportExcel()
+    {
+        try {
+            return Excel::download(new CampReportExport, 'Camp_Report.csv');
+        } catch (\Exception $e) {
+            \Log::error('Camp Report Excel Error (MIS): ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            
+            return response()->json([
+                'error' => 'Failed to generate camp report',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function mismonthlyCounseling()
