@@ -316,12 +316,11 @@ if (!empty($search)) {
         'a.patient_name',       // 2
         'a.mobile_number',      // 3
         'a.gender',             // 4
-        'b.blood_pressure',     // 5
-        'c.bmi',                // 6
-        'a.consent_form_file',  // 7
-        'a.prescription_file',  // 8
-        'd.full_name',          // 9
-        'f.full_name',          // 10
+        'c.bmi',                // 5
+        'a.consent_form_file',  // 6
+        'a.prescription_file',  // 7
+        'd.full_name',          // 8
+        'f.full_name',          // 9
         'g.city'                // 11
     ];
 
@@ -335,7 +334,6 @@ if (!empty($search)) {
         'a.patient_name',
         'a.mobile_number',
         'a.gender',
-        'b.blood_pressure',
         'c.bmi',
         'a.prescription_file',
         'a.consent_form_file',
