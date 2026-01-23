@@ -26,7 +26,7 @@ protected function calculateMaxPrescriptionFiles()
         $query = DB::table('public.patient_details as a')
         ->leftJoin('common.users as d', function ($join) {
             $join->on('a.educator_id', '=', 'd.id')
-                ->where('d.role', '=', 'educator');
+                ->where('d.role', '=', 'counsellor');
         })
         ->leftJoin('common.rm_users as f', 'd.rm_pm_id', '=', 'f.id');
 
@@ -66,11 +66,10 @@ protected function calculateMaxPrescriptionFiles()
     public function collection()
     {
         $query = DB::table('public.patient_details as a')
-            // ->leftJoin('public.patient_cardio_details as b', 'a.uuid', '=', 'b.uuid') // Table removed
             ->leftJoin('public.patient_medication_details as c', 'a.uuid', '=', 'c.uuid')
             ->leftJoin('common.users as d', function ($join) {
                 $join->on('a.educator_id', '=', 'd.id')
-                    ->where('d.role', '=', 'educator');
+                    ->where('d.role', '=', 'counsellor');
             })
             ->leftJoin('common.rm_users as f', 'd.rm_pm_id', '=', 'f.id')
             ->leftJoin('public.doctor as g', DB::raw('CAST(a.hcp_id AS INTEGER)'), '=', 'g.id')
@@ -123,34 +122,6 @@ protected function calculateMaxPrescriptionFiles()
             'a.prescription_file',
             'a.cipla_brand_prescribed',
             'a.date',
-            'b.date_of_discharge',
-            'b.blood_pressure',
-            'b.urea',
-            'b.lv_ef',
-            'b.heart_rate',
-            'b.nt_pro_bnp',
-            'b.egfr',
-            'b.potassium',
-            'b.sodium',
-            'b.uric_acid',
-            'b.creatinine',
-            'b.crp',
-            'b.uacr',
-            'b.iron',
-            'b.hb',
-            'b.ldl',
-            'b.hdl',
-            'b.triglycerid',
-            'b.total_cholesterol',
-            'b.hba1c',
-            'b.sgot',
-            'b.sgpt',
-            'b.vit_d',
-            'b.sglt2_inhibitors',
-            'b.hypertension_angina_ckd',
-            'b.anti_diabetic_therapy',
-            'b.t3',
-            'b.t4',
             'c.weight',
             'c.height',
             'c.waist_circumference',
@@ -207,33 +178,6 @@ protected function calculateMaxPrescriptionFiles()
             $row->date,
             $row->approved_status,
             $row->date_of_discharge,
-            $row->blood_pressure,
-            $row->urea,
-            $row->lv_ef,
-            $row->heart_rate,
-            $row->nt_pro_bnp,
-            $row->egfr,
-            $row->potassium,
-            $row->sodium,
-            $row->uric_acid,
-            $row->creatinine,
-            $row->crp,
-            $row->uacr,
-            $row->iron,
-            $row->hb,
-            $row->ldl,
-            $row->hdl,
-            $row->triglycerid,
-            $row->total_cholesterol,
-            $row->hba1c,
-            $row->sgot,
-            $row->sgpt,
-            $row->vit_d,
-            $row->sglt2_inhibitors,
-            $row->hypertension_angina_ckd,
-            $row->anti_diabetic_therapy,
-            $row->t3,
-            $row->t4,
             $row->weight,
             $row->height,
             $row->waist_circumference,

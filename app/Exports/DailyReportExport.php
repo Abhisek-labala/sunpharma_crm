@@ -33,7 +33,7 @@ class DailyReportExport implements FromCollection, WithHeadings
         e.full_name AS educator_name,
         e.emp_id AS employee_id,
         COUNT(pin.id) AS total_patient,
-        SUM(CASE WHEN cipla_brand_prescribed = 'Yes' THEN 1 ELSE 0 END) AS total_rx,
+        SUM(CASE WHEN cipla_brand_prescribed = 'Yes' THEN 1 ELSE 0 END) AS total_rx
     ")
     ->when($this->fromDate, function ($q) {
         $q->whereDate('pin.date', '>=', $this->fromDate);
