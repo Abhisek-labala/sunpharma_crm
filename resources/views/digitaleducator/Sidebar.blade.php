@@ -19,7 +19,7 @@
                     </li>
 
 <li>
-                        <a href="{{ url('digital-patient-form') }}">
+                        <a href="{{ url('digitalcounsellor/patient-inquiry/step-1') }}">
                             <i class="fa-solid fa-circle-info"></i>
                             <span>Patient Information</span>
                         </a>

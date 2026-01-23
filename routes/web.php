@@ -104,7 +104,8 @@ Route::middleware(['check.session', 'role:counsellor'])->group(function () {
 });
 Route::middleware(['check.session', 'role:digitalcounsellor'])->group(function () {
     Route::get('/dashboard/digitalcounsellor', [DashboardController::class, 'digitaleducator'])->name('dashboard.digitaleducator');
-    
+    Route::get('/digitalcounsellor/patients/export', [DashboardController::class, 'downloadpmPatientExcel'])->name('digitalcounsellor.patients.export');
+    Route::get('/digitalcounsellor/daily-report/export', [PmController::class, 'downloadDailyReport'])->name('digitalcounsellordaily.report.export');
     // Attendance
     Route::get('/digitalcounsellor/attendance', [EducatorAttendanceController::class, 'index'])->name('digitaleducator.attendance.index');
     Route::post('/digitalcounsellor/attendance/location', [EducatorAttendanceController::class, 'updateLocation'])->name('digitaleducator.attendance.updateLocation');
@@ -113,7 +114,6 @@ Route::middleware(['check.session', 'role:digitalcounsellor'])->group(function (
     Route::get('digital-patient-form', [digitalController::class, 'digitsalPatientInquary'])->name('digital.patient.form');
     Route::get('digital-Patient-List', [digitalController::class, 'digitalPatientList'])->name('digital.patient.list');
     Route::get('Digital-Educator-Dashboard', [digitalController::class, 'digitalEducatorDashboard'])->name('digital.educator.dashboard');
-    Route::post('/digitalcounsellor/Patient-Inquiry-Post', [PatientController::class, 'DigitalcreatePatientInquiryPost']);
     Route::get('/digitalcounsellor/getHCPNames', [PatientController::class, 'gethcpnamesall']);
     Route::post('/digitalcounsellor/getHCLDetails', [PatientController::class, 'getHCLDetailsall']);
     Route::get('/digitalcounsellor/patientlist', [digitalController::class, 'getPatientList'])->name('digitaleducator.patientslist');
@@ -165,8 +165,22 @@ Route::middleware(['check.session', 'role:digitalcounsellor'])->group(function (
     Route::get('/digitalgeteducatorsname', [digitalController::class, 'getEducatorsName'])->name('digitalget.educators.name');
     Route::post('/Digital-Feedback-Details', [digitalController::class, 'getFeedbackDetails']);
     Route::get('/digital-feedback-report-excel', [digitalController::class, 'feedbackReportExcel'])->name('digital-feedback-report-excel');
+    Route::get('/digitalcounsellor/patient-inquiry/step-1/{uuid?}', [PatientController::class, 'digitalStep1View'])->name('digital.patient.step1');
+    Route::post('/digitalcounsellor/patient-inquiry/save-step-1', [PatientController::class, 'saveDigitalStep1'])->name('digital.patient.save.step1');
+
+    Route::get('/digitalcounsellor/patient-inquiry/step-2/{uuid}', [PatientController::class, 'digitalStep2View'])->name('digital.patient.step2');
+    Route::post('/digitalcounsellor/patient-inquiry/save-step-2', [PatientController::class, 'saveDigitalStep2'])->name('digital.patient.save.step2');
+
+    Route::get('/digitalcounsellor/patient-inquiry/step-3/{uuid}', [PatientController::class, 'digitalStep3View'])->name('digital.patient.step3');
+    Route::post('/digitalcounsellor/patient-inquiry/save-step-3', [PatientController::class, 'saveDigitalStep3'])->name('digital.patient.save.step3');
+
+    Route::get('/digitalcounsellor/patient-inquiry/step-4/{uuid}', [PatientController::class, 'digitalStep4View'])->name('digital.patient.step4');
+    Route::post('/digitalcounsellor/patient-inquiry/save-step-4', [PatientController::class, 'saveDigitalStep4'])->name('digital.patient.save.step4');
+
+    Route::get('/digitalcounsellor/getHCPNames', [PatientController::class, 'gethcpnamesall']);
+    Route::post('/digitalcounsellor/getHCLDetails', [PatientController::class, 'getHCLDetailsall']);
 });
-Route::middleware(['check.session', 'role:nc'])->group(function () {
+    Route::middleware(['check.session', 'role:nc'])->group(function () {
     Route::post('/getpatientdetails', [PmController::class, 'getpatientdetails'])->name('pm.getpatientdetails');
     Route::get('/nc/patients/export', [DashboardController::class, 'downloadpmPatientExcel'])->name('pm.patients.export');
     Route::get('/dashboard/nc', [DashboardController::class, 'pm'])->name('dashboard.pm');

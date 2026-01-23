@@ -96,8 +96,8 @@
                                 <th>BMI</th>
                                 <th>Consent Form</th>
                                 <th>Prescription</th>
-                                <th>Educator Name</th>
-                                <th>Rm Name</th>
+                                <th>Counsellor Name</th>
+                                <th>RC Name</th>
                                 <th>City</th>
                             </tr>
                         </thead>
@@ -275,7 +275,7 @@
         var campId = $('#campId').val();
         var hcpId = $('#doctor').val();
 
-        var url = "{{ route('pm.patients.export') }}"
+        var url = "{{ route('digitalcounsellor.patients.export') }}"
             + "?fromDate=" + encodeURIComponent(fromDate)
             + "&toDate=" + encodeURIComponent(toDate)
             + "&campId=" + encodeURIComponent(campId)
@@ -286,5 +286,15 @@
 
         window.location.href = url;
     }
+    window.openNewWindow2 = function () {
+    var fromDate = $('#from_date').val();
+    var toDate = $('#to_date').val();
+
+    var url = "{{ route('digitalcounsellordaily.report.export') }}"
+        + "?fromDate=" + encodeURIComponent(fromDate)
+        + "&toDate=" + encodeURIComponent(toDate);
+
+    window.location.href = url;
+}
 </script>
 

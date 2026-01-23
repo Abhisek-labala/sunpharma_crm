@@ -28,7 +28,7 @@ class digitalController extends Controller
     }
     public function digitsalPatientInquary()
     {
-        return view('digitaleducator.patientInquaryForm');
+        return redirect()->route('digital.patient.step1');
     }
     public function digitalPatientList()
     {
@@ -90,7 +90,6 @@ class digitalController extends Controller
             )
             ->where('a.digital_educator_id', $user_id)
             ->whereNotNull('a.patient_name')
-            ->where('a.patient_enrolled', '=', 'Yes')
             ->whereNotNull('a.prescription_file')
             ->whereNotNull('a.consent_form_file')
             ->where('a.cipla_brand_prescribed', '=', 'Yes')
@@ -1260,7 +1259,7 @@ class digitalController extends Controller
         $digital_educator_id=Auth::user()->id;
         try {
             $educators = DB::table('common.users')
-                ->where('role', 'educator')
+                ->where('role', 'counsellor')
                 ->where('digital_educator_id',$digital_educator_id)
                 ->select('id', 'full_name')
                 ->get();
@@ -1286,10 +1285,10 @@ class digitalController extends Controller
             $query = DB::table('public.patient_details as a')
                 ->leftJoin('public.doctor as b', DB::raw('a.hcp_id::int'), '=', 'b.id')
                 ->leftJoin('common.users as c', function ($join) {
-                    $join->on(DB::raw('c.id'), '=', DB::raw('a.educator_id::int'))->where('c.role', '=', 'educator');
+                    $join->on(DB::raw('c.id'), '=', DB::raw('a.educator_id::int'))->where('c.role', '=', 'counsellor');
                 })
                 ->leftJoin('common.users as d', function ($join) {
-                    $join->on(DB::raw('d.id'), '=', DB::raw('a.digital_educator_id::int'))->where('d.role', '=', 'digitaleducator');
+                    $join->on(DB::raw('d.id'), '=', DB::raw('a.digital_educator_id::int'))->where('d.role', '=', 'digitalcounsellor');
                 })
                 ->leftJoin('public.feedback_submitted as e', DB::raw('a.id'), '=', DB::raw('e.patient_id::int'))
                 ->leftJoin('public.day3_followup as o', DB::raw('o.patient_id'), '=', DB::raw('e.patient_id::int'))
@@ -1302,7 +1301,6 @@ class digitalController extends Controller
                 ->leftJoin('public.day120_followup as l', DB::raw('l.patient_id'), '=', DB::raw('e.patient_id::int'))
                 ->leftJoin('public.day150_followup as m', DB::raw('m.patient_id'), '=', DB::raw('e.patient_id::int'))
                 ->leftJoin('public.day180_followup as n', DB::raw('n.patient_id'), '=', DB::raw('e.patient_id::int'))
-                ->where('a.patient_enrolled', '=', 'Yes')
                 ->where('a.approved_status', '=', 'Approved')
                 ->where(function ($q) {
                     $q->whereNotNull('a.prescription_file')->orWhereNotNull('a.consent_form_file');

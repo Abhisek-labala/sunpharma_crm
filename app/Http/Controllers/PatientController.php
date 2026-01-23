@@ -418,184 +418,173 @@ class PatientController extends Controller
         ];
         return response()->json($response);
     }
-    public function DigitalcreatePatientInquiryPost(Request $request)
+    public function digitalStep1View(Request $request, $uuid = null)
     {
-        $educatorId = Auth::id();
-         $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp']; // added webp
-        $uploadDirs = ['prescription', 'consent', 'purchasebill'];
-
-        $ciplaPrescribed = $request->input('ciplaBrandPrescribed', 'No');
-        $patientEnrolled = $request->input('patientEnrolled', 'No');
-        $prescription_available = $request->input('prescription_available', 'No');
-        $medicineString = null;
-        $prescriptionFilenames = [];
-        $consentFilename = '';
-        $purchasebillname = '';
-
-        // Helper for optional inputs
-        $getOrNull = fn($key) => $request->has($key) ? $request->input($key) : null;
-
-        // ---------- Handle Prescription & Consent ----------
-        if ($ciplaPrescribed == 'Yes' && $patientEnrolled == 'Yes' && $prescription_available == 'Yes') {
-            if (!$request->hasFile('fileToUpload')) {
-                return response()->json(['success' => false, 'message' => "Please upload Prescription."], 422);
-            }
-            if (!$request->hasFile('consentForm')) {
-                return response()->json(['success' => false, 'message' => "Please upload Consent Form."], 422);
-            }
-
-            // Prescription images
-            foreach ($request->file('fileToUpload') as $file) {
-                $extension = strtolower($file->getClientOriginalExtension());
-                if (!in_array($extension, $allowedExtensions)) {
-                    return response()->json(['success' => false, 'message' => "Invalid prescription file format: {$file->getClientOriginalName()}"], 422);
-                }
-
-                // Convert to WebP and resize
-                $filename = time() . '_' . Str::random(10) . '.webp';
-                $image = Image::make($file)->resize(1024, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                    $constraint->upsize();
-                })->encode('webp', 75);
-
-                Storage::disk('private')->put('prescription/' . $filename, (string) $image);
-                $prescriptionFilenames[] = 'prescription/' . $filename;
-            }
-
-            // Consent Form
-            $consentFile = $request->file('consentForm');
-            $extension = strtolower($consentFile->getClientOriginalExtension());
-            if (!in_array($extension, $allowedExtensions)) {
-                return response()->json(['success' => false, 'message' => 'Invalid consent form file format.'], 422);
-            }
-
-            $consentFilename = 'consent/' . 'Consent_' . time() . '_' . Str::random(10) . '.webp';
-            $image = Image::make($consentFile)->resize(1024, null, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            })->encode('webp', 75);
-            Storage::disk('private')->put($consentFilename, (string) $image);
-
-            if ($request->filled('medicine')) {
-                $medicineString = implode(',', $request->input('medicine'));
-            }
-        } elseif ($ciplaPrescribed == 'Yes' && $patientEnrolled == 'Yes' && $prescription_available == 'No') {
-            if ($request->filled('medicine')) {
-                $medicineString = implode(',', $request->input('medicine'));
-            }
-        } elseif ($ciplaPrescribed == 'Yes' && $patientEnrolled == 'No' && $prescription_available == 'No') {
-            if ($request->hasFile('consentForm')) {
-                return response()->json(['success' => false, 'message' => 'Consent form not required. Please remove it.'], 422);
-            }
-            if ($request->filled('medicine')) {
-                $medicineString = implode(',', $request->input('medicine'));
-            }
-        } elseif ($ciplaPrescribed == 'Yes' && $patientEnrolled == 'No' && $prescription_available == 'Yes') {
-            if (!$request->hasFile('fileToUpload')) {
-                return response()->json(['success' => false, 'message' => "Please upload Prescription."], 422);
-            }
-
-            foreach ($request->file('fileToUpload') as $file) {
-                $extension = strtolower($file->getClientOriginalExtension());
-                if (!in_array($extension, $allowedExtensions)) {
-                    return response()->json(['success' => false, 'message' => "Invalid prescription file format: {$file->getClientOriginalName()}"], 422);
-                }
-
-                $filename = time() . '_' . Str::random(10) . '.webp';
-                $image = Image::make($file)->resize(1024, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                    $constraint->upsize();
-                })->encode('webp', 75);
-
-                Storage::disk('private')->put('prescription/' . $filename, (string) $image);
-                $prescriptionFilenames[] = 'prescription/' . $filename;
-            }
-
-            if ($request->hasFile('consentForm')) {
-                return response()->json(['success' => false, 'message' => 'Consent form not required. Please remove it.'], 422);
-            }
-
-            if ($request->filled('medicine')) {
-                $medicineString = implode(',', $request->input('medicine'));
-            }
+        $data = [];
+        if($uuid) {
+            $data['patient'] = Patient::where('uuid', $uuid)->first();
+            $data['uuid'] = $uuid;
         }
+        return view('digitaleducator.patientInquaryForm_step1', $data);
+    }
 
-        // ---------- Handle Purchase Bill ----------
-        $prescribedselect = $request->input('prescribedselect', 'No');
-        if ($prescribedselect === 'Purchase Bill Available') {
-            if (!$request->hasFile('purchasebill')) {
-                return response()->json(['success' => false, 'message' => "Please upload purchasebill."], 422);
+    public function saveDigitalStep1(Request $request)
+    {
+         try {
+            $educatorId = Auth::id();
+            $uuid = $request->input('patient_uuid');
+
+            if (!$uuid) {
+                $uuid = Str::uuid();
+                $patient = new Patient();
+                $patient->uuid = $uuid;
+                $patient->digital_educator_id = $educatorId;
+                $patient->created_at = Carbon::now();
+            } else {
+                $patient = Patient::where('uuid', $uuid)->firstOrFail();
             }
 
-            $purchasebillFile = $request->file('purchasebill');
-            $purchasebillname = 'purchasebill/' . 'purchasebill_' . time() . '_' . Str::random(10) . '.webp';
-            $image = Image::make($purchasebillFile)->resize(1024, null, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            })->encode('webp', 75);
+            $patient->hcp_id = $request->hcp_name;
+            $patient->date = date('Y-m-d');
+            $patient->save();
 
-            Storage::disk('private')->put($purchasebillname, (string) $image);
-        }
+            return response()->json(['success' => true, 'uuid' => $uuid]);
 
-        // ---------- DB Insert ----------
-        $uuid = Str::uuid();
-        $currentDate = now()->format('Y-m-d');
-        $timestamp = now()->toDateTimeString(); // same as format('Y-m-d H:i:s')
-        DB::beginTransaction();
-        try {
-            Patient::create([
-                'uuid' => $uuid,
-                'digital_educator_id' => $educatorId,
-                'camp_id' => $request->input('campId'),
-                'hcp_id' => $request->input('hcp_name'),
-                'patient_name' => $getOrNull('patient_name'),
-                'age' => $getOrNull('age'),
-                'mobile_number' => $getOrNull('mobile_number'),
-                'gender' => $getOrNull('gender'),
-                'medicine' => $medicineString,
-                'compititor' => $request->filled('Compititor') ? implode(',', $request->input('Compititor')) : null,
-                'consent_form_file' => $consentFilename ?: null,
-                'prescription_file' => !empty($prescriptionFilenames) ? implode(',', $prescriptionFilenames) : null,
-                'cipla_brand_prescribed' => $getOrNull('ciplaBrandPrescribed'),
-                'date' => $currentDate,
-                'created_at' => $timestamp
-            ]);
-
-            PatientMedicationDetail::create([
-                'uuid' => $uuid,
-                'weight' => $getOrNull('weight'),
-                'height' => $getOrNull('height'),
-                'waist_circumference' => $getOrNull('waist_circumference'),
-                'bmi' => $getOrNull('bmi'),
-                'waist_to_height_ratio' => $getOrNull('waist_to_height_ratio'),
-                'metabolic_age' => $getOrNull('metabolic_age'),
-                'co_morbidities' => $getOrNull('co_morbidities'),
-                'remark' => $getOrNull('remark'),
-                'date' => $currentDate,
-                'created_at' => $timestamp,
-                'update_at' => $timestamp
-            ]);
-
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Patient information submitted successfully',
-            ]);
         } catch (\Exception $e) {
-            DB::rollBack();
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
 
-            // Delete uploaded files if transaction fails
-            foreach (array_merge($prescriptionFilenames, [$consentFilename, $purchasebillname]) as $file) {
-                if ($file && Storage::disk('private')->exists($file)) {
-                    Storage::disk('private')->delete($file);
+    public function digitalStep2View($uuid)
+    {
+        $patient = Patient::where('uuid', $uuid)->firstOrFail();
+        return view('digitaleducator.patientInquaryForm_step2', ['patient' => $patient, 'uuid' => $uuid]);
+    }
+
+    public function saveDigitalStep2(Request $request)
+    {
+        try {
+            $uuid = $request->input('patient_uuid');
+            $patient = Patient::where('uuid', $uuid)->firstOrFail();
+
+            $patient->patient_name = $request->patient_name;
+            $patient->age = $request->age;
+            $patient->mobile_number = $request->mobile_number;
+            $patient->gender = $request->gender;
+            $patient->patient_city = $request->patient_city;
+            $patient->save();
+
+            return response()->json(['success' => true, 'uuid' => $uuid]);
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function digitalStep3View($uuid)
+    {
+        $patient = Patient::where('uuid', $uuid)->firstOrFail();
+        $medication = PatientMedicationDetail::where('uuid', $uuid)->first();
+        return view('digitaleducator.patientInquaryForm_step3', ['patient' => $patient, 'medication' => $medication, 'uuid' => $uuid]);
+    }
+
+    public function saveDigitalStep3(Request $request)
+    {
+        try {
+            $uuid = $request->input('patient_uuid');
+            $currentDate = now()->format('Y-m-d');
+            
+            PatientMedicationDetail::updateOrCreate(
+                ['uuid' => $uuid],
+                [
+                    'weight' => $request->weight,
+                    'height' => $request->height,
+                    'waist_circumference' => $request->waist_circumference,
+                    'bmi' => $request->bmi,
+                    'waist_to_height_ratio' => $request->w_htr,
+                    'metabolic_age' => $request->metabolic_age,
+                    'co_morbidities' => $request->co_morbidities,
+                    'remark' => $request->remark,
+                    'date' => $currentDate,
+                ]
+            );
+
+            return response()->json(['success' => true, 'uuid' => $uuid]);
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function digitalStep4View($uuid)
+    {
+        $patient = Patient::where('uuid', $uuid)->firstOrFail();
+        return view('digitaleducator.patientInquaryForm_step4', ['patient' => $patient, 'uuid' => $uuid]);
+    }
+
+    public function saveDigitalStep4(Request $request)
+    {
+        try {
+            $uuid = $request->input('patient_uuid');
+            $patient = Patient::where('uuid', $uuid)->firstOrFail();
+
+            $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
+            $prescriptionFilenames = [];
+            
+            // Prescription Upload
+             if ($request->hasFile('fileToUpload')) {
+                foreach ($request->file('fileToUpload') as $file) {
+                    $extension = strtolower($file->getClientOriginalExtension());
+                    if (!in_array($extension, $allowedExtensions)) {
+                        return response()->json(['success' => false, 'message' => "Invalid file format"], 422);
+                    }
+                    $filename = time() . '_' . Str::random(10) . '.webp';
+                    $image = Image::make($file)->resize(1024, null, function ($constraint) {
+                        $constraint->aspectRatio();
+                        $constraint->upsize();
+                    })->encode('webp', 75);
+                    Storage::disk('private')->put('prescription/' . $filename, (string) $image);
+                    $prescriptionFilenames[] = 'prescription/' . $filename;
                 }
             }
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Error: ' . $e->getMessage(),
-            ], 500);
+            // Consent Upload
+            $consentFilename = null;
+            if ($request->hasFile('consentForm')) {
+                $file = $request->file('consentForm');
+                $extension = strtolower($file->getClientOriginalExtension());
+                 if (!in_array($extension, $allowedExtensions)) {
+                     return response()->json(['success' => false, 'message' => "Invalid consent file format"], 422);
+                 }
+                $consentFilename = 'consent/' . 'Consent_' . time() . '_' . Str::random(10) . '.webp';
+                $image = Image::make($file)->resize(1024, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })->encode('webp', 75);
+                Storage::disk('private')->put($consentFilename, (string) $image);
+            }
+
+            // Update Patient
+            $patient->cipla_brand_prescribed = $request->ciplaBrandPrescribed;
+            if(!empty($prescriptionFilenames)) {
+                $patient->prescription_file = implode(',', $prescriptionFilenames);
+            }
+            if($consentFilename) {
+                $patient->consent_form_file = $consentFilename;
+            }
+             if ($request->filled('medicine')) {
+                $patient->medicine = implode(',', $request->input('medicine'));
+            }
+             if ($request->filled('Compititor')) {
+                $patient->compititor = implode(',', $request->input('Compititor'));
+            }
+            
+            $patient->save();
+
+            return response()->json(['success' => true]);
+
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
 }

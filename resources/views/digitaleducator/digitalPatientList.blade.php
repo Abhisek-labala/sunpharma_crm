@@ -13,7 +13,7 @@
                         <thead>
                             <tr>
                                 <th>Sr</th>
-                                <th>Educator Name</th>
+                                <th>Counsellor Name</th>
                                 <th>Name</th>
                                 <th>Mobile Number</th>
                                 <th>Gender</th>
@@ -21,7 +21,7 @@
                                 <th>Weight</th>
                                 <th>Height</th>
                                 <th>Doctor Name</th>
-                                <th>Cipla Brand Prescribed</th>
+                                <th>Brand Prescribed</th>
                                 <th>Camp</th>
                                 <th>Consent Form</th>
                                 <th>Prescription Form</th>

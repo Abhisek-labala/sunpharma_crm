@@ -37,7 +37,7 @@
                                         value="">
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="educatorFilter" class="form-label">Educator</label>
+                                    <label for="educatorFilter" class="form-label">Counsellor</label>
                                     <select class="form-control" id="educatorFilter"></select>
                                 </div>
                                 <div class="col-md-3">
@@ -73,8 +73,8 @@
                                         <th>Patient Name</th>
                                         <th>Mobile Number</th>
                                         <th>Doctor Name</th>
-                                        <th>Educator Name</th>
-                                        <th>Digital Educator Name</th>
+                                        <th>Counsellor Name</th>
+                                        <th>Digital Counsellor Name</th>
                                         <th>Created At</th>
                                         <th>Day 3 planned Date</th>
                                         <th>Day 3 Actual Date</th>
@@ -152,7 +152,7 @@
     // This function populates the educator dropdown filter
     function populateFilters() {
         $.getJSON('{{ route("digitalget.educators.name") }}', function (data) {
-            let educatorOptions = '<option value="">All Educators</option>';
+            let educatorOptions = '<option value="">All Counsellors</option>';
             data.forEach(item => {
                 educatorOptions += `<option value="${item.id}">${item.full_name}</option>`;
             });

@@ -37,18 +37,18 @@
                 <!-- Step 1: HCP Details -->
                 <div class="card mb-4">
                     <div class="card-header thembutton text-white">
-                        <h5 class="mb-0">HCP Details (Step 1/4)</h5>
+                        <h5 class="mb-0">Doctor Details (Step 1/4)</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">HCP Name <span class='mandatory'>*</span></label>
+                                <label class="form-label">Doctor Name <span class='mandatory'>*</span></label>
                                 <select class="form-select form-control" name="hcp_name" id="hcp_name" required>
                                     <option selected="selected" value="">--Select--</option>
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">HCP Code <span class='mandatory'>*</span></label>
+                                <label class="form-label">Doctor Code <span class='mandatory'>*</span></label>
                                 <input type="text" class="form-control" name="msl_code" id="msl_code" required readonly>
                             </div>
                         </div>

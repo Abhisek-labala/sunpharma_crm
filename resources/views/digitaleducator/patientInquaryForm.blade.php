@@ -213,88 +213,9 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-4 col-lg-6">
-                                    <div class="mb-3 row">
-                                        <label class="col-form-label col-md-4" for="gender">Prescription Available<span
-                                                class='mandatory'>*</span></label>
-                                        <div class="col-md-6">
-                                            <span class="radio">
-                                                <label><input type="radio" name="prescription_available"
-                                                        id="prescription_available" value="Yes"> Yes</label>
-                                            </span>
-                                            <span class="radio">
-                                                <label><input type="radio" name="prescription_available"
-                                                        id="prescription_available" value="No"> No</label>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-lg-6" id="prescribeddatashow" style="display:none;">
-                                    <div class="mb-3 row">
-                                        <label class="col-form-label col-md-4" for="prescribeddatashow">Cipla Brand
-                                            Prescribed<span
-                                                class='mandatory'>*</span></label>
-                                        <div class="col-md-6">
-                                            <select class="form-select form-control" name="prescribedselect"
-                                                id="prescribedselect">
-                                                <option value="">Select an Option</option>
-                                                <option value="Purchase Bill Available">Purchase Bill Available</option>
-                                                <option value="Observed Only Cipla Brand">Observed Only Cipla Brand
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-6" id="followupdiv">
-                                    <div class="mb-3 row">
-                                        <label class="col-form-label col-md-4" for="followupdiv">Upload Purchase Bill
-                                        </label>
-                                        <div class="col-md-6">
-                                            <input type="file" accept="image/*" name="purchasebill" id="purchasebill"
-                                                style="width:100%;" multiple="multiple">
-                                            <div id="purchasebillPreview" style="margin-top: 10px; display: none;">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 col-lg-6">
-                                    <div class="mb-3 row">
-                                        <label class="col-form-label col-md-4" for="speciality">Patient Enrolled<span
-                                                class='mandatory'>*</span></label>
-                                        <div class="col-md-8">
-                                            <span class="radio">
-                                                <label><input type="radio" name="patientEnrolled" value="Yes">
-                                                    Yes</label>
-                                            </span>
-                                            <span class="radio">
-                                                <label><input type="radio" name="patientEnrolled" value="No"> No</label>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row" id="patientKitDiv" style="display:none;">
-                                    <div class="col-md-6 col-lg-6">
-                                        <div class="mb-3 row">
-                                            <label class="col-form-label col-md-4" for="patient_kit_enrolled">Kit
-                                                Enrolled<span class='mandatory'>*</span></label>
-                                            <div class="col-md-8">
-                                                <span class="radio">
-                                                    <label><input type="radio" name="patient_kit_enrolled" value="Yes">
-                                                        Yes</label>
-                                                </span>
-                                                <span class="radio">
-                                                    <label><input type="radio" name="patient_kit_enrolled" value="No">
-                                                        No</label>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-lg-6" id="medicinediv">
+                            <!-- Removed Prescription Available, Purchase Bill, Patient Enrolled, Kit Enrolled -->
+                            <div class="col-md-6 col-lg-6" id="medicinediv">
                                     <div class="mb-3 row">
                                         <label class="col-form-label col-md-4" for="medicine">Medicine<span
                                                 class='mandatory'>*</span></label>

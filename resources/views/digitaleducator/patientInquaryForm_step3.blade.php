@@ -1,8 +1,8 @@
-@include('educator.head')
+@include('digitaleducator.head')
 
 <div class="main-wrapper">
-    @include('educator.header')
-    @include('educator.Sidebar')
+    @include('digitaleducator.header')
+    @include('digitaleducator.Sidebar')
 
     <script src="{{asset('js/jquery.min.js')}}"></script>
     <style>
@@ -14,7 +14,7 @@
 
     <div class="page-wrapper" style="min-height: 653px;">
         <div class="content container-fluid">
-            @include('educator.breadcum')
+            @include('digitaleducator.breadcum')
 
             <form id="step3Form">
                 @csrf
@@ -67,14 +67,12 @@
                                 <textarea class="form-control" name="additional_notes" rows="4" placeholder="--Mention Additional Notes--">{{ $medication->remark ?? '' }}</textarea>
                             </div>
                         </div>
-
-                        <div class="mt-4 clearfix">
-                            <a href="{{ route('educator.patient.step2', ['uuid' => $uuid]) }}" class="btn btn-secondary float-left"><i class="fa fa-arrow-left"></i> Back</a>
-                            <button type="button" class="btn btn-primary float-right btn-next" onclick="saveAndNext()">Next <i class="fa fa-arrow-right"></i></button>
-                        </div>
                     </div>
                 </div>
-
+                <div class="text-end">
+                    <a href="{{ route('digital.patient.step2', ['uuid' => $uuid]) }}" class="btn btn-secondary">Previous</a>
+                    <button type="button" class="btn btn-primary" onclick="saveStep3()">Next</button>
+                </div>
             </form>
         </div>
     </div>
@@ -99,6 +97,7 @@
         
         const diff = bmiVal - 22;
         
+        // Exact match with Educator form logic
         let metabolicAge = age + (diff * 0.8);
         
         if(metabolicAge < 12) metabolicAge = 12;
@@ -116,40 +115,22 @@
         }
     }
 
-    async function saveAndNext() {
-        const weight = $('#weight').val();
-         // Basic Validation check
-        if (!weight) {
-            alert('Please fill mandatory fields');
-            return;
-        }
-
-        const btn = $('.btn-next');
-        btn.prop('disabled', true).html('Saving... <i class="fa fa-spinner fa-spin"></i>');
-
-        const formData = new FormData(document.getElementById('step3Form'));
-        
-        try {
-            const response = await fetch("{{ url('counsellor/patient-inquiry/save-step-3') }}", {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
+    function saveStep3() {
+        var formData = $('#step3Form').serialize();
+        $.ajax({
+            url: "{{ route('digital.patient.save.step3') }}",
+            type: "POST",
+            data: formData,
+            success: function(response) {
+                if(response.success) {
+                    window.location.href = "{{ url('digitalcounsellor/patient-inquiry/step-4') }}/" + response.uuid;
+                } else {
+                    alert('Error saving data');
                 }
-            });
-            const result = await response.json();
-            
-            if (result.success) {
-                window.location.href = "{{ url('counsellor/patient-inquiry/step-4') }}/" + "{{ $uuid }}";
-            } else {
-                alert('Error: ' + result.message);
-                btn.prop('disabled', false).html('Next <i class="fa fa-arrow-right"></i>');
+            },
+            error: function(xhr) {
+               alert('Error: ' + xhr.responseText);
             }
-        } catch (error) {
-            console.error(error);
-            alert('An error occurred.');
-            btn.prop('disabled', false).html('Next <i class="fa fa-arrow-right"></i>');
-        }
+        });
     }
 </script>
-@include('educator.footer')
