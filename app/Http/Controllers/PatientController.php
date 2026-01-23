@@ -529,54 +529,57 @@ class PatientController extends Controller
             $patient = Patient::where('uuid', $uuid)->firstOrFail();
 
             $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
-            $prescriptionFilenames = [];
             
             // Prescription Upload
-             if ($request->hasFile('fileToUpload')) {
-                foreach ($request->file('fileToUpload') as $file) {
-                    $extension = strtolower($file->getClientOriginalExtension());
-                    if (!in_array($extension, $allowedExtensions)) {
-                        return response()->json(['success' => false, 'message' => "Invalid file format"], 422);
-                    }
-                    $filename = time() . '_' . Str::random(10) . '.webp';
-                    $image = Image::make($file)->resize(1024, null, function ($constraint) {
-                        $constraint->aspectRatio();
-                        $constraint->upsize();
-                    })->encode('webp', 75);
-                    Storage::disk('private')->put('prescription/' . $filename, (string) $image);
-                    $prescriptionFilenames[] = 'prescription/' . $filename;
-                }
-            }
-
-            // Consent Upload
-            $consentFilename = null;
-            if ($request->hasFile('consentForm')) {
-                $file = $request->file('consentForm');
+            $prescriptionFilename = null;
+            if ($request->hasFile('prescription_file')) {
+                $file = $request->file('prescription_file');
                 $extension = strtolower($file->getClientOriginalExtension());
-                 if (!in_array($extension, $allowedExtensions)) {
-                     return response()->json(['success' => false, 'message' => "Invalid consent file format"], 422);
-                 }
-                $consentFilename = 'consent/' . 'Consent_' . time() . '_' . Str::random(10) . '.webp';
+                if (!in_array($extension, $allowedExtensions)) {
+                    return response()->json(['success' => false, 'message' => "Invalid file format"], 422);
+                }
+                $filename = time() . '_' . Str::random(10) . '.webp';
                 $image = Image::make($file)->resize(1024, null, function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 })->encode('webp', 75);
-                Storage::disk('private')->put($consentFilename, (string) $image);
+                Storage::disk('private')->put('prescription/' . $filename, (string) $image);
+                $prescriptionFilename = 'prescription/' . $filename;
+            }
+
+            // Consent Upload
+            $consentFilename = null;
+            if ($request->hasFile('consent_form')) {
+                $file = $request->file('consent_form');
+                $extension = strtolower($file->getClientOriginalExtension());
+                 if (!in_array($extension, $allowedExtensions)) {
+                     return response()->json(['success' => false, 'message' => "Invalid consent file format"], 422);
+                 }
+                $filename = 'Consent_' . time() . '_' . Str::random(10) . '.webp';
+                $image = Image::make($file)->resize(1024, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })->encode('webp', 75);
+                Storage::disk('private')->put('consent/' . $filename, (string) $image);
+                $consentFilename = 'consent/' . $filename;
             }
 
             // Update Patient
-            $patient->cipla_brand_prescribed = $request->ciplaBrandPrescribed;
-            if(!empty($prescriptionFilenames)) {
-                $patient->prescription_file = implode(',', $prescriptionFilenames);
+            $patient->cipla_brand_prescribed = $request->sunpharma_prescribed;
+            
+            if ($prescriptionFilename) {
+                $patient->prescription_file = $prescriptionFilename;
             }
-            if($consentFilename) {
+            if ($consentFilename) {
                 $patient->consent_form_file = $consentFilename;
             }
-             if ($request->filled('medicine')) {
-                $patient->medicine = implode(',', $request->input('medicine'));
+
+            // Medicine & Competitor
+            if ($request->filled('brand_prescribed')) {
+                $patient->medicine = $request->brand_prescribed;
             }
-             if ($request->filled('Compititor')) {
-                $patient->compititor = implode(',', $request->input('Compititor'));
+            if ($request->filled('competitor_brand')) {
+                $patient->compititor = $request->competitor_brand;
             }
             
             $patient->save();
