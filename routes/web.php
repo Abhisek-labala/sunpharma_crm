@@ -334,7 +334,7 @@ Route::middleware(['check.session', 'role:admin'])->group(function () {
     });
     Route::prefix('Charts')->group(function () {
         Route::get('adminmonthly_counseling', [misController::class, 'mismonthlyCounseling']);
-        Route::get('adminstop_educators', [misController::class, 'mistopeducators']);
+        Route::get('admintop_educators', [misController::class, 'mistopeducators']);
         Route::get('adminnoteducator', [misController::class, 'misnoteducator']);
         Route::get('admingender_distribution', [misController::class, 'misgenderDistribution']);
         Route::get('admincamp_distribution', [misController::class, 'miscampDistribution']);
