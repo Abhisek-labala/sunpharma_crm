@@ -106,7 +106,6 @@ protected function calculateMaxPrescriptionFiles()
             'a.approved_status',
             'd.emp_id',
             'f.full_name as rm_name',
-            'a.camp_id',
             'g.msl_code',
             'g.name as doctor_name',
             'g.speciality',
@@ -157,10 +156,9 @@ protected function calculateMaxPrescriptionFiles()
         }
         return [
             $row->id,
-            $row->educator_name,
             $row->emp_id,
+            $row->educator_name,
             $row->rm_name,
-            $row->camp_id,
             $row->msl_code,
             $row->doctor_name,
             $row->speciality,
@@ -193,8 +191,8 @@ protected function calculateMaxPrescriptionFiles()
         $this->calculateMaxPrescriptionFiles();
 
         $headings = [
-            'Patient Id',
-            'Counselor Name', 'EMP Id', 'RC Name', 'Camp', 'Doctor Code', 'Doctor Name', 'Speciality', 'City', 'State',
+            'Patient Id','EMP Id',
+            'Counsellor Name',  'RC Name', 'Doctor Code', 'Doctor Name', 'Speciality', 'City', 'State',
             'Patient Name', 'Age', 'Mobile Number', 'Gender', 'Medicine', 'Competitor', 'Consent Form File'
         ];
 
