@@ -246,7 +246,6 @@
                 noteducatorsData,
                 genderData,
                 campData,
-                bpData,
                 obesityData,
                 docnotData
             ] = await Promise.all([
