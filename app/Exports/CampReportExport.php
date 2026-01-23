@@ -13,10 +13,7 @@ class CampReportExport implements FromCollection, WithHeadings, WithMapping
     {
         try {
             return DB::table('public.camp as c')
-                ->leftJoin('common.users as u', function ($join) {
-                    $join->on('u.id', '=', 'c.educator_id')
-                        ->where('u.role', '=', 'counsellor');
-                })
+                ->leftJoin('common.users as u', 'u.id', '=', 'c.educator_id')
                 ->select(
                     'c.id',
                     'u.emp_id as employee_id',
