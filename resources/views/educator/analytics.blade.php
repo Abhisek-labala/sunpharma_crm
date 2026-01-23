@@ -67,17 +67,6 @@
                             <canvas id="obesityChart" height="150"></canvas>
                         </div>
                     </div>
-
-                    <div class="card card-danger card-outline">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-heartbeat me-1"></i> Blood Pressure
-                            </h3>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="bpChart" height="150"></canvas>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -182,14 +171,12 @@
                 monthlyData,
                 genderData,
                 campData,
-                bpData,
                 obesityData,
                 doctorData
             ] = await Promise.all([
                 fetchChartData('monthly_counseling'),
                 fetchChartData('gender_distribution'),
                 fetchChartData('camp_distribution'),
-                fetchChartData('blood_pressure', { days: 5 }),
                 fetchChartData('obesity_metrics', { days: 5 }),
                 fetchChartData('doctor_metrics', { days: 5 })
             ]);
@@ -197,7 +184,6 @@
             if (monthlyData) renderMonthlyChart(monthlyData);
             if (genderData) renderGenderChart(genderData);
             if (campData) renderCampChart(campData);
-            if (bpData) renderBPChart(bpData);
             if (obesityData) renderObesityChart(obesityData);
             if (doctorData) renderDoctorChart(doctorData);
         }
@@ -284,47 +270,6 @@
                     scales: {
                         x: { grid: { display: false } },
                         y: { beginAtZero: true }
-                    }
-                }
-            });
-        }
-
-        function renderBPChart(data) {
-            const ctx = document.getElementById('bpChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: data.map(item => new Date(item.date).toLocaleDateString()),
-                    datasets: [
-                        {
-                            label: 'Systolic (mmHg)',
-                            data: data.map(item => item.systolic),
-                            borderColor: dynamicColors[4].replace('0.7', '1'),
-                            backgroundColor: dynamicColors[4].replace('0.7', '0.2'),
-                            borderWidth: 2,
-                            tension: 0.1,
-                            fill: false
-                        },
-                        {
-                            label: 'Diastolic (mmHg)',
-                            data: data.map(item => item.diastolic),
-                            borderColor: dynamicColors[0].replace('0.7', '1'),
-                            backgroundColor: dynamicColors[0].replace('0.7', '0.2'),
-                            borderWidth: 2,
-                            tension: 0.1,
-                            fill: false
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        tooltip: { mode: 'index', intersect: false },
-                        legend: { position: 'top' }
-                    },
-                    scales: {
-                        x: { grid: { display: false } },
-                        y: { beginAtZero: false, title: { display: true, text: 'Blood Pressure (mmHg)' } }
                     }
                 }
             });
