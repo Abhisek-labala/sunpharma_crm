@@ -2695,14 +2695,14 @@ class PmController extends Controller
     {
         // Get request parameters from DataTable
         $draw = $request->get('draw');
-        $start = $request->get('start');
-        $length = $request->get('length');
-        $search = $request->get('search');
-        $searchValue = $search['value'];
+            $start = $request->get('start');
+            $length = $request->get('length');
+            $search = $request->get('search');
+            $searchValue = $search['value'] ?? '';
 
-        $order = $request->get('order');
-        $orderColumn = $order[0]['column'];
-        $orderDir = $order[0]['dir'];
+            $order = $request->get('order');
+            $orderColumn = $order[0]['column'] ?? 0;
+            $orderDir = $order[0]['dir'] ?? 'asc';
 
         // Column mapping for ordering
         $columns = [
@@ -2748,8 +2748,7 @@ class PmController extends Controller
                 'e.full_name as digital_educator_name',
                 'f.full_name as rm_name'
             )
-            ->whereNotNull('a.patient_name')
-            ->where('a.patient_enrolled', '=', 'Yes');
+            ->whereNotNull('a.patient_name');
         // Get total records count
         $totalRecords = $query->count();
 

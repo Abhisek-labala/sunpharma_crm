@@ -20,13 +20,13 @@
                                 <th>Weight</th>
                                 <th>Height</th>
                                 <th>Doctor Name</th>
-                                <th>Cipla Brand Prescribed</th>
+                                <th>Brand Prescribed</th>
                                 <th>Camp</th>
                                 <th>Date</th>
-                                <th>Educator Name</th>
-                                <th>Digital Educator Name</th>
-                                <th>Rm Name</th>
-                                <th>RM Approved Status</th>
+                                <th>Counsellor Name</th>
+                                <th>Digital Counsellor Name</th>
+                                <th>RC Name</th>
+                                <th>RC Approved Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
