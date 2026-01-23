@@ -2378,7 +2378,6 @@ class misController extends Controller
 
         // Base query
         $query = DB::table('public.patient_details as a')
-            ->leftJoin('public.patient_cardio_details as b', 'a.uuid', '=', 'b.uuid')
             ->leftJoin('public.patient_medication_details as c', 'a.uuid', '=', 'c.uuid')
             ->leftJoin('public.doctor as g', DB::raw('CAST(a.hcp_id AS INTEGER)'), '=', 'g.id')
             ->leftJoin('public.camp as h', 'a.camp_id', '=', 'h.id')

@@ -399,7 +399,6 @@ public function getrmPatientTable(Request $request)
             $q->where('a.patient_name', 'ILIKE', "%{$search}%")
               ->orWhere('a.mobile_number', 'ILIKE', "%{$search}%")
               ->orWhere('a.gender', 'ILIKE', "%{$search}%")
-              ->orWhere('b.blood_pressure', 'ILIKE', "%{$search}%")
               ->orWhere('c.bmi', 'ILIKE', "%{$search}%")
               ->orWhere('d.full_name', 'ILIKE', "%{$search}%")
               ->orWhere('f.full_name', 'ILIKE', "%{$search}%")
@@ -420,13 +419,12 @@ public function getrmPatientTable(Request $request)
         'a.patient_name',       // 2
         'a.mobile_number',      // 3
         'a.gender',             // 4
-        'b.blood_pressure',     // 5
-        'c.bmi',                // 6
-        'a.consent_form_file',  // 7
-        'a.prescription_file',  // 8
-        'd.full_name',          // 9
-        'f.full_name',          // 10
-        'g.city'                // 11
+        'c.bmi',                // 5
+        'a.consent_form_file',  // 6
+        'a.prescription_file',  // 7
+        'd.full_name',          // 8
+        'f.full_name',          // 9
+        'g.city'                // 10
     ];
 
     if ($orderColumnIndex > 0 && isset($columns[$orderColumnIndex - 1])) {
@@ -439,7 +437,6 @@ public function getrmPatientTable(Request $request)
         'a.patient_name',
         'a.mobile_number',
         'a.gender',
-        'b.blood_pressure',
         'c.bmi',
         'a.prescription_file',
         'a.consent_form_file',

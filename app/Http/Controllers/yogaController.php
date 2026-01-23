@@ -46,7 +46,6 @@ class yogaController extends Controller
 
     // Base query
     $query = DB::table('public.patient_details as a')
-        ->leftJoin('public.patient_cardio_details as b', 'a.uuid', '=', 'b.uuid')
         ->leftJoin('public.patient_medication_details as c', 'a.uuid', '=', 'c.uuid')
         ->leftJoin('common.users as d', function ($join) {
             $join->on('a.digital_educator_id', '=', 'd.id');

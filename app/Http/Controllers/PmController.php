@@ -1048,7 +1048,7 @@ class PmController extends Controller
             $baseQuery = DB::table('public.patient_details as a')
                 ->leftJoin('public.doctor as b', DB::raw('a.hcp_id::int'), '=', 'b.id')
                 ->leftJoin('common.users as c', function ($join) {
-                    $join->on(DB::raw('c.id'), '=', DB::raw('a.educator_id::int'))->where('c.role', '=', 'educator');
+                    $join->on(DB::raw('c.id'), '=', DB::raw('a.educator_id::int'))->where('c.role', '=', 'counsellor');
                 })
                 ->leftJoin('common.users as d', function ($join) {
                     $join->on(DB::raw('d.id'), '=', DB::raw('a.digital_educator_id::int'))->where('d.role', '=', 'digitaleducator');
@@ -2725,7 +2725,6 @@ class PmController extends Controller
 
         // Base query
         $query = DB::table('public.patient_details as a')
-            ->leftJoin('public.patient_cardio_details as b', 'a.uuid', '=', 'b.uuid')
             ->leftJoin('public.patient_medication_details as c', 'a.uuid', '=', 'c.uuid')
             ->leftJoin('public.doctor as g', DB::raw('CAST(a.hcp_id AS INTEGER)'), '=', 'g.id')
             ->leftJoin('public.camp as h', 'a.camp_id', '=', 'h.id')

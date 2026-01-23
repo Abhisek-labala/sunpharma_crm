@@ -112,7 +112,7 @@ class RmController extends Controller
             ->select('u.full_name as educator_name', DB::raw('COUNT(p.uuid) as session_count'))
             ->leftJoin('patient_details as p', 'u.id', '=', 'p.educator_id')
             ->leftJoin('common.rm_users as rm', 'u.rm_pm_id', '=', 'rm.id')
-            ->where('u.role', 'educator')
+            ->where('u.role', 'counsellor')
             ->whereNotNull('p.medicine')
             ->where('rm.id', $user_id)
             ->groupBy('u.id', 'u.full_name')
@@ -152,11 +152,10 @@ class RmController extends Controller
         // echo 'g';die;
        $user_id = session()->get('id');
         $patients = DB::table('public.patient_details as a')
-            ->leftJoin('public.patient_cardio_details as b', 'a.uuid', '=', 'b.uuid')
             ->leftJoin('public.patient_medication_details as c', 'a.uuid', '=', 'c.uuid')
             ->leftJoin('common.users as d', function ($join) {
                 $join->on('a.educator_id', '=', 'd.id')
-                    ->where('d.role', '=', 'educator');
+                    ->where('d.role', '=', 'counselor');
             })
             ->leftJoin('common.rm_users as f', 'd.rm_pm_id', '=', 'f.id')
             ->leftJoin('public.doctor as g', DB::raw('CAST(a.hcp_id AS INTEGER)'), '=', 'g.id')

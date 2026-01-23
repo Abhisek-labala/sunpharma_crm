@@ -137,7 +137,7 @@ class EducatorController extends Controller
         $data = DB::table('public.patient_details as pin')
             ->leftJoin('common.users as e', function ($join) {
                 $join->on('e.id', '=', 'pin.educator_id')
-                    ->where('e.role', '=', 'educator');
+                    ->where('e.role', '=', 'counsellor');
             })
             ->leftJoin('public.doctor as h', function ($join) {
                 $join->on(DB::raw('pin.hcp_id::text'), '=', DB::raw('h.id::text'))
@@ -165,7 +165,7 @@ class EducatorController extends Controller
         $data = DB::table('public.patient_details as pin')
             ->leftJoin('common.users as e', function ($join) {
                 $join->on('e.id', '=', 'pin.educator_id')
-                    ->where('e.role', '=', 'educator');
+                    ->where('e.role', '=', 'counsellor');
             })
             ->leftJoin('public.doctor as h', function ($join) {
                 $join->on(DB::raw('pin.hcp_id::text'), '=', DB::raw('h.id::text'))

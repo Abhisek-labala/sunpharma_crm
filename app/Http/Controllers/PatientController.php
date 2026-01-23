@@ -561,40 +561,6 @@ class PatientController extends Controller
                 'created_at' => $timestamp
             ]);
 
-            PatientCardioDetail::create([
-                'uuid' => $uuid,
-                'date_of_discharge' => $getOrNull('date_of_discharge'),
-                'blood_pressure' => $getOrNull('blood_pressure'),
-                'urea' => $getOrNull('urea'),
-                'lv_ef' => $getOrNull('lv_ef'),
-                'heart_rate' => $getOrNull('heart_rate'),
-                'nt_pro_bnp' => $getOrNull('nt_pro_bnp'),
-                'egfr' => $getOrNull('egfr'),
-                'potassium' => $getOrNull('potassium'),
-                'sodium' => $getOrNull('sodium'),
-                'uric_acid' => $getOrNull('uric_acid'),
-                'creatinine' => $getOrNull('creatinine'),
-                'crp' => $getOrNull('crp'),
-                'uacr' => $getOrNull('uacr'),
-                'iron' => $getOrNull('iron'),
-                'hb' => $getOrNull('hb'),
-                'ldl' => $getOrNull('ldl'),
-                'hdl' => $getOrNull('hdl'),
-                'triglycerid' => $getOrNull('triglycerid'),
-                'total_cholesterol' => $getOrNull('total_cholesterol'),
-                'hba1c' => $getOrNull('hba1c'),
-                'sgot' => $getOrNull('sgot'),
-                'sgpt' => $getOrNull('sgpt'),
-                'vit_d' => $getOrNull('vit_d'),
-                'anti_diabetic_therapy' => $getOrNull('anti_diabetic_therapy'),
-                'sglt2_inhibitors' => $getOrNull('sglt2_inhibitors'),
-                't3' => $getOrNull('t3'),
-                't4' => $getOrNull('t4'),
-                'date' => $currentDate,
-                'created_at' => $timestamp,
-                'updated_at' => $timestamp
-            ]);
-
             PatientMedicationDetail::create([
                 'uuid' => $uuid,
                 'weight' => $getOrNull('weight'),

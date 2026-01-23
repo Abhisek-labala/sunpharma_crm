@@ -60,15 +60,14 @@ class digitalController extends Controller
 
         // Step 2: Get base patient list (without filtering yet)
         $patients = DB::table('public.patient_details as a')
-            ->leftJoin('public.patient_cardio_details as b', 'a.uuid', '=', 'b.uuid')
             ->leftJoin('public.patient_medication_details as c', 'a.uuid', '=', 'c.uuid')
             ->leftJoin('common.users as d', function ($join) {
                 $join->on('a.digital_educator_id', '=', 'd.id')
-                    ->where('d.role', '=', 'digitaleducator');
+                    ->where('d.role', '=', 'digitalcounsellor');
             })
             ->leftJoin('common.users as e', function ($join) {
                 $join->on('a.educator_id', '=', 'e.id')
-                    ->where('e.role', '=', 'educator');
+                    ->where('e.role', '=', 'counsellor');
             })
             ->leftJoin('common.rm_users as f', 'd.rm_pm_id', '=', 'f.id')
             ->leftJoin('public.doctor as g', DB::raw('CAST(a.hcp_id AS INTEGER)'), '=', 'g.id')
