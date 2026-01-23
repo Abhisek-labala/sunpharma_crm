@@ -3,35 +3,28 @@
 namespace App\Exports;
 
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 
-class CampReportExport implements FromCollection, WithHeadings, WithMapping
+class CampReportExport implements FromQuery, WithHeadings, WithMapping
 {
-    public function collection()
+    public function query()
     {
-        try {
-            return DB::table('public.camp as c')
-                ->leftJoin('common.users as u', 'u.id', '=', 'c.educator_id')
-                ->select(
-                    'c.id',
-                    'u.emp_id as employee_id',
-                    'u.full_name',
-                    'c.hcp_name',
-                    'c.in_time',
-                    'c.out_time',
-                    'c.remarks',
-                    'c.execution_status',
-                    'c.date'
-                )
-                ->orderBy('c.date', 'desc')
-                ->get();
-        } catch (\Exception $e) {
-            \Log::error('Camp Report Export Error: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
-            return collect([]); // Return empty collection on error
-        }
+        return DB::table('public.camp as c')
+            ->leftJoin('common.users as u', 'u.id', '=', 'c.educator_id')
+            ->select(
+                'c.id',
+                'u.emp_id as employee_id',
+                'u.full_name',
+                'c.hcp_name',
+                'c.in_time',
+                'c.out_time',
+                'c.remarks',
+                'c.execution_status',
+                'c.date'
+            )
+            ->orderBy('c.date', 'desc');
     }
 
     public function headings(): array
