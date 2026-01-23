@@ -33,7 +33,7 @@ class CampReportExport implements FromCollection, WithHeadings, WithMapping
         return [
             'Camp ID',
             'Employee ID',
-            'Educator Name',
+            'Counsellor Name',
             'Doctor Name',
             'In Time',
             'Out Time',

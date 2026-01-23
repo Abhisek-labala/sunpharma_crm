@@ -80,7 +80,7 @@ class FeedBackController extends Controller
         $id = $request->get('patient_id'); // get query param
         
         if (!$id) {
-            return response()->json(['error' => 'Patient ID is required'], 400);
+        return response()->json(['error' => 'Patient ID is required'], 400);
         }
         
         $day3_data_exists = false;

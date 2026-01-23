@@ -30,10 +30,10 @@ class FeedbackReportExport implements FromCollection, WithHeadings, ShouldAutoSi
         $query = DB::table('public.patient_details as a')
             ->leftJoin('public.doctor as b', DB::raw('a.hcp_id::int'), '=', 'b.id')
             ->leftJoin('common.users as c', function ($join) {
-                $join->on(DB::raw('c.id'), '=', DB::raw('a.educator_id::int'))->where('c.role', '=', 'educator');
+                $join->on(DB::raw('c.id'), '=', DB::raw('a.educator_id::int'))->where('c.role', '=', 'counsellor');
             })
             ->leftJoin('common.users as d', function ($join) {
-                $join->on(DB::raw('d.id'), '=', DB::raw('a.digital_educator_id::int'))->where('d.role', '=', 'digitaleducator');
+                $join->on(DB::raw('d.id'), '=', DB::raw('a.digital_educator_id::int'))->where('d.role', '=', 'digitalcounsellor');
             })
             ->leftJoin('public.feedback_submitted as e', DB::raw('a.id'), '=', DB::raw('e.patient_id::int'))
             ->leftJoin('public.day3_followup as o', DB::raw('o.patient_id'), '=', DB::raw('e.patient_id::int'))
@@ -46,11 +46,10 @@ class FeedbackReportExport implements FromCollection, WithHeadings, ShouldAutoSi
             ->leftJoin('public.day120_followup as l', DB::raw('l.patient_id'), '=', DB::raw('e.patient_id::int'))
             ->leftJoin('public.day150_followup as m', DB::raw('m.patient_id'), '=', DB::raw('e.patient_id::int'))
             ->leftJoin('public.day180_followup as n', DB::raw('n.patient_id'), '=', DB::raw('e.patient_id::int'))
-            ->where('a.patient_enrolled', '=', 'Yes')
-                ->where(function ($q) {
+            ->where(function ($q) {
                                 $q->whereNotNull('a.prescription_file')
                                 ->orWhereNotNull('a.consent_form_file');
-                });
+            });
 
         // Apply all filters
         if (!empty($this->fromDate) && !empty($this->toDate)) {
@@ -202,8 +201,8 @@ class FeedbackReportExport implements FromCollection, WithHeadings, ShouldAutoSi
             'Patient Name',
             'Mobile Number',
             'Doctor Name',
-            'Educator Name',
-            'Digital Educator Name',
+            'Counsellor Name',
+            'Digital Counsellor Name',
             'Created At',
             'Day 3 Planner Date',
             'Day 3 Actual Date',
