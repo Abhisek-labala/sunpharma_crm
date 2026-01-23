@@ -352,8 +352,7 @@ class misController extends Controller
 
                     'd.full_name as educator_name',
                     DB::raw("COALESCE(e.full_name, 'N/A') as digital_educator")
-                )
-                ->where('a.patient_enrolled', '=', 'Yes');
+                );
 
             // Search filter
             if (!empty($searchValue)) {
@@ -1502,8 +1501,12 @@ class misController extends Controller
 
             return response()->json($educators);
         } catch (\Exception $e) {
-            Log::error('Get counsellors Name Error: ' . $e->getMessage());
-            return response()->json(['error' => 'Server error'], 500);
+            \Log::error('Get counsellors Name Error: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return response()->json([
+                'error' => 'Server error',
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
     public function assignDigitalEducatorpatient(Request $request)
@@ -2520,7 +2523,6 @@ class misController extends Controller
                 ->leftJoin('public.day120_followup as l', DB::raw('l.patient_id'), '=', DB::raw('e.patient_id::int'))
                 ->leftJoin('public.day150_followup as m', DB::raw('m.patient_id'), '=', DB::raw('e.patient_id::int'))
                 ->leftJoin('public.day180_followup as n', DB::raw('n.patient_id'), '=', DB::raw('e.patient_id::int'))
-                ->where('a.patient_enrolled', '=', 'Yes')
                 ->where(function ($q) {
                                 $q->whereNotNull('a.prescription_file')
                                 ->orWhereNotNull('a.consent_form_file');
