@@ -236,7 +236,7 @@ Route::middleware(['check.session', 'role:nc'])->group(function () {
     Route::get('/nc-feedback-report-excel', [PmController::class, 'feedbackReportExcel'])->name('pm-feedback-report-excel');
     Route::get('/get-educators-name', [PmController::class, 'getEducatorsName'])->name('get.educators.name');
     Route::get('/get-digi-educators-name', [PmController::class, 'getDigiEducatorsName'])->name('get.digi.educators.name');
-    Route::get('nc-campreport_excel', [PmController::class, 'campReportExcel'])->name('pmcamp.report.excel');
+    Route::get('nccampreport_excel', [PmController::class, 'campReportExcel'])->name('pmcamp.report.excel');
     Route::get('/nc-daily-report/export', [PmController::class, 'downloadDailyReport'])->name('pmdaily.report.export');
     Route::get('nc-Get-Doctor/{id}', [PmController::class, 'getDoctorById']);
     Route::get('nc-medicine', [PmController::class, 'medicinepage']);
