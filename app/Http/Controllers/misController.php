@@ -2404,8 +2404,7 @@ class misController extends Controller
                     'e.full_name as digital_educator_name',
                     'f.full_name as rm_name'
                 )
-                ->whereNotNull('a.patient_name')
-                ->where('a.patient_enrolled', '=', 'Yes');
+                ->whereNotNull('a.patient_name');
             
             // Get total records count
             $totalRecords = $query->count();
