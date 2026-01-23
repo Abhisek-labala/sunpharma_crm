@@ -26,10 +26,10 @@ class DailyReportExport implements FromCollection, WithHeadings
     ->selectRaw("
         pin.date,
         dn.msl_code,
+        dn.name AS doctor_name,
         dn.city AS hq,
         dn.state AS state_name,
         rm.full_name AS rm_name,
-        dn.name AS doctor_name,
         e.full_name AS educator_name,
         e.emp_id AS employee_id,
         COUNT(pin.id) AS total_patient,
@@ -44,10 +44,10 @@ class DailyReportExport implements FromCollection, WithHeadings
     ->groupBy([
         'pin.date',
         'dn.msl_code',
+        'dn.name',
         'dn.city',
         'dn.state',
         'rm.full_name',
-        'dn.name',
         'e.full_name',
         'e.emp_id'
     ])
@@ -59,12 +59,12 @@ class DailyReportExport implements FromCollection, WithHeadings
     {
         return [
             'Date',
-            'MSL Code',
+            'Doctor Code',
+            'Doctor Name',
             'HQ',
             'State',
-            'RM Name',
-            'Doctor Name',
-            'Educator Name',
+            'RC Name',
+            'Counsellor Name',
             'Employee ID',
             'Total Patients',
             'Total Rx',

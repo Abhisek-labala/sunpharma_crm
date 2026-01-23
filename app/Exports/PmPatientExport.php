@@ -177,7 +177,6 @@ protected function calculateMaxPrescriptionFiles()
             $row->cipla_brand_prescribed,
             $row->date,
             $row->approved_status,
-            $row->date_of_discharge,
             $row->weight,
             $row->height,
             $row->waist_circumference,
@@ -204,8 +203,7 @@ protected function calculateMaxPrescriptionFiles()
             $headings[] = "Prescription $i";
         }
          $headings = array_merge($headings, [
-            'Brand Prescribed', 'Date','RC Approved Status',
-            'Date of Discharge','Weight', 'Height',
+            'Brand Prescribed', 'Date','RC Approved Status','Weight', 'Height',
             'Waist Circumference', 'BMI', 'Waist to Height Ratio', 'Metabolic Age', 'Co-morbidities', 'Remark'
         ]);
          return $headings;
