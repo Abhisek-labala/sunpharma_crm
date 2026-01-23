@@ -11,21 +11,30 @@ class CampReportExport implements FromCollection, WithHeadings, WithMapping
 {
     public function collection()
     {
-        return DB::table('public.camp as c')
-            ->leftJoin('common.users as u', 'u.id', '=', 'c.educator_id')
-            ->select(
-                'c.id',
-                'u.emp_id as employee_id',
-                'u.full_name',
-                'c.hcp_name',
-                'c.in_time',
-                'c.out_time',
-                'c.remarks',
-                'c.execution_status',
-                'c.date'
-            )
-            ->orderBy('c.date', 'desc')
-            ->get();
+        try {
+            return DB::table('public.camp as c')
+                ->leftJoin('common.users as u', function ($join) {
+                    $join->on('u.id', '=', 'c.educator_id')
+                        ->where('u.role', '=', 'counsellor');
+                })
+                ->select(
+                    'c.id',
+                    'u.emp_id as employee_id',
+                    'u.full_name',
+                    'c.hcp_name',
+                    'c.in_time',
+                    'c.out_time',
+                    'c.remarks',
+                    'c.execution_status',
+                    'c.date'
+                )
+                ->orderBy('c.date', 'desc')
+                ->get();
+        } catch (\Exception $e) {
+            \Log::error('Camp Report Export Error: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return collect([]); // Return empty collection on error
+        }
     }
 
     public function headings(): array
