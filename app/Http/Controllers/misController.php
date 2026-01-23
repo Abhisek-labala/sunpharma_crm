@@ -237,6 +237,31 @@ class misController extends Controller
             return response()->json(['error' => 'Server error'], 500);
         }
     }
+    
+    public function getdigiEducatorsname()
+    {
+        // Check session (replace with Laravel auth check if needed)
+        if (!session()->has('emp_id')) {
+            return response()->json(['error' => 'Session expired'], 401);
+        }
+
+        try {
+            $educators = DB::table('common.users')
+                ->where('role', 'digitalcounsellor')
+                ->select('id', 'full_name')
+                ->get();
+
+            return response()->json($educators);
+        } catch (\Exception $e) {
+            \Log::error('Get Digital Counsellor Name Error: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return response()->json([
+                'error' => 'Server error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+    
     public function pmassignDigitalEducatorPost(Request $request)
     {
         // Validate inputs
@@ -2746,8 +2771,14 @@ class misController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Get Feedback Details Error: ' . $e->getMessage());
-            return response()->json(['error' => 'Server error'], 500);
+            \Log::error('Get Feedback Details Error: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            \Log::error('Request params: ' . json_encode($request->all()));
+            
+            return response()->json([
+                'error' => 'Server error',
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
      public function misfeedbackReport()
