@@ -121,20 +121,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="col-lg-12">
-                    <div class="card card-info card-outline">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-heartbeat mr-1"></i>
-                                Blood Pressure
-                            </h3>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="bpChart" style="height: 120px;"></canvas>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -269,7 +255,6 @@
                 fetchChartData('noteducator', { days: 5 }),
                 fetchChartData('gender_distribution'),
                 fetchChartData('camp_distribution'),
-                fetchChartData('blood_pressure', { days: 5 }),
                 fetchChartData('obesity_metrics', { days: 5 }),
                 fetchChartData('doctorNotMetrics', { days: 5 })
             ]);
@@ -279,7 +264,6 @@
             if (noteducatorsData) rendernottopEducatorsChart(noteducatorsData);
             if (genderData) renderBrandChart(genderData);
             if (campData) renderCampChart(campData);
-            if (bpData) renderBPChart(bpData);
             if (obesityData) renderObesityChart(obesityData);
             if (docnotData) renderDocnotChart(docnotData);
         }
@@ -430,45 +414,6 @@
                     plugins: { legend: { display: false } },
                     scales: {
                         y: { beginAtZero: true },
-                        x: { grid: { display: false } }
-                    }
-                }
-            });
-        }
-
-        function renderBPChart(data) {
-            const ctx = document.getElementById('bpChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: data.map(item => new Date(item.date).toLocaleDateString()),
-                    datasets: [
-                        {
-                            label: 'Systolic (mmHg)',
-                            data: data.map(item => item.systolic),
-                            borderColor: '#ef4444',
-                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true
-                        },
-                        {
-                            label: 'Diastolic (mmHg)',
-                            data: data.map(item => item.diastolic),
-                            borderColor: '#3b82f6',
-                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { tooltip: { mode: 'index', intersect: false }, legend: { position: 'top' } },
-                    scales: {
-                        y: { beginAtZero: false },
                         x: { grid: { display: false } }
                     }
                 }
