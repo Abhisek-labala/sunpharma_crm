@@ -228,11 +228,6 @@
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-
-                    // Force JPEG or WebP for compression. Original file.type might be PNG which can be large.
-                    // WebP is good if supported, otherwise JPEG.
-                    // The backend accepts 'jpg', 'jpeg', 'png', 'webp'.
-                    // Let's use 'image/webp' for best compression if browser supports it, or 'image/jpeg'.
                     canvas.toBlob(blob => {
                         if (!blob) {
                             reject(new Error('Canvas is empty'));
