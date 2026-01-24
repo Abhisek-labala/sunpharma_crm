@@ -173,7 +173,7 @@ $(document).ready(function () {
 
     // Define global function for form redirection
     window.openForm = function (patientId) {
-        window.location.href = '/educator/educator-follow-up-form?patient_id=' + patientId;
+        window.location.href = '/counsellor/counsellor-follow-up-form?patient_id=' + patientId;
     };
     window.openUploadModal = function (patientId, patientName) {
             $('#uploadPatientId').val(patientId);
