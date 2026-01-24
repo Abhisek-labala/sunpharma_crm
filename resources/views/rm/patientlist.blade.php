@@ -29,7 +29,6 @@
                                 <th>Date</th>
                                 <th>Consent Form</th>
                                 <th>Prescription Files</th>
-                                <th>Purchase Bill</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -78,7 +77,6 @@
                         date: item.date,
                         consent_form_file: item.consent_form_file ?? null,
                         prescription_file: item.prescription_file ?? null,
-                        purchase_bill: item.purchase_bill ?? null,
                         actions: actionButtons
                     };
                 });
@@ -133,13 +131,6 @@
                         return files
                             .map(f => `<a href="/private-file/${f.trim()}" target="_blank">View</a>`)
                             .join(', ');
-                    }
-                },
-                {
-                    data: 'purchase_bill',
-                    name: 'purchase_bill',
-                    render: function (data) {
-                        return data ? `<a href="/private-file/${data}" target="_blank">View</a>` : '-';
                     }
                 },
                 { data: 'actions' },
