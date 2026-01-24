@@ -87,7 +87,7 @@ Route::middleware(['check.session', 'role:counsellor'])->group(function () {
 
     Route::get('/counsellor/patientlist', [PatientController::class, 'getPatientList'])->name('educator.patientslist');
     Route::post('/counsellor/upload-documents', [EducatorController::class, 'uploadDocuments'])->name('educator.uploadDocuments');
-    Route::get('/counsellor/educator-follow-up-form', [FeedBackController::class, 'followupFormeducator'])->name('educator.followupform');
+    Route::get('/counsellor/counsellor-follow-up-form', [FeedBackController::class, 'followupFormeducator'])->name('educator.followupform');
 
     Route::get('/counsellor/max-day/{patientId}', [EducatorController::class, 'getMaxDay']);
     Route::get('/counsellor/day3-Followup-get/{patient_id}', [EducatorController::class, 'day3followupget'])->name('educator.day3followupget');
