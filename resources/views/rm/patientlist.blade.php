@@ -24,7 +24,7 @@
                                 <th>Weight</th>
                                 <th>Height</th>
                                 <th>Doctor Name</th>
-                                <th>Cipla Brand Prescribed</th>
+                                <th>Brand Prescribed</th>
                                 <th>Camp</th>
                                 <th>Date</th>
                                 <th>Consent Form</th>

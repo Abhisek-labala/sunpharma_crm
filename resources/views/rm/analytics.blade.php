@@ -195,7 +195,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const API_BASE_URL = "{{ url('Charts') }}/rm/";
+        const API_BASE_URL = "{{ url('Charts') }}/rc/";
 
         // A new, more attractive color array for bar charts
         const dynamicColors = [

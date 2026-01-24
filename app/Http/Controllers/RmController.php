@@ -155,7 +155,7 @@ class RmController extends Controller
             ->leftJoin('public.patient_medication_details as c', 'a.uuid', '=', 'c.uuid')
             ->leftJoin('common.users as d', function ($join) {
                 $join->on('a.educator_id', '=', 'd.id')
-                    ->where('d.role', '=', 'counselor');
+                    ->where('d.role', '=', 'counsellor');
             })
             ->leftJoin('common.rm_users as f', 'd.rm_pm_id', '=', 'f.id')
             ->leftJoin('public.doctor as g', DB::raw('CAST(a.hcp_id AS INTEGER)'), '=', 'g.id')
