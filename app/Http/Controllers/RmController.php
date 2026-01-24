@@ -170,7 +170,6 @@ class RmController extends Controller
                 'a.approved_status',
                 'a.prescription_file',
                 'a.consent_form_file',
-                'a.purchase_bill',
                 'c.height',
                 'c.weight',
                 'a.cipla_brand_prescribed',
@@ -181,8 +180,7 @@ class RmController extends Controller
             ->whereNotNull('a.patient_name')
             ->where(function ($q) {
                 $q->whereNotNull('a.prescription_file')
-                ->orWhereNotNull('a.consent_form_file')
-                ->orWhereNotNull('a.purchase_bill');
+                ->orWhereNotNull('a.consent_form_file');
             })
             ->orderBy('a.id', 'desc')
             ->get();

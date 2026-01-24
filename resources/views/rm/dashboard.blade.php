@@ -24,7 +24,7 @@
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label class="col-form-label col-md-2">Educator</label>
+                                    <label class="col-form-label col-md-2">Counsellor</label>
                                     <div class="col-md-10">
                                         <select class="form-control" name="educator" id="educator">
                                             <option value=""> -- Select -- </option>
@@ -42,7 +42,7 @@
                                 </div>
 
                                 <div class="mb-3 row">
-                                    <label class="col-form-label col-md-2">HCP Name</label>
+                                    <label class="col-form-label col-md-2">Doctor Name</label>
                                     <div class="col-md-10">
                                         <select class="form-control" name="doctor" id="doctor">
                                             <option value=""> -- Select -- </option>
@@ -71,7 +71,6 @@
                                 <th>Patient Name</th>
                                 <th>Mobile</th>
                                 <th>Gender</th>
-                                <th>Blood Pressure</th>
                                 <th>BMI</th>
                                 <th>Consent Form</th>
                                 <th>Prescription</th>
@@ -148,7 +147,6 @@
                 { data: 'patient_name', name: 'patient_name' },
                 { data: 'mobile_number', name: 'mobile_number' },
                 { data: 'gender', name: 'gender' },
-                { data: 'blood_pressure', name: 'blood_pressure', defaultContent: '-' },
                 { data: 'bmi', name: 'bmi', defaultContent: '-' },
                 {
                     data: 'consent_form_file',
