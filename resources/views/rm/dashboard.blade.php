@@ -74,8 +74,8 @@
                                 <th>BMI</th>
                                 <th>Consent Form</th>
                                 <th>Prescription</th>
-                                <th>Educator Name</th>
-                                <th>RM Name</th>
+                                <th>Counsellor Name</th>
+                                <th>RC Name</th>
                                 <th>City</th>
                             </tr>
                         </thead>
