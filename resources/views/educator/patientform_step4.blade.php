@@ -207,6 +207,46 @@
         });
     }
 
+    async function compressImage(file, maxWidth = 1024, quality = 0.7) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = event => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > maxWidth) {
+                        height = Math.round((height * maxWidth) / width);
+                        width = maxWidth;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Force JPEG or WebP for compression. Original file.type might be PNG which can be large.
+                    // WebP is good if supported, otherwise JPEG.
+                    // The backend accepts 'jpg', 'jpeg', 'png', 'webp'.
+                    // Let's use 'image/webp' for best compression if browser supports it, or 'image/jpeg'.
+                    canvas.toBlob(blob => {
+                        if (!blob) {
+                            reject(new Error('Canvas is empty'));
+                            return;
+                        }
+                        resolve(blob);
+                    }, 'image/webp', quality);
+                };
+                img.onerror = error => reject(error);
+            };
+            reader.onerror = error => reject(error);
+        });
+    }
+
     async function submitFinal() {
         const brand = $('#brand_prescribed').val();
          // Basic Validation check
@@ -218,7 +258,37 @@
         const btn = $('.btn-next');
         btn.prop('disabled', true).html('Submitting... <i class="fa fa-spinner fa-spin"></i>');
 
-        const formData = new FormData(document.getElementById('step4Form'));
+        const form = document.getElementById('step4Form');
+        const formData = new FormData(form);
+        
+        // Handle compression for Prescription File
+        const presInput = document.getElementById('prescription_file');
+        if (presInput && presInput.files[0]) {
+            try {
+                // tostr info to let user know we are processing
+                toastr.info('Compressing prescription image...');
+                const compressedPres = await compressImage(presInput.files[0]);
+                // Replace the file in FormData with the compressed blob
+                // We keep the original name but change extension to .webp since we encode as webp
+                let newName = presInput.files[0].name.split('.').slice(0, -1).join('.') + '.webp';
+                formData.set('prescription_file', compressedPres, newName);
+            } catch (e) {
+                console.error("Prescription compression failed, sending original", e);
+            }
+        }
+
+        // Handle compression for Consent Form
+        const conInput = document.getElementById('consent_form');
+        if (conInput && conInput.files[0]) {
+             try {
+                toastr.info('Compressing consent image...');
+                const compressedCon = await compressImage(conInput.files[0]);
+                 let newName = conInput.files[0].name.split('.').slice(0, -1).join('.') + '.webp';
+                formData.set('consent_form', compressedCon, newName);
+            } catch (e) {
+                console.error("Consent compression failed, sending original", e);
+            }
+        }
         
         try {
             const response = await fetch("{{ url('counsellor/Patient-Inquiry-Post') }}", {
@@ -242,7 +312,7 @@
             }
         } catch (error) {
             console.error(error);
-            toastr.error('An error occurred while submitting the form.');
+            toastr.error('An error occurred while submitting the form. (Request might be too large)');
             btn.prop('disabled', false).html('Submit <i class="fa fa-check"></i>');
         }
     }
