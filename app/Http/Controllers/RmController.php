@@ -149,7 +149,6 @@ class RmController extends Controller
     }
      public function getPatientdata(Request $request)
     {
-        // echo 'g';die;
        $user_id = session()->get('id');
         $patients = DB::table('public.patient_details as a')
             ->leftJoin('public.patient_medication_details as c', 'a.uuid', '=', 'c.uuid')
