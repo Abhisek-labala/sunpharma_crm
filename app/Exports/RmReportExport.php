@@ -176,8 +176,8 @@ protected function calculateMaxPrescriptionFiles()
     {
        $this->calculateMaxPrescriptionFiles();
 
-        $headings = [
-            'Patient ID','Counsellor Name', 'EMP Id', 'RM Name', 'Camp', 'MSL Code', 'Doctor Name', 'Speciality', 'City', 'State',
+        $headings = [ 
+            'Patient ID','Counsellor Name', 'EMP Id', 'RC Name', 'Camp', 'Doctor Code', 'Doctor Name', 'Speciality', 'City', 'State',
             'Patient Name', 'Age', 'Mobile Number', 'Gender', 'Medicine', 'Competitor', 'Consent Form File'
         ];
 
