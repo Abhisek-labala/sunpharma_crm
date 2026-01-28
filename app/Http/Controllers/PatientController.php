@@ -351,7 +351,6 @@ class PatientController extends Controller
             'c.height',
             'g.name',
             'a.cipla_brand_prescribed',
-            'h.camp_id',
             'a.date',
             'a.approved_status'
         ];
@@ -365,7 +364,6 @@ class PatientController extends Controller
             })
             ->leftJoin('common.rm_users as f', 'd.rm_pm_id', '=', 'f.id')
             ->leftJoin('public.doctor as g', DB::raw('CAST(a.hcp_id AS INTEGER)'), '=', 'g.id')
-            ->leftJoin('public.camp as h', 'a.camp_id', '=', 'h.id')
             ->select(
                 'a.id',
                 'a.date',
@@ -377,7 +375,6 @@ class PatientController extends Controller
                 'c.height',
                 'c.weight',
                 'a.cipla_brand_prescribed',
-                'h.camp_id',
                 'g.name as doctor_name',
             )
             ->where('a.educator_id', $user_id)
@@ -392,7 +389,6 @@ class PatientController extends Controller
                     ->orWhere('a.mobile_number', 'ilike', "%{$searchValue}%")
                     ->orWhere('g.name', 'ilike', "%{$searchValue}%")
                     ->orWhere('a.cipla_brand_prescribed', 'ilike', "%{$searchValue}%")
-                    ->orWhere('h.camp_id', 'ilike', "%{$searchValue}%")
                     ->orWhere('a.gender', 'ilike', "%{$searchValue}%")
                     ->orWhere('a.age', 'ilike', "%{$searchValue}%")
                     ->orWhere('a.approved_status', 'ilike', "%{$searchValue}%");

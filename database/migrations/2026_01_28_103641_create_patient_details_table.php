@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('digital_educator_id')->nullable();
             $table->unsignedBigInteger('camp_id')->nullable();
             $table->unsignedBigInteger('hcp_id')->nullable();
-            $table->string('patient_name');
+            $table->string('patient_name')->nullable();
             $table->integer('age')->nullable();
             $table->string('mobile_number')->nullable();
             $table->string('gender')->nullable();

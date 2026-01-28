@@ -33,7 +33,6 @@
                                 <th>Height</th>
                                 <th>Doctor Name</th>
                                 <th>Brand Prescribed</th>
-                                <th>Camp</th>
                                 <th>Date</th>
                                 <th>RC Approved Status</th>
                                 <th>Actions</th>
@@ -128,12 +127,6 @@ $(document).ready(function () {
             },
             { data: 'doctor_name' },
             { data: 'cipla_brand_prescribed' },
-            {
-                data: 'camp_id',
-                render: function (data) {
-                    return data ? 'Camp ' + data : '-';
-                }
-            },
             { data: 'date' },
             {
                 data: 'approved_status',
