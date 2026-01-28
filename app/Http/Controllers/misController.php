@@ -1795,6 +1795,7 @@ class misController extends Controller
                 ->select([
                     'm.id',
                     'm.medicine_name',
+                    'm.medicine_header_id', // Added for edit form
                     'mh.header as medicine_header',
                     'm.status'
                 ])
