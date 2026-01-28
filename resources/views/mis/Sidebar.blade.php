@@ -40,12 +40,6 @@
                         <i class="fa fa-user"></i> <span>Feedbacks</span>
                     </a>
                 </li>
-
-                <li>
-                    <a href="{{ url('admin-campreport') }}">
-                        <i class="fa fa-ticket"></i> <span>Camp Report</span>
-                    </a>
-                </li>
                 <li>
                     <a href="{{ url('admin/attendance-report') }}">
                         <i class="fa fa-calendar-check"></i> <span>Attendance Report</span>

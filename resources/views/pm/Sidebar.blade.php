@@ -10,10 +10,10 @@
                     <li class="submenu">-
                         <a href="#"> <span> ADD/DELETE </span> <span class="menu-arrow"></span></a>
                         <ul style="display: none;">
-                            <li><a href="{{ url('nc-Create-Educator') }}">Counsellor</a></li>
-                            <li><a href="{{ url('nc-Create-Hcp') }}">Doctor</a></li>
-                            <li><a href="{{ url('nc-Create-RM') }}">RC</a></li>
-                            <li><a href="{{ url('nc-Create-DigitalEducator') }}"> Digital Counsellor</a></li>
+                            <li><a href="{{ url('nc-Create-Counsellor') }}">Counsellor</a></li>
+                            <li><a href="{{ url('nc-Create-Doctor') }}">Doctor</a></li>
+                            <li><a href="{{ url('nc-Create-RC') }}">RC</a></li>
+                            <li><a href="{{ url('nc-Create-DigitalCounsellor') }}"> Digital Counsellor</a></li>
                             <li><a href="{{ url('nc-medicine') }}"> Medicine</a></li>
                             <li><a href="{{ url('nc-compitetor') }}"> Compitetor</a></li>
                         </ul>
@@ -33,9 +33,6 @@
                     </li>
                     <li>
                         <a href="{{ url('nc-Patient-List') }}"><i class="fa fa-user"></i> <span>Feedbacks</span></a>
-                    </li>
-                    <li>
-                        <a href="{{ url('nc-campreport') }}"><i class="fa fa-ticket"></i> <span>Camp Report</span></a>
                     </li>
                     <li>
                         <a href="{{ url('nc/attendance-report') }}"><i class="fa fa-calendar-check"></i> <span>Attendance Report</span></a>

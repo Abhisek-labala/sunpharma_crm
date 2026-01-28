@@ -26,10 +26,10 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Educators Management</h4>
+                            <h4 class="card-title">DigitalCounsellor Management</h4>
                             <button type="button" class="btn btn-primary float-right" data-toggle="modal"
                                 data-target="#educatorModal" onclick="resetForm()">
-                                <i class="fa fa-plus"></i> Add Digital Educator
+                                <i class="fa fa-plus"></i> Add DigitalCounsellor
                             </button>
                         </div>
                         <div class="card-body">
@@ -66,7 +66,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle">Add Digital Educator</h5>
+                <h5 class="modal-title" id="modalTitle">Add Digital Counsellor</h5>
             </div>
             <div class="modal-body">
                 <form action="Pm-Create-DigiEducator-Post" name="createEducator" id="createEducator" method="post"
@@ -198,7 +198,7 @@
     // Reset form and modal - improved version
     function resetForm() {
         $('#educatorModal').modal('show');
-        $('#modalTitle').text('Add Educator');
+        $('#modalTitle').text('Add Counsellor');
         $('#createEducator')[0].reset();
         $('#educator_id').val('');
         $('#password').val('').removeAttr('placeholder');
@@ -349,7 +349,7 @@
         }
 
         // Change modal title
-        $('#modalTitle').text("Edit Digital Educator");
+        $('#modalTitle').text("Edit Digital Counsellor");
         $('#submitBtn').prop('disabled', false);
         // Populate form fields
         $('#educator_id').val(rowData.id);

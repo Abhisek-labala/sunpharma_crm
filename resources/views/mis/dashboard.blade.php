@@ -52,15 +52,6 @@
                                 </div>
 
                                 <div class="mb-3 row">
-                                    <label class="col-form-label col-md-2">Camp</label>
-                                    <div class="col-md-10">
-                                        <select class="form-control" name="campId" id="campId">
-                                            <option value=""> -- Select -- </option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3 row">
                                     <label class="col-form-label col-md-2">Doctor Name</label>
                                     <div class="col-md-10">
                                         <select class="form-control" name="doctor" id="doctor">
@@ -117,12 +108,6 @@
 <script>
     $(document).ready(function () {
         loadZones();
-
-        function checkEducatorAndLoad() {
-            if ($('#educator').val()) {
-                loadCamps();
-            }
-        }
 
         let patientTable = $('#patientTable').DataTable({
             processing: true,
@@ -192,20 +177,6 @@
         function loadPatientData() {
             patientTable.ajax.reload();
         }
-
-        function loadCamps() {
-            $.post("{{ route('common.misgetCampbyeducator') }}", {
-                educatorId: $('#educator').val(),
-                fromDate: $('#from_date').val(),
-                toDate: $('#to_date').val(),
-                _token: $('input[name="_token"]').val()
-            }, function (data) {
-                $('#campId').html(data);
-                $('#doctor').html('<option value="">-- Select --</option>');
-                loadPatientData();
-            });
-        }
-
         function loadZones() {
             $.post("{{ route('common.misgetZones') }}", {
                 _token: $('input[name="_token"]').val()
@@ -238,10 +209,6 @@
         });
 
         $('#educator').on('change', function () {
-            loadCamps();
-        });
-
-        $('#campId').on('change', function () {
             $.post("{{ route('common.misgetDoctorsByEdu') }}", {
                 educatorId: $('#educator').val(),
                 _token: $('input[name="_token"]').val()
@@ -257,11 +224,8 @@
 
         // ✅ Updated: Handle native input type="date" changes
         $('#from_date, #to_date').on('input', function () {
-            checkEducatorAndLoad();
             loadPatientData();
         });
-
-        loadCamps();
     });
 
     window.downloadpmPatientExcel = function () {

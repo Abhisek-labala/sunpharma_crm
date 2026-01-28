@@ -21,7 +21,6 @@
                                 <th>Height</th>
                                 <th>Doctor Name</th>
                                 <th>Brand Prescribed</th>
-                                <th>Camp</th>
                                 <th>Date</th>
                                 <th>Counsellor Name</th>
                                 <th>Digital Counsellor Name</th>
@@ -83,12 +82,6 @@ $(document).ready(function () {
             },
             { data: 'doctor_name' },
             { data: 'cipla_brand_prescribed' },
-            {
-                data: 'camp_id',
-                render: function (data) {
-                    return data ? 'Camp ' + data : '-';
-                }
-            },
             { data: 'date' },
             { data: 'educator_name', defaultContent: '-' },
             { data: 'digital_educator_name', defaultContent: '-' },

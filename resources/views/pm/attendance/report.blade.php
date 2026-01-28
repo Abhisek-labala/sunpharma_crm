@@ -9,10 +9,6 @@
                 <div class="row align-items-center">
                     <div class="col">
                         <h3 class="page-title">Attendance Report</h3>
-                        <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('dashboard.rm') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Attendance Report</li>
-                        </ul>
                     </div>
                 </div>
             </div>

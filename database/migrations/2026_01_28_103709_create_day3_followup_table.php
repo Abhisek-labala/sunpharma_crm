@@ -1,0 +1,41 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('public.day3_followup', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('patient_id')->nullable();
+            $table->string('day3_meds')->nullable();
+            $table->text('day3_meds_reason')->nullable();
+            $table->string('day3_sugar')->nullable();
+            $table->text('day3_sugar_reason')->nullable();
+            $table->string('day3_bp')->nullable();
+            $table->text('day3_bp_reason')->nullable();
+            $table->string('day3_fluid')->nullable();
+            $table->text('day3_fluid_reason')->nullable();
+            $table->text('day3_support')->nullable();
+            $table->text('callremark_3')->nullable();
+            $table->text('callconnect_subremark_3')->nullable();
+            $table->text('noresponse_subremark_3')->nullable();
+            $table->text('ae_report')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('public.day3_followup');
+    }
+};

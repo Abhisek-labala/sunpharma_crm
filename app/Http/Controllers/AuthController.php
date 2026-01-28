@@ -26,10 +26,10 @@ class AuthController extends Controller
             ->orWhere('emp_id', $request->email)
             ->first();
 
-        if ($user) {
-            $hashedPassword = hash('sha256', $request->password);
 
-            if ($hashedPassword === $user->password) {
+        if ($user) {
+            // Password is already hashed from client-side (SHA-256)
+            if ($request->password === $user->password) {
                 Auth::loginUsingId($user->id);
                 $request->session()->regenerate();
                 session()->put('emp_id', $user->emp_id);
@@ -105,9 +105,8 @@ class AuthController extends Controller
             ->first();
 
         if ($user) {
-            $hashedPassword = hash('sha256', $request->password);
-
-            if ($hashedPassword === $user->password) {
+            // Password is already hashed from client-side (SHA-256)
+            if ($request->password === $user->password) {
                 Auth::loginUsingId($user->id);
                 $request->session()->regenerate();
                 session()->put('emp_id', $user->emp_id);

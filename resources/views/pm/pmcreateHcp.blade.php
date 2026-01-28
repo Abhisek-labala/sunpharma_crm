@@ -26,10 +26,10 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">HCP Management</h4>
+                            <h4 class="card-title">Doctor Management</h4>
                             <button type="button" class="btn btn-primary float-right" data-toggle="modal"
                                 data-target="#doctorModal" onclick="resetForm()">
-                                <i class="fa fa-plus"></i> Add HCP
+                                <i class="fa fa-plus"></i> Add Doctor
                             </button>
                         </div>
                         <div class="card-body">
@@ -38,7 +38,7 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Doctor CODE</th>
+                                            <th>Doctor Code</th>
                                             <th>Name</th>
                                             <th>City</th>
                                             <th>State</th>
@@ -489,7 +489,7 @@
         }
         function editRecord(id) {
             $('#doctorModal').modal('show');
-            $('#modalTitle').text('Edit HCP');
+            $('#modalTitle').text('Edit Doctor');
             $('#createDoctor')[0].reset();
             $('#submitBtn').text('Update');
             $('.is-invalid').removeClass('is-invalid');

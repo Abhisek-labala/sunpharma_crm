@@ -12,15 +12,13 @@ class RmReportExport implements FromCollection, WithHeadings, WithMapping
 {
     protected $fromDate;
     protected $toDate;
-    protected $campId;
     protected $hcp;
     protected $educator;
 
-    public function __construct($fromDate, $toDate, $campId, $hcp, $educator)
+    public function __construct($fromDate, $toDate, $hcp, $educator)
     {
         $this->fromDate = $fromDate;
         $this->toDate = $toDate;
-        $this->campId = $campId;
         $this->hcp = $hcp;
         $this->educator = $educator;
     }
@@ -88,7 +86,6 @@ protected function calculateMaxPrescriptionFiles()
             'a.approved_status',
             'd.emp_id',
             'f.full_name as rm_name',
-            'a.camp_id',
             'g.msl_code',
             'g.name as doctor_name',
             'g.speciality',
@@ -144,7 +141,6 @@ protected function calculateMaxPrescriptionFiles()
             $row->educator_name,
             $row->emp_id,
             $row->rm_name,
-            $row->camp_id,
             $row->msl_code,
             $row->doctor_name,
             $row->speciality,
@@ -177,7 +173,7 @@ protected function calculateMaxPrescriptionFiles()
        $this->calculateMaxPrescriptionFiles();
 
         $headings = [ 
-            'Patient ID','Counsellor Name', 'EMP Id', 'RC Name', 'Camp', 'Doctor Code', 'Doctor Name', 'Speciality', 'City', 'State',
+            'Patient ID','Counsellor Name', 'EMP Id', 'RC Name', 'Doctor Code', 'Doctor Name', 'Speciality', 'City', 'State',
             'Patient Name', 'Age', 'Mobile Number', 'Gender', 'Medicine', 'Competitor', 'Consent Form File'
         ];
 

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 use App\Exports\EducatorPatientExport;
 use App\Exports\PmPatientExport;
 use App\Exports\RmReportExport;
-use App\Models\Camp;
 use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\User;
@@ -35,7 +34,7 @@ class DashboardController extends Controller
     public function getZones()
     {
 
-        $Zones = Zone::orderBy('zone_name')->get(['id', 'zone_name']); // Assuming camp_name exists
+        $Zones = Zone::orderBy('zone_name')->get(['id', 'zone_name']); 
 
         $options = '<option value="">-- Select --</option>';
         foreach ($Zones as $Zone) {
@@ -50,7 +49,7 @@ class DashboardController extends Controller
         $ZoneId = $request->input('zone');
         $RmDetails = Rmuser::where('zone_id',  $ZoneId )
            ->orderBy('full_name')
-            ->get(['id', 'full_name']); // Assuming camp_name exists
+            ->get(['id', 'full_name']);
         $options = '<option value="">-- Select --</option>';
         foreach ($RmDetails as $row) {
             $options .= '<option value="' .  $row ->id . '">' . $row ->full_name . '</option>';
@@ -90,42 +89,6 @@ class DashboardController extends Controller
 
             return response()->json($options);
     }
-     public function getEducatorCamp(Request $request)
-    {
-        $educatorId = Auth::id();
-        $fromDate = $request->input('fromDate');
-        $toDate = $request->input('toDate');
-
-        $camps = Camp::where('educator_id', $educatorId)
-            ->whereBetween('date', [$fromDate, $toDate])
-            ->groupBy('camp_id')
-            ->get(['camp_id']); // Assuming camp_name exists
-
-        $options = '<option value="">-- Select --</option>';
-        foreach ($camps as $camp) {
-            $options .= '<option value="' . $camp->camp_id . '">' . "CAMP " . $camp->camp_id . '</option>';
-        }
-
-        return response()->json($options);
-    }
-    public function getCampbyeducator(Request $request)
-    {
-        $educatorId = $request->input('educatorId');
-        $fromDate = $request->input('fromDate');
-        $toDate = $request->input('toDate');
-
-        $camps = Camp::where('educator_id', $educatorId)
-            ->whereBetween('date', [$fromDate, $toDate])
-            ->groupBy('camp_id')
-            ->get(['camp_id']); // Assuming camp_name exists
-
-        $options = '<option value="">-- Select --</option>';
-        foreach ($camps as $camp) {
-            $options .= '<option value="' . $camp->camp_id . '">' . "CAMP " . $camp->camp_id . '</option>';
-        }
-
-        return response()->json($options);
-    }
     public function getDoctorsByCamp()
     {
         $user_id = Auth::id();
@@ -154,7 +117,6 @@ public function getEducatorPatientTable(Request $request)
     $fromDate = $request->input('fromDate');
     $toDate = $request->input('toDate');
     $doctorId = $request->input('doctorId');
-    $campId = $request->input('campId');
     $search = $request->input('search.value');
 
     // Build base query
@@ -250,7 +212,6 @@ public function getpmPatientTable(Request $request)
     $fromDate = $request->input('fromDate');
     $toDate = $request->input('toDate');
     $doctorId = $request->input('doctorId');
-    $campId = $request->input('campId');
     $user_id = $request->input('educator');
     $zone = $request->input('zone');
     $rm = $request->input('rm');
@@ -358,7 +319,6 @@ public function getrmPatientTable(Request $request)
     $fromDate = $request->input('fromDate');
     $toDate = $request->input('toDate');
     $doctorId = $request->input('doctorId');
-    $campId = $request->input('campId');
     $user_id = $request->input('educator');
     $search = $request->input('search.value');
 
@@ -460,7 +420,6 @@ public function downloadEducatorPatientExcel(Request $request)
         new EducatorPatientExport(
             $request->fromDate,
             $request->toDate,
-            $request->campId,
             $request->hcp
         ),
         'educator_patients.csv'
@@ -472,7 +431,6 @@ public function downloadpmPatientExcel(Request $request)
         new PmPatientExport(
             $request->fromDate,
             $request->toDate,
-            $request->campId,
             $request->hcp,
             $request->educator,
             $request->rm,
@@ -489,7 +447,6 @@ public function downloadrmPatientExcel(Request $request)
 
             $request->fromDate,
             $request->toDate,
-            $request->campId,
             $request->hcp,
             $request->educator,
 

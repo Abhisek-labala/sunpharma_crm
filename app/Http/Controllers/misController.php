@@ -253,8 +253,6 @@ class misController extends Controller
 
             return response()->json($educators);
         } catch (\Exception $e) {
-            \Log::error('Get Digital Counsellor Name Error: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
             return response()->json([
                 'error' => 'Server error',
                 'message' => $e->getMessage()
@@ -290,15 +288,15 @@ class misController extends Controller
 
             if ($result) {
                 $message = is_null($updateData['rm_pm_id'])
-                    ? 'DigitalEducator successfully unassigned from RM'
-                    : 'DigitalEducator successfully assigned to RM';
+                    ? 'DigitalEducator successfully unassigned from RC'
+                    : 'DigitalEducator successfully assigned to RC';
 
                 return response()->json(['success' => true, 'message' => $message]);
             } else {
                 return response()->json(['success' => false, 'message' => 'Failed to assign educator']);
             }
         } catch (\Exception $e) {
-            Log::error('Assign Educator Error: ' . $e->getMessage());
+            Log::error('Assign Counsellor Error: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Server error']);
         }
     }
@@ -428,12 +426,12 @@ class misController extends Controller
             $deleted = DB::table('common.users')->where('id', $id)->where('role', 'digitalcounsellor')->delete();
 
             if ($deleted > 0) {
-                return response()->json(['status' => true, 'message' => 'DigiEducator deleted successfully']);
+                return response()->json(['status' => true, 'message' => 'Digital Counsellor deleted successfully']);
             } else {
-                return response()->json(['status' => false, 'message' => 'DigiEducator not found or already deleted']);
+                return response()->json(['status' => false, 'message' => 'Digital Counsellor not found or already deleted']);
             }
         } catch (\Exception $e) {
-            Log::error('Delete DigiEducator Error: ' . $e->getMessage());
+            Log::error('Delete Digital Counsellor Error: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Server error']);
         }
     }
@@ -444,12 +442,12 @@ class misController extends Controller
             $deleted = DB::table('common.users')->where('id', $id)->where('role', 'counsellor')->delete();
 
             if ($deleted > 0) {
-                return response()->json(['status' => true, 'message' => 'Educator deleted successfully']);
+                return response()->json(['status' => true, 'message' => 'Counsellor deleted successfully']);
             } else {
-                return response()->json(['status' => false, 'message' => 'Educator not found or already deleted']);
+                return response()->json(['status' => false, 'message' => 'Counsellor not found or already deleted']);
             }
         } catch (\Exception $e) {
-            Log::error('Delete DigiEducator Error: ' . $e->getMessage());
+            Log::error('Delete Counsellor Error: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Server error']);
         }
     }
@@ -476,12 +474,12 @@ class misController extends Controller
             $deleted = DB::table('common.rm_users')->where('id', $id)->delete();
 
             if ($deleted > 0) {
-                return response()->json(['status' => true, 'message' => 'Regional Manager deleted successfully']);
+                return response()->json(['status' => true, 'message' => 'Regional Cordinator deleted successfully']);
             } else {
-                return response()->json(['status' => false, 'message' => 'Regional Manager  not found or already deleted']);
+                return response()->json(['status' => false, 'message' => 'Regional Cordinator  not found or already deleted']);
             }
         } catch (\Exception $e) {
-            Log::error('Regional Manager  provider Error: ' . $e->getMessage());
+            Log::error('Regional Counsellor  provider Error: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Server error']);
         }
     }
@@ -600,7 +598,7 @@ class misController extends Controller
             $educator = DB::table('common.users')->where('id', $request->educator_id)->first();
 
             if (!$educator) {
-                throw new \Exception("Educator not found");
+                throw new \Exception("Counsellor not found");
             }
 
             $profileImagePath = $educator->profile_pic; // keep old if no new upload
@@ -657,13 +655,13 @@ class misController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => 'Educator updated successfully',
+                'message' => 'Counsellor updated successfully',
                 'id' => $request->educator_id,
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Update Educator Error: ' . $e->getMessage());
+            Log::error('Update Counsellor Error: ' . $e->getMessage());
 
             return response()->json([
                 'status' => false,
@@ -936,7 +934,7 @@ class misController extends Controller
             return response()->json($response);
 
         } catch (\Exception $e) {
-            Log::error('RM DataTable Error: ' . $e->getMessage());
+            Log::error('RC DataTable Error: ' . $e->getMessage());
             return response()->json(['error' => 'Server error'], 500);
         }
     }
@@ -1049,7 +1047,7 @@ class misController extends Controller
             $userName = $this->generateUsername($request->name);
             $hashedPassword = hash('sha256', $request->password);
 
-            // Insert RM
+            // Insert RC
             $rmId = DB::table('common.rm_users')->insertGetId([
                 'emp_id' => $request->emp_id,
                 'full_name' => $request->name,
@@ -1065,14 +1063,14 @@ class misController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => 'Regional Manager created successfully',
+                'message' => 'Regional Cordinator created successfully',
                 'id' => $rmId,
                 'username' => $userName
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Create RM Error: ' . $e->getMessage());
+            Log::error('Create RC Error: ' . $e->getMessage());
 
             return response()->json([
                 'status' => false,
@@ -1115,13 +1113,13 @@ class misController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => 'Regional Manager updated successfully',
+                'message' => 'Regional Cordinator updated successfully',
                 'id' => $request->rm_id
             ]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Update RM Error: ' . $e->getMessage());
+            Log::error('Update RC Error: ' . $e->getMessage());
 
             return response()->json([
                 'status' => false,
@@ -1501,8 +1499,6 @@ class misController extends Controller
 
             return response()->json($educators);
         } catch (\Exception $e) {
-            \Log::error('Get counsellors Name Error: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
             return response()->json([
                 'error' => 'Server error',
                 'message' => $e->getMessage()
@@ -1573,22 +1569,6 @@ class misController extends Controller
             'DailyReport.csv'
         );
     }
-
-    public function campReportExcel()
-    {
-        try {
-            return Excel::download(new CampReportExport, 'Camp_Report.csv');
-        } catch (\Exception $e) {
-            \Log::error('Camp Report Excel Error (MIS): ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
-            
-            return response()->json([
-                'error' => 'Failed to generate camp report',
-                'message' => $e->getMessage()
-            ], 500);
-        }
-    }
-
     public function mismonthlyCounseling()
     {
 
@@ -2484,10 +2464,7 @@ class misController extends Controller
 
             return response()->json($response);
 
-        } catch (\Exception $e) {
-            \Log::error('Get Patient List Error: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
-            
+        } catch (\Exception $e) {        
             return response()->json([
                 'error' => 'Server error occurred',
                 'message' => $e->getMessage(),
@@ -2784,9 +2761,6 @@ class misController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            \Log::error('Get Feedback Details Error: ' . $e->getMessage());
-            \Log::error('Stack trace: ' . $e->getTraceAsString());
-            \Log::error('Request params: ' . json_encode($request->all()));
             
             return response()->json([
                 'error' => 'Server error',

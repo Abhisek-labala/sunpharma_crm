@@ -8,7 +8,16 @@
 <script src="{{ asset('js/bootstrap/script.js') }}" type="text/javascript"></script>
 <script src="{{ asset('js/toastr.min.js') }}" type="text/javascript"></script>
 <script>
-    $('#loginForm').on('submit', function (e) {
+    // SHA-256 hash function
+    async function sha256(str) {
+        const buffer = new TextEncoder().encode(str);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        return hashHex;
+    }
+
+    $('#loginForm').on('submit', async function (e) {
         e.preventDefault();
         if (!validateLogin()) {
             return; // stop AJAX if validation fails
@@ -16,13 +25,22 @@
         const loginBtn = $('#loginButton');
         const originalText = loginBtn.html();
         loginBtn.prop('disabled', true).html('Logging in...');
-        let form = $(this);
-        let formData = form.serialize();
+        
+        // Get form data
+        const email = $('#email').val();
+        const password = $('#password').val();
+        
+        // Hash the password before sending
+        const hashedPassword = await sha256(password);
 
         $.ajax({
             url: "{{ route('rmlogin.submit') }}",
             method: "POST",
-            data: formData,
+            data: {
+                email: email,
+                password: hashedPassword, // Send hashed password
+                _token: '{{ csrf_token() }}'
+            },
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },

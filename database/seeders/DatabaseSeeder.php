@@ -13,11 +13,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Call all seeders in order (dependencies first)
+        $this->call([
+            // Common schema tables (foundational data)
+            ZoneSeeder::class,
+            StateSeeder::class,
+            CitySeeder::class,
+            MedicineHeaderSeeder::class,
+            MedicineSeeder::class,
+            CompitetorSeeder::class,
+            RmUserSeeder::class,
+            UserSeeder::class, // Added users with roles
+            
+            // Public schema tables (depends on common tables)
+            DoctorSeeder::class,
+            PatientSeeder::class,
         ]);
     }
 }

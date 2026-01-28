@@ -9,13 +9,12 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 
 class PmPatientExport implements FromCollection, WithHeadings, WithMapping
 {
-    protected $fromDate, $toDate, $campId, $hcp, $educator, $rm, $zone;
+    protected $fromDate, $toDate, $hcp, $educator, $rm, $zone;
 
-    public function __construct($fromDate, $toDate, $campId, $hcp, $educator, $rm, $zone)
+    public function __construct($fromDate, $toDate, $hcp, $educator, $rm, $zone)
     {
         $this->fromDate = $fromDate;
         $this->toDate = $toDate;
-        $this->campId = $campId;
         $this->hcp = $hcp;
         $this->educator = $educator;
         $this->rm = $rm;

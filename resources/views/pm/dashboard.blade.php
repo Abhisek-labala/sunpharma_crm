@@ -52,15 +52,6 @@
                                 </div>
 
                                 <div class="mb-3 row">
-                                    <label class="col-form-label col-md-2">Camp</label>
-                                    <div class="col-md-10">
-                                        <select class="form-control" name="campId" id="campId">
-                                            <option value=""> -- Select -- </option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3 row">
                                     <label class="col-form-label col-md-2">Doctor Name</label>
                                     <div class="col-md-10">
                                         <select class="form-control" name="doctor" id="doctor">
@@ -120,7 +111,7 @@
 
         function checkEducatorAndLoad() {
             if ($('#educator').val()) {
-                loadCamps();
+
             }
         }
 
@@ -193,19 +184,6 @@
             patientTable.ajax.reload();
         }
 
-        function loadCamps() {
-            $.post("{{ route('common.getCampbyeducator') }}", {
-                educatorId: $('#educator').val(),
-                fromDate: $('#from_date').val(),
-                toDate: $('#to_date').val(),
-                _token: $('input[name="_token"]').val()
-            }, function (data) {
-                $('#campId').html(data);
-                $('#doctor').html('<option value="">-- Select --</option>');
-                loadPatientData();
-            });
-        }
-
         function loadZones() {
             $.post("{{ route('common.getZones') }}", {
                 _token: $('input[name="_token"]').val()
@@ -238,10 +216,6 @@
         });
 
         $('#educator').on('change', function () {
-            loadCamps();
-        });
-
-        $('#campId').on('change', function () {
             $.post("{{ route('common.getDoctorsByEdu') }}", {
                 educatorId: $('#educator').val(),
                 _token: $('input[name="_token"]').val()
@@ -260,8 +234,6 @@
             checkEducatorAndLoad();
             loadPatientData();
         });
-
-        loadCamps();
     });
 
     window.downloadpmPatientExcel = function () {
@@ -270,13 +242,11 @@
         var educator = $('#educator').val();
         var zone = $('#zone').val();
         var rm = $('#rm').val();
-        var campId = $('#campId').val();
         var hcpId = $('#doctor').val();
 
         var url = "{{ route('pm.patients.export') }}"
             + "?fromDate=" + encodeURIComponent(fromDate)
             + "&toDate=" + encodeURIComponent(toDate)
-            + "&campId=" + encodeURIComponent(campId)
             + "&hcp=" + encodeURIComponent(hcpId)
             + "&educator=" + encodeURIComponent(educator)
             + "&rm=" + encodeURIComponent(rm)

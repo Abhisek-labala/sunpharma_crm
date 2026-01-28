@@ -12,14 +12,12 @@ class EducatorPatientExport implements FromCollection, WithHeadings, WithMapping
 {
    protected $fromDate;
     protected $toDate;
-    protected $campId;
     protected $hcp;
 
-   public function __construct($fromDate, $toDate, $campId, $hcp)
+   public function __construct($fromDate, $toDate, $hcp)
     {
         $this->fromDate = $fromDate;
         $this->toDate = $toDate;
-        $this->campId = $campId;
         $this->hcp = $hcp;
     }
 
@@ -65,7 +63,6 @@ class EducatorPatientExport implements FromCollection, WithHeadings, WithMapping
             })
             ->leftJoin('common.rm_users as f', 'd.rm_pm_id', '=', 'f.id')
             ->leftJoin('public.doctor as g', DB::raw('CAST(a.hcp_id AS INTEGER)'), '=', 'g.id')
-            ->leftJoin('public.camp as h', 'h.id', '=', 'a.camp_id')
             ->whereNotNull('a.patient_name')
             ->where('a.educator_id', $user_id);
 
@@ -85,7 +82,6 @@ class EducatorPatientExport implements FromCollection, WithHeadings, WithMapping
             'a.approved_status',
             'd.emp_id',
             'f.full_name as rm_name',
-            'h.camp_id',
             'g.msl_code',
             'g.name as doctor_name',
             'g.speciality',
@@ -143,7 +139,6 @@ class EducatorPatientExport implements FromCollection, WithHeadings, WithMapping
             $row->educator_name,
             $row->emp_id,
             $row->rm_name,
-            $row->camp_id,
             $row->msl_code,
             $row->doctor_name,
             $row->speciality,
@@ -177,7 +172,7 @@ class EducatorPatientExport implements FromCollection, WithHeadings, WithMapping
         $this->calculateMaxPrescriptionFiles();
 
         $headings = [
-            'Patient ID','Counsellor Name', 'EMP ID', 'RC Name', 'Camp', 'Doctor Code', 'Doctor Name', 'Speciality', 'City', 'State',
+            'Patient ID','Counsellor Name', 'EMP ID', 'RC Name', 'Doctor Code', 'Doctor Name', 'Speciality', 'City', 'State',
             'Patient Name', 'Age', 'Mobile Number', 'Gender', 'Medicine', 'Competitor', 'Consent Form File'
         ];
 

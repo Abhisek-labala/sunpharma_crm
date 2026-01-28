@@ -26,10 +26,10 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Educators Management</h4>
+                            <h4 class="card-title">Counsellor Management</h4>
                             <button type="button" class="btn btn-primary float-right" data-toggle="modal"
                                 data-target="#educatorModal" onclick="resetForm()">
-                                <i class="fa fa-plus"></i> Add Educator
+                                <i class="fa fa-plus"></i> Add COUNSELLOR
                             </button>
                         </div>
                         <div class="card-body">
@@ -71,7 +71,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle">Add Educator</h5>
+                <h5 class="modal-title" id="modalTitle">Add Counsellor</h5>
             </div>
             <div class="modal-body">
                 <form action="Pm-Create-Educator-Post" name="createEducator" id="createEducator" method="post"
@@ -170,7 +170,7 @@
                 <h5 class="modal-title">Confirm Delete</h5>
             </div>
             <div class="modal-body">
-                <p>Are you sure you want to delete this educator?</p>
+                <p>Are you sure you want to delete this counsellor?</p>
                 <input type="hidden" id="delete_id">
             </div>
             <div class="modal-footer">
@@ -282,7 +282,7 @@
     // Reset form and modal - improved version
     function resetForm() {
         $('#educatorModal').modal('show');
-        $('#modalTitle').text('Add Educator');
+        $('#modalTitle').text('Add Counsellor');
         $('#createEducator')[0].reset();
         $('#educator_id').val('');
         $('#profile_image_preview').html('');
@@ -504,7 +504,7 @@
         }
 
         // Change modal title
-        $('#modalTitle').text("Edit Educator");
+        $('#modalTitle').text("Edit Counsellor");
         $('#submitBtn').prop('disabled', false);
         // Populate form fields
         $('#educator_id').val(rowData.id);

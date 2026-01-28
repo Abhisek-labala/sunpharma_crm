@@ -192,10 +192,10 @@ Route::middleware(['check.session', 'role:digitalcounsellor'])->group(function (
         Route::post('/get-rm-detail-by-zone', [DashboardController::class, 'getrmsbyzone'])->name('common.getrmsbyzone');
         Route::post('/get-edu-detail-by-rm', [DashboardController::class, 'getEducatorbyzoneandRm'])->name('common.getEducatorbyzoneandRm');
     });
-    Route::get('nc-Create-Educator', [PmController::class, 'pmcreateEducatorView']);
-    Route::get('nc-Create-Hcp', [PmController::class, 'pmcreateHcpView']);
-    Route::get('nc-Create-RM', [PmController::class, 'pmcreateRmView']);
-    Route::get('nc-Create-DigitalEducator', [PmController::class, 'pmcreateDigitalEducatorView']);
+    Route::get('nc-Create-Counsellor', [PmController::class, 'pmcreateEducatorView']);
+    Route::get('nc-Create-Doctor', [PmController::class, 'pmcreateHcpView']);
+    Route::get('nc-Create-RC', [PmController::class, 'pmcreateRmView']);
+    Route::get('nc-Create-DigitalCounsellor', [PmController::class, 'pmcreateDigitalEducatorView']);
     Route::post('nc-Delete-DigiEducator/{id}', [PmController::class, 'deleteDigiEducator'])->name('pm.deleteDigiEducator');
     Route::post('nc-Delete-Educator/{id}', [PmController::class, 'deleteEducator'])->name('pm.deleteEducator');
     Route::post('nc-Delete-Doctor/{id}', [PmController::class, 'deleteDoctor'])->name('pm.deleteDoctor');
@@ -235,7 +235,6 @@ Route::middleware(['check.session', 'role:digitalcounsellor'])->group(function (
         Route::get('pmdoctorNotMetrics', [PmController::class, 'pmdoctorNotMetrics']);
     });
     Route::get('/nc-feedback', [PmController::class, 'pmfeedback']);
-    Route::get('/nc-campreport', [PmController::class, 'pmcampReport']);
     Route::post('nc-Get-Educators', [PmController::class, 'getEducators']);
     Route::post('nc-Get-DigiEducators', [PmController::class, 'getDigitalEducators']);
     Route::post('nc-Get-Doctors', [PmController::class, 'getDoctors']);
@@ -356,7 +355,6 @@ Route::middleware(['check.session', 'role:admin'])->group(function () {
         Route::get('adminobesity_metrics', [misController::class, 'misobesityMetrics']);
         Route::get('admindoctorNotMetrics', [misController::class, 'misdoctorNotMetrics']);
     });
-    Route::get('/admin-campreport', [misController::class, 'miscampReport']);
     Route::get('campreport_excel', [misController::class, 'campReportExcel'])->name('camp.report.excel');
     Route::get('/daily-report/export', [misController::class, 'downloadDailyReport'])->name('misdaily.report.export');
     Route::get('admin-medicine', [misController::class, 'medicinepage']);
