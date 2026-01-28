@@ -316,7 +316,7 @@
 
         $('#medicine_id').val(rowData.id);
         $('#medicine_name').val(rowData.medicine_name);
-        $('#medicine_header').val(rowData.medicine_header);
+        $('#medicine_header').val(rowData.medicine_header_id); // Use ID for select
 
         $('#medicineModal').modal('show');
     }
@@ -335,7 +335,7 @@
                 var $dropdown = $('#medicine_header');
                 $dropdown.empty().append('<option value=""> -- Select -- </option>');
                 $.each(response.data, function(index, header) {
-                    $dropdown.append('<option value="'+header.header+'">'+header.header+'</option>');
+                    $dropdown.append('<option value="'+header.id+'">'+header.header+'</option>'); // Use ID as value
                 });
             } else {
                 toastr.error(response.message || 'Unable to fetch headers');
