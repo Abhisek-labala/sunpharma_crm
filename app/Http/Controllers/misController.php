@@ -2390,7 +2390,6 @@ class misController extends Controller
                 'c.height',
                 'g.name',
                 'a.cipla_brand_prescribed',
-                'h.camp_id',
                 'a.date',
                 'a.approved_status',
                 'd.full_name',
@@ -2404,7 +2403,6 @@ class misController extends Controller
             $query = DB::table('public.patient_details as a')
                 ->leftJoin('public.patient_medication_details as c', 'a.uuid', '=', 'c.uuid')
                 ->leftJoin('public.doctor as g', DB::raw('CAST(a.hcp_id AS INTEGER)'), '=', 'g.id')
-                ->leftJoin('public.camp as h', 'a.camp_id', '=', 'h.id')
                 ->leftjoin('common.users as d', 'a.educator_id', '=', 'd.id')
                 ->leftJoin('common.users as e', 'a.digital_educator_id', '=', 'e.id')
                 ->leftJoin('common.rm_users as f', 'd.rm_pm_id', '=', 'f.id')
@@ -2418,7 +2416,6 @@ class misController extends Controller
                     'c.height',
                     'c.weight',
                     'a.cipla_brand_prescribed',
-                    'h.camp_id',
                     'g.name as doctor_name',
                     'a.approved_status',
                     'd.full_name as educator_name',
@@ -2437,7 +2434,6 @@ class misController extends Controller
                         ->orWhere('a.mobile_number', 'ilike', "%{$searchValue}%")
                         ->orWhere('g.name', 'ilike', "%{$searchValue}%")
                         ->orWhere('a.cipla_brand_prescribed', 'ilike', "%{$searchValue}%")
-                        ->orWhere('h.camp_id', 'ilike', "%{$searchValue}%")
                         ->orWhere('a.gender', 'ilike', "%{$searchValue}%")
                         ->orWhere('a.age', 'ilike', "%{$searchValue}%")
                         ->orWhere('a.approved_status', 'ilike', "%{$searchValue}%")
