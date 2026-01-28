@@ -116,10 +116,7 @@ class FeedBackController extends Controller
         \Log::error('Follow up Form MIS Error: ' . $e->getMessage());
         \Log::error('Stack trace: ' . $e->getTraceAsString());
         
-        return response()->view('errors.500', [
-            'error' => 'An error occurred while loading the follow-up form',
-            'message' => $e->getMessage()
-        ], 500);
+        return response("<h1>Error</h1><p>An error occurred while loading the follow-up form.</p><p>Error: " . $e->getMessage() . "</p>", 500);
     }
 }
    public function followupFormeducator(Request $request)
@@ -164,10 +161,7 @@ class FeedBackController extends Controller
         \Log::error('Follow up Form Counsellor Error: ' . $e->getMessage());
         \Log::error('Stack trace: ' . $e->getTraceAsString());
         
-        return response()->view('errors.500', [
-            'error' => 'An error occurred while loading the follow-up form',
-            'message' => $e->getMessage()
-        ], 500);
+        return response("<h1>Error</h1><p>An error occurred while loading the follow-up form.</p><p>Error: " . $e->getMessage() . "</p>", 500);
     }
 }
    public function followupFormyoga(Request $request)
