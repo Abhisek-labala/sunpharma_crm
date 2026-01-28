@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Camp;
 use App\Models\Patient;
 use Auth;
 use Carbon\Carbon;
@@ -158,7 +157,6 @@ class RmController extends Controller
             })
             ->leftJoin('common.rm_users as f', 'd.rm_pm_id', '=', 'f.id')
             ->leftJoin('public.doctor as g', DB::raw('CAST(a.hcp_id AS INTEGER)'), '=', 'g.id')
-            ->leftJoin('public.camp as h', 'a.camp_id', '=', 'h.id')
             ->select(
                 'a.id',
                 'a.date',
@@ -172,7 +170,6 @@ class RmController extends Controller
                 'c.height',
                 'c.weight',
                 'a.cipla_brand_prescribed',
-                'h.camp_id',
                 'g.name as doctor_name',
             )
             ->where('d.rm_pm_id', $user_id)
