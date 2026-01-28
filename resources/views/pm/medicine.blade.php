@@ -316,7 +316,8 @@
 
         $('#medicine_id').val(rowData.id);
         $('#medicine_name').val(rowData.medicine_name);
-        $('#medicine_header').val(rowData.medicine_header_id); // Use ID for select
+        // $('#medicine_header').val(rowData.medicine_header_id); // Removed, handled by loadMedicineHeaders
+        loadMedicineHeaders(rowData.medicine_header_id);
 
         $('#medicineModal').modal('show');
     }
@@ -324,7 +325,7 @@
     function isEmpty(value) {
         return !value || value.trim() === "";
     }
-    function loadMedicineHeaders() {
+    function loadMedicineHeaders(selectedId = null) {
     $.ajax({
         url: 'nc-Get-Medicine-Headers',
         type: 'POST',
@@ -337,6 +338,9 @@
                 $.each(response.data, function(index, header) {
                     $dropdown.append('<option value="'+header.id+'">'+header.header+'</option>'); // Use ID as value
                 });
+                if (selectedId) {
+                    $dropdown.val(selectedId);
+                }
             } else {
                 toastr.error(response.message || 'Unable to fetch headers');
             }
