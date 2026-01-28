@@ -1785,16 +1785,17 @@ class misController extends Controller
             $columns = [
                 0 => 'm.id',
                 1 => 'm.medicine_name',
-                2 => 'm.medicine_header'
+                2 => 'mh.header'
             ];
             $orderColumn = $columns[$orderColumnIndex] ?? 'm.id';
 
             // Base query
             $query = Medicine::from('common.medicines as m')
+                ->leftJoin('common.medicine_headers as mh', 'm.medicine_header_id', '=', 'mh.id')
                 ->select([
                     'm.id',
                     'm.medicine_name',
-                    'm.medicine_header',
+                    'mh.header as medicine_header',
                     'm.status'
                 ])
                 ->where('m.status', '1');
@@ -1803,7 +1804,7 @@ class misController extends Controller
             if (!empty($searchValue)) {
                 $query->where(function ($q) use ($searchValue) {
                     $q->where('m.medicine_name', 'ilike', "%{$searchValue}%");
-                    $q->where('m.medicine_header', 'ilike', "%{$searchValue}%");
+                    $q->where('mh.header', 'ilike', "%{$searchValue}%");
                 });
             }
 
@@ -1859,12 +1860,12 @@ class misController extends Controller
         try {
             $validated = $request->validate([
                 'medicine_name' => 'required|string|max:50',
-                'medicine_header' => 'required|string',
+                'medicine_header' => 'required|integer',
             ]);
 
             $medicine = new Medicine();
             $medicine->medicine_name = $validated['medicine_name'];
-            $medicine->medicine_header = $validated['medicine_header'];
+            $medicine->medicine_header_id = $validated['medicine_header'];
             $medicine->status = 1;
             $medicine->save();
 
@@ -1894,12 +1895,12 @@ class misController extends Controller
             $validated = $request->validate([
                 'medicine_id' => 'required|integer',
                 'medicine_name' => 'required|string|max:50',
-                'medicine_header' => 'required|string',
+                'medicine_header' => 'required|integer',
             ]);
 
             $medicine = Medicine::find($validated['medicine_id']);
             $medicine->medicine_name = $validated['medicine_name'];
-            $medicine->medicine_header = $validated['medicine_header'];
+            $medicine->medicine_header_id = $validated['medicine_header'];
             $medicine->save();
 
             return response()->json([

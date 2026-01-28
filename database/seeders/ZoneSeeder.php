@@ -11,16 +11,10 @@ class ZoneSeeder extends Seeder
     public function run(): void
     {
         $zones = [
-            ['zone_name' => 'North Zone', 'created_at' => Carbon::now()],
-            ['zone_name' => 'South Zone', 'created_at' => Carbon::now()],
-            ['zone_name' => 'East Zone', 'created_at' => Carbon::now()],
-            ['zone_name' => 'West Zone', 'created_at' => Carbon::now()],
-            ['zone_name' => 'Central Zone', 'created_at' => Carbon::now()],
-            ['zone_name' => 'North-East Zone', 'created_at' => Carbon::now()],
-            ['zone_name' => 'North-West Zone', 'created_at' => Carbon::now()],
-            ['zone_name' => 'South-East Zone', 'created_at' => Carbon::now()],
-            ['zone_name' => 'South-West Zone', 'created_at' => Carbon::now()],
-            ['zone_name' => 'Metro Zone', 'created_at' => Carbon::now()],
+            ['zone_name' => 'North', 'created_at' => Carbon::now()],
+            ['zone_name' => 'South', 'created_at' => Carbon::now()],
+            ['zone_name' => 'East', 'created_at' => Carbon::now()],
+            ['zone_name' => 'West', 'created_at' => Carbon::now()],
         ];
 
         DB::table('common.zones')->insert($zones);
