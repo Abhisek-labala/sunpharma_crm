@@ -137,8 +137,7 @@ class FeedBackController extends Controller
         $day180_data_exists = false;
 
         $submitData = FeedbackSubmitted::where('patient_id', $id)
-        ->select('day')
-        ->distinct()
+        ->selectRaw('DISTINCT day')
         ->orderByRaw('CAST(day AS INTEGER) ASC')
         ->get();
 
@@ -169,8 +168,7 @@ class FeedBackController extends Controller
     $day90_data_exists = false;
 
     $submitData = FeedbackSubmitted::where('patient_id', $id)
-    ->select('day')
-    ->distinct()
+    ->selectRaw('DISTINCT day')
     ->orderByRaw('CAST(day AS INTEGER) ASC')
     ->get();
 
