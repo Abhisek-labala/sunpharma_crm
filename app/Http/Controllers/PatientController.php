@@ -155,7 +155,6 @@ class PatientController extends Controller
 
             $patient->educator_id = $educatorId;
             $patient->digital_educator_id = $digitaleducatorid;
-            $patient->camp_id = $request->input('campId');
             $patient->hcp_id = $request->input('hcp_name');
             $patient->date = now()->format('Y-m-d');
             $patient->save();

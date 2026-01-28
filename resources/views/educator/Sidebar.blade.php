@@ -25,14 +25,6 @@
                     </li>
 
                     <li>
-                        <a href="{{ route('campinfo') }}">
-                            <i class="fa-solid fa-snowflake"></i>
-                            <span>Camp</span>
-                        </a>
-                    </li>
-
-
-                    <li>
                         <a href="{{ url('/counsellor/patientinfo') }}">
                             <i class="fa-solid fa-circle-info"></i>
                             <span>Patient Information</span>

@@ -30,8 +30,6 @@
 
             <form id="step1Form">
                 @csrf
-                <input type="hidden" name='campId' id='campId' value=''>
-                {{-- Handle editing existing patient if uuid is present --}}
                 <input type="hidden" name="patient_uuid" id="patient_uuid" value="{{ $uuid ?? '' }}">
 
                 <!-- Step 1: HCP Details -->
@@ -88,25 +86,12 @@
 
 <script>
     $(document).ready(function() {
-        getCampId();
         getHcpNames();
 
         const existingUuid = "{{ $uuid ?? '' }}";
         if(existingUuid) {
         }
     });
-
-    function getCampId() {
-        $.ajax({
-            url: "{{ url('counsellor/get-camp-id') }}",
-            type: "GET",
-            success: function(response) {
-                if(response.campId) {
-                    $('#campId').val(response.campId.camp_id);
-                }
-            }
-        });
-    }
 
     function getHcpNames() {
         $.ajax({
