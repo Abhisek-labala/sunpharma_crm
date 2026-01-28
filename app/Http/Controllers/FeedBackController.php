@@ -23,9 +23,12 @@ class FeedBackController extends Controller
     $day180_data_exists = false;
 
     $submitData = FeedbackSubmitted::where('patient_id', $id)
-    ->selectRaw('DISTINCT day')
-    ->orderByRaw('CAST(day AS INTEGER) ASC')
-    ->get();
+    ->select('day')
+    ->distinct()
+    ->get()
+    ->sortBy(function ($item) {
+        return (int) $item->day;
+    });
 
     return view('digitaleducator.followupForm', ['patientId' => $id, 'day3_data_exists' => $day3_data_exists,
     'day7_data_exists' => $day7_data_exists,
@@ -55,9 +58,12 @@ class FeedBackController extends Controller
     $day180_data_exists = false;
 
     $submitData = FeedbackSubmitted::where('patient_id', $id)
-    ->selectRaw('DISTINCT day')
-    ->orderByRaw('CAST(day AS INTEGER) ASC')
-    ->get();
+    ->select('day')
+    ->distinct()
+    ->get()
+    ->sortBy(function ($item) {
+        return (int) $item->day;
+    });
 
     return view('pm.followupForm', ['patientId' => $id, 'day3_data_exists' => $day3_data_exists,
     'day7_data_exists' => $day7_data_exists,
@@ -93,9 +99,12 @@ class FeedBackController extends Controller
         $day180_data_exists = false;
 
         $submitData = FeedbackSubmitted::where('patient_id', $id)
-        ->selectRaw('DISTINCT day')
-        ->orderByRaw('CAST(day AS INTEGER) ASC')
-        ->get();
+        ->select('day')
+        ->distinct()
+        ->get()
+        ->sortBy(function ($item) {
+            return (int) $item->day;
+        });
 
         return view('mis.followupform', ['patientId' => $id, 'day3_data_exists' => $day3_data_exists,
         'day7_data_exists' => $day7_data_exists,
@@ -137,9 +146,12 @@ class FeedBackController extends Controller
         $day180_data_exists = false;
 
         $submitData = FeedbackSubmitted::where('patient_id', $id)
-        ->selectRaw('DISTINCT day')
-        ->orderByRaw('CAST(day AS INTEGER) ASC')
-        ->get();
+        ->select('day')
+        ->distinct()
+        ->get()
+        ->sortBy(function ($item) {
+            return (int) $item->day;
+        });
 
         return view('educator.followupForm', ['patientId' => $id, 'day3_data_exists' => $day3_data_exists,
         'day7_data_exists' => $day7_data_exists,
@@ -168,9 +180,12 @@ class FeedBackController extends Controller
     $day90_data_exists = false;
 
     $submitData = FeedbackSubmitted::where('patient_id', $id)
-    ->selectRaw('DISTINCT day')
-    ->orderByRaw('CAST(day AS INTEGER) ASC')
-    ->get();
+    ->select('day')
+    ->distinct()
+    ->get()
+    ->sortBy(function ($item) {
+        return (int) $item->day;
+    });
 
     return view('yogaeducator.followupForm', ['patientId' => $id,
     'day7_data_exists' => $day7_data_exists,
