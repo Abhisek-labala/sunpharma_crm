@@ -50,16 +50,6 @@
                                         </select>
                                     </div>
                                 </div>
-
-                                <div class="mb-3 row">
-                                    <label class="col-form-label col-md-2">Camp</label>
-                                    <div class="col-md-10">
-                                        <select class="form-control" name="campId" id="campId">
-                                            <option value=""> -- Select -- </option>
-                                        </select>
-                                    </div>
-                                </div>
-
                                 <div class="mb-3 row">
                                     <label class="col-form-label col-md-2">Doctor Name</label>
                                     <div class="col-md-10">
@@ -118,12 +108,6 @@
     $(document).ready(function () {
         loadZones();
 
-        function checkEducatorAndLoad() {
-            if ($('#educator').val()) {
-                loadCamps();
-            }
-        }
-
         let patientTable = $('#patientTable').DataTable({
            processing: true,
             serverSide: true,
@@ -140,7 +124,6 @@
                 data: function (d) {
                     return $.extend({}, d, {
                         _token: $('input[name="_token"]').val(),
-                        campId: $('#campId').val(),
                         doctorId: $('#doctor').val(),
                         fromDate: $('#from_date').val(),
                         toDate: $('#to_date').val(),
@@ -238,10 +221,6 @@
         });
 
         $('#educator').on('change', function () {
-            loadCamps();
-        });
-
-        $('#campId').on('change', function () {
             $.post("{{ route('common.getDoctorsdigiByEdu') }}", {
                 educatorId: $('#educator').val(),
                 _token: $('input[name="_token"]').val()
@@ -257,11 +236,8 @@
 
         // ✅ Updated: Handle native input type="date" changes
         $('#from_date, #to_date').on('input', function () {
-            checkEducatorAndLoad();
             loadPatientData();
         });
-
-        loadCamps();
     });
 
     window.downloadpmPatientExcel = function () {
