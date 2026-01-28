@@ -71,7 +71,6 @@ class digitalController extends Controller
             })
             ->leftJoin('common.rm_users as f', 'd.rm_pm_id', '=', 'f.id')
             ->leftJoin('public.doctor as g', DB::raw('CAST(a.hcp_id AS INTEGER)'), '=', 'g.id')
-            ->leftJoin('public.camp as h', 'a.camp_id', '=', 'h.id')
             ->select(
                 'a.id',
                 'a.date',
@@ -83,7 +82,6 @@ class digitalController extends Controller
                 'c.height',
                 'c.weight',
                 'a.cipla_brand_prescribed',
-                'h.camp_id',
                 'g.name as doctor_name',
                 'a.consent_form_file',
                 'a.prescription_file'
